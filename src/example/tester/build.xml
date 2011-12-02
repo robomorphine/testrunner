@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="importer" xmlns:inz="antlib:com.inazaruk.ant" xmlns:ac="antcontrib">
+    <inz:root-import marker="rootdir" file="builder/builder.xml" as="project" />
+</project>
