@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/android-sdk-tools-lib"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ant-lib"/>
-	<classpathentry kind="output" path="bin/builder/eclipse"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rbm-host-testrunner"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
