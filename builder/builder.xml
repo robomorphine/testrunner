@@ -12,13 +12,14 @@
     <fail unless="project.name" message="Please specify project.name in project.properties." />        
     <fail unless="project.type" message="Please specify project.type in project.properties." />    
     <fail message="Incorrect project type: '${project.type}'. 
-                   Supported types: 'app', 'lib', 'jar', 'app.test', 'lib.test', 'jar.test'">
+                   Supported types: 'app', 'lib', 'jar', 'host.jar', 'app.test', 'lib.test', 'jar.test'">
         <condition>
             <not>
                 <or>
                     <equals arg1="${project.type}" arg2="app" /> 
                     <equals arg1="${project.type}" arg2="lib" />
                     <equals arg1="${project.type}" arg2="jar" />
+					<equals arg1="${project.type}" arg2="host.jar" />
                     <equals arg1="${project.type}" arg2="app.test" /> 
                     <equals arg1="${project.type}" arg2="lib.test" />
                     <equals arg1="${project.type}" arg2="jar.test" />
@@ -27,10 +28,10 @@
         </condition>
     </fail>
 
-    <fail unless="version.code" message="Please specify version.code in project.properties." />
-    <fail unless="version.name.major" message="Please specify version.name.major in project.properties." />
-    <fail unless="version.name.minor" message="Please specify version.name.minor in project.properties." />
-    <fail unless="version.name.build" message="Please specify version.name.build in project.properties." />
+    <property name="version.code" value="1" />
+    <property name="version.name.major" value="1" />
+    <property name="version.name.minor" value="0" />
+    <property name="version.name.build" value="0" />
 
     <echo>###########################################################</echo>
     <echo>###########################################################</echo>

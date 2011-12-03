@@ -1,6 +1,7 @@
 <ivy-module version="1.0">
-    <info organisation="com.robomorphine" module="com.robomorphine.testrunner.test" />
+    <info organisation="com.robomorphine" module="com.robomorphine.testrunner.device.test" />
 	<dependencies>
-		<dependency org="com.robomorphine" name="com.robomorphine.testrunner" rev="latest.integration"  />		 
+		<dependency org="com.robomorphine" name="com.robomorphine.testrunner.common" rev="latest.integration" />
+		<dependency org="com.robomorphine" name="com.robomorphine.testrunner.device" rev="latest.integration" />
 	</dependencies>
 </ivy-module>
