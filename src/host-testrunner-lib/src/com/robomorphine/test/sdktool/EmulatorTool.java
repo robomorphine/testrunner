@@ -4,7 +4,7 @@ import java.io.File;
 
 public class EmulatorTool extends SdkTool {
     
-    private static final String RELATIVE_PATH = "tools/emulator";
+    private static final String RELATIVE_PATH = "tools/emulator-arm";
     
     EmulatorTool(File sdkPath, ToolsManager manager) {
         super(new File(sdkPath, RELATIVE_PATH), manager);

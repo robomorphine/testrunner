@@ -34,7 +34,7 @@ public class SdkToolTest extends TestCase {
     
     public void testSdkTool_async() throws IOException, InterruptedException {
         File sdkPath = new File("r:\\repository\\dev\\bin\\android-sdk");
-        File exePath = new File("r:\\repository\\dev\\bin\\android-sdk\\tools\\emulator");
+        File exePath = new File("r:\\repository\\dev\\bin\\android-sdk\\tools\\emulator-x86");
         
         final ToolsManager manager = new ToolsManager(sdkPath);
         SdkTool tool = manager.createTool(exePath);
