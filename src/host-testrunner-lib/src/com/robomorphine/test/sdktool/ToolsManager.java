@@ -1,5 +1,7 @@
 package com.robomorphine.test.sdktool;
 
+import com.robomorphine.test.log.ILog;
+
 import org.python.core.util.ConcurrentHashSet;
 
 import java.io.File;
@@ -9,11 +11,16 @@ import java.util.Set;
 public class ToolsManager {
 
     private final File mSdkPath;
-        
+    private final ILog mLogger;
     private Set<Process> mRunningProcesses = new ConcurrentHashSet<Process>();
     
-    public ToolsManager(File sdkPath) {
+    public ToolsManager(File sdkPath, ILog log) {
         mSdkPath = sdkPath;
+        mLogger = log;         
+    }
+    
+    ILog getLogger() {
+        return mLogger;
     }
     
     void onProcessStarted(Process process) {

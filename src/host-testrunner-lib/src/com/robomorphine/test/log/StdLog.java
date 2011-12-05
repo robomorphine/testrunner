@@ -18,6 +18,10 @@ public class StdLog implements ILog  {
     
     @Override
     public void error(Throwable ex, String format, Object... args) {
-        mStdLog.error(ex, format, args);
+        String prefix = null;
+        if(ex != null) {
+            prefix = ex.getMessage();                
+        }
+        mStdLog.error(null, prefix + ". " + format, args);
     };
 }

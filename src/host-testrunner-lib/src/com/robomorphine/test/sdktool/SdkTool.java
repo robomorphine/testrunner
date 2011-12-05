@@ -1,5 +1,6 @@
 package com.robomorphine.test.sdktool;
 
+import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.sdktool.ProcessCompletionWaiter.CompletionListener;
 import com.robomorphine.test.sdktool.ProcessOutputHandler.HandlerListener;
 
@@ -82,11 +83,13 @@ public class SdkTool {
             if(mManager != null) {
                 mManager.onProcessCompleted(mProcess);
             }
+            mLog.info("Tool %s exit code: %d", SdkTool.this.getClass().getSimpleName(), exitValue);
             mState = State.COMPLETED;
         }
     };
         
     private final ToolsManager mManager;
+    private final ILog mLog;
     private final File mExePath;
     private final List<String> mArguments = new LinkedList<String>();
     private final HashMap<String, String> mEnv = new HashMap<String, String>();
@@ -108,8 +111,9 @@ public class SdkTool {
     private Thread mStdErrHandlerThread;
     
     SdkTool(File exePath, ToolsManager manager) {
-        mExePath = exePath;
+        mExePath = exePath;        
         mManager = manager;
+        mLog = manager.getLogger();
     }
     
     private void assertState(State...states) {
@@ -164,6 +168,14 @@ public class SdkTool {
         args.add(mExePath.getAbsolutePath());
         args.addAll(mArguments);
         builder.command(args);
+        
+        StringBuilder args4Log = new StringBuilder();
+        for(String arg : args) {
+            args4Log.append(arg);
+            args4Log.append(" ");
+        }
+        mLog.info("Executing %s tool: %s", getClass().getSimpleName(), args4Log.toString());
+                    
         
         /* env */
         builder.environment().putAll(mEnv);

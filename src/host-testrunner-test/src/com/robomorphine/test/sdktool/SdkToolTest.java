@@ -1,5 +1,7 @@
 package com.robomorphine.test.sdktool;
 
+import com.robomorphine.test.log.ILog;
+import com.robomorphine.test.log.StdLog;
 import com.robomorphine.test.sdktool.SdkTool.Result;
 import com.robomorphine.test.sdktool.SdkTool.ToolListener;
 
@@ -35,8 +37,9 @@ public class SdkToolTest extends TestCase {
     public void testSdkTool_async() throws IOException, InterruptedException {
         File sdkPath = new File("r:\\repository\\dev\\bin\\android-sdk");
         File exePath = new File("r:\\repository\\dev\\bin\\android-sdk\\tools\\emulator-x86");
+        ILog logger = new StdLog();
         
-        final ToolsManager manager = new ToolsManager(sdkPath);
+        final ToolsManager manager = new ToolsManager(sdkPath, logger);
         SdkTool tool = manager.createTool(exePath);
         
         tool.addArgument("@Android-2.2", "-verbose");
@@ -87,7 +90,8 @@ public class SdkToolTest extends TestCase {
     
     public void testAapt_packageName() throws IOException {
         File path = new File("r:\\repository\\dev\\bin\\android-sdk\\");
-        ToolsManager manager = new ToolsManager(path);
+        ILog logger = new StdLog();
+        ToolsManager manager = new ToolsManager(path, logger);
         
         File apkFile = new File("r:\\repository\\dev\\src\\projects\\github\\robomorphine-testrunner\\bin\\debug\\tester.app.apk");
         String pkg = manager.createAaptTool().getPacakgeName(apkFile);
