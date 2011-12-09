@@ -6,6 +6,7 @@ import com.android.sdklib.ISdkLog;
 import com.android.sdklib.SdkManager;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.ISdkLog2ILog;
+import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.AdbTool;
 import com.robomorphine.test.sdktool.ToolsManager;
 
@@ -14,6 +15,7 @@ import java.io.File;
 public class TestManager {
     
     private final File mSdkPath;
+    private final ILog mOriginalLog;
     private final ILog mLog;
     private final ISdkLog mSdkLog;
     
@@ -25,17 +27,18 @@ public class TestManager {
     
     public TestManager(File sdkPath, ILog log) throws AndroidLocationException {
         mSdkPath = sdkPath;
-        mLog = log;
-        mSdkLog = new ISdkLog2ILog(log);
+        mOriginalLog = log;
+        mLog = new PrefixedLog(TestManager.class.getSimpleName(), log);
+        mSdkLog = new ISdkLog2ILog(new PrefixedLog("SDK", mOriginalLog));
         
         mSdkManager = SdkManager.createManager(sdkPath.getAbsolutePath(), mSdkLog);
         
-        mToolsManager = new ToolsManager(sdkPath, mLog);
+        mToolsManager = new ToolsManager(sdkPath, mOriginalLog);
         mAvdManager = new AvdManager(mSdkManager, mSdkLog);
     }
     
     public ILog getLogger() {
-        return mLog;
+        return mOriginalLog;
     }
     
     public ISdkLog getSdkLogger() {

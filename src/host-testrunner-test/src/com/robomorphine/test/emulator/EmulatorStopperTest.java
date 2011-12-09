@@ -18,7 +18,9 @@ public class EmulatorStopperTest extends TestCase {
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
         
-        EmulatorStopper stopper = new EmulatorStopper("emulator-5554", testManager);
-        assertTrue(stopper.stop());        
+        EmulatorStopper stopper = new EmulatorStopper(testManager);
+        assertTrue(stopper.stop("emulator-5554"));
+        
+        //assertTrue(stopper.stopAll());
     }
 }

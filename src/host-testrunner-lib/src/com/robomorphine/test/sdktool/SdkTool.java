@@ -1,6 +1,7 @@
 package com.robomorphine.test.sdktool;
 
 import com.robomorphine.test.log.ILog;
+import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.ProcessCompletionWaiter.CompletionListener;
 import com.robomorphine.test.sdktool.ProcessOutputHandler.HandlerListener;
 
@@ -113,7 +114,7 @@ public class SdkTool {
     SdkTool(File exePath, ToolsManager manager) {
         mExePath = exePath;        
         mManager = manager;
-        mLog = manager.getLogger();
+        mLog = new PrefixedLog(getClass().getSimpleName(), manager.getLogger());
     }
     
     private void assertState(State...states) {
