@@ -14,6 +14,8 @@ import java.io.File;
 
 public class TestManager {
     
+    private final static long ADB_CONNECTION_CHECK_INTERVAL = 500;
+    
     private final File mSdkPath;
     private final ILog mOriginalLog;
     private final ILog mLog;
@@ -65,7 +67,12 @@ public class TestManager {
         return mAdb != null && mAdb.isConnected();
     }
     
-    public void connectAdb() {
+    public void reconnectAdb() throws AdbConnectionException {
+        mAdb.restart();
+        connectAdb();
+    }
+    
+    public void connectAdb()  throws AdbConnectionException {
         try {
             AndroidDebugBridge.init(false);
             mLog.info("ADB initialized.");
@@ -75,13 +82,13 @@ public class TestManager {
         File path = AdbTool.getAdbPath(mSdkPath);
         mAdb = AndroidDebugBridge.createBridge(path.getAbsolutePath(), false);        
         if(mAdb == null) {
-            throw new IllegalStateException("Failed to start adb connection");
+            throw new AdbConnectionException("Failed to start adb connection");
         }
         mLog.info("ADB created.");
         
         while(!mAdb.hasInitialDeviceList()) {
             try {
-                Thread.sleep(250);
+                Thread.sleep(ADB_CONNECTION_CHECK_INTERVAL);
                 mLog.info("ADB connecting...");
             } catch(InterruptedException ex){
                 //ignore
