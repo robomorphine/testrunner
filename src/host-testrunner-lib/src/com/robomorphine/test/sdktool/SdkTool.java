@@ -138,6 +138,13 @@ public class SdkTool {
         }
     }
     
+    public void addArgument(List<String> args) {
+        assertState(State.IDLE);
+        for(String arg : args) {         
+            addArgument(arg);
+        }
+    }
+    
     public void setEnv(String name, String value) {
         assertState(State.IDLE);
         mEnv.put(name, value);

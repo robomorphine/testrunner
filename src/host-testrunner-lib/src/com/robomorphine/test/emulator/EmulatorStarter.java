@@ -80,7 +80,8 @@ public class EmulatorStarter {
         EmulatorTool emulator = mTestManager.getToolsManager().createEmulatorTool();
         emulator.addArgument("@"+avdName);
         emulator.addArgument("-prop");
-        emulator.addArgument(uuidProp);        
+        emulator.addArgument(uuidProp);
+        emulator.addArgument(emulatorArgs);
         emulator.startExecution();
         
         try{
