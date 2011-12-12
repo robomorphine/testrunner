@@ -25,7 +25,8 @@ public class TestManager {
     private AndroidDebugBridge mAdb;
     
     private final ToolsManager mToolsManager;
-    private final AvdManager mAvdManager;    
+    private final AvdManager mAvdManager;
+    private final ApkManager mApkManager;
     
     public TestManager(File sdkPath, ILog log) throws AndroidLocationException {
         mSdkPath = sdkPath;
@@ -37,6 +38,7 @@ public class TestManager {
         
         mToolsManager = new ToolsManager(sdkPath, mOriginalLog);
         mAvdManager = new AvdManager(mSdkManager, mSdkLog);
+        mApkManager = new ApkManager(this);
     }
     
     public ILog getLogger() {
@@ -52,6 +54,9 @@ public class TestManager {
     }
     
     public AndroidDebugBridge getAndroidDebugBridge() {
+        if(mAdb == null) {
+            throw new IllegalStateException("ADB is not connected.");
+        }
         return mAdb;
     }
     
@@ -61,6 +66,10 @@ public class TestManager {
     
     public AvdManager getAvdManager() {
         return mAvdManager;
+    }
+    
+    public ApkManager getApkManager() {
+        return mApkManager;
     }
     
     public boolean isAdbConnected() {
