@@ -2,17 +2,15 @@ package com.robomorphine.test.sdktool;
 
 import com.robomorphine.test.log.ILog;
 
-import org.python.core.util.ConcurrentHashSet;
-
 import java.io.File;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ToolsManager {
 
     private final File mSdkPath;
     private final ILog mLogger;
-    private Set<Process> mRunningProcesses = new ConcurrentHashSet<Process>();
+    private ConcurrentHashMap<Process, Boolean> mRunningProcesses = new ConcurrentHashMap<Process, Boolean>();
     
     public ToolsManager(File sdkPath, ILog log) {
         mSdkPath = sdkPath;
@@ -24,7 +22,7 @@ public class ToolsManager {
     }
     
     void onProcessStarted(Process process) {
-        mRunningProcesses.add(process);
+        mRunningProcesses.put(process, true);
     }
     
     void onProcessCompleted(Process process) {
@@ -32,7 +30,7 @@ public class ToolsManager {
     }
     
     public void terminate() {
-        for(Process process : new LinkedList<Process>(mRunningProcesses)) {
+        for(Process process : new LinkedList<Process>(mRunningProcesses.keySet())) {
             process.destroy();
             mRunningProcesses.remove(process);
         }

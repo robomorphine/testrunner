@@ -40,7 +40,8 @@ public class ApkManager {
             InstallException {
         long time = System.currentTimeMillis();
         mLog.info("Installing %s to %s...", apkFile.getName(), device.getSerialNumber());
-        device.installRemotePackage(apkFile.getAbsolutePath(), reinstall);
+        device.installPackage(apkFile.getAbsolutePath(), reinstall);
+        
         
         long delta = System.currentTimeMillis() - time;
         mLog.info("Installed %s to %s in %d seconds.", 
