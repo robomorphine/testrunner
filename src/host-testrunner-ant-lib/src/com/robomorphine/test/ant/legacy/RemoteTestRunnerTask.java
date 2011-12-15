@@ -1,4 +1,4 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.legacy;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
