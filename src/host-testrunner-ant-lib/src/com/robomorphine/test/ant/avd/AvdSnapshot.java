@@ -1,4 +1,4 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 public class AvdSnapshot {
 

@@ -1,4 +1,4 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 import com.android.sdklib.IAndroidTarget;
 
@@ -80,9 +80,9 @@ public class AvdScreen {
         RESOLUTION_ALIASES = Collections.unmodifiableMap(aliases);
     }
     
-    private final CreateAvdTask mCreateAvdTask;    
-    public AvdScreen(CreateAvdTask task) {
-        mCreateAvdTask = task;
+    private final AvdConfigTask mAvdTask;    
+    public AvdScreen(AvdConfigTask task) {
+        mAvdTask = task;
     }
     
     String mResolution = null;
@@ -100,12 +100,12 @@ public class AvdScreen {
             try {
                 mDensity = Integer.parseInt(density);
             } catch(NumberFormatException ex){
-                mCreateAvdTask.error("Failed to parse %s as density.", density);
+                mAvdTask.error("Failed to parse %s as density.", density);
             }
         } else {
             Integer value = DENISTY_ALIASES.get(density.toLowerCase());
             if(value == null) {
-                mCreateAvdTask.error("Density alias is not recognized: %s", density);
+                mAvdTask.error("Density alias is not recognized: %s", density);
             }
             mDensity = value;
         }
@@ -121,7 +121,7 @@ public class AvdScreen {
     
     public int convertToPx(int dp) {
         if(!hasDensity()) {
-            mCreateAvdTask.error("Screen density is not specified. " + 
+            mAvdTask.error("Screen density is not specified. " + 
                                   "If you've used \"dp\" in resolution you have to specify density.");
         }
         return (int)(1.0 * getDensity() / NORMAL_DENSITY * dp);
@@ -135,7 +135,7 @@ public class AvdScreen {
             }
             return size;
         } catch(NumberFormatException ex) {
-            mCreateAvdTask.error(ex, "Failed to parse resolution's size: %s.", value);            
+            mAvdTask.error(ex, "Failed to parse resolution's size: %s.", value);            
         }
         return 0;
     }
@@ -172,7 +172,7 @@ public class AvdScreen {
         } else {
             boolean verified = false;
             
-            IAndroidTarget target = mCreateAvdTask.getResolvedTarget();
+            IAndroidTarget target = mAvdTask.getResolvedTarget();
             while(target != null && !verified) {
                 for(String skin : target.getSkins()) {
                     if(skin.equals(mResolution)) {
@@ -202,7 +202,7 @@ public class AvdScreen {
         }
         
         
-        IAndroidTarget target = mCreateAvdTask.getResolvedTarget();
+        IAndroidTarget target = mAvdTask.getResolvedTarget();
         LinkedHashSet<String> skinSet = new LinkedHashSet<String>(); 
         while(target != null) {
             for(String skin : target.getSkins()) {
@@ -219,10 +219,10 @@ public class AvdScreen {
             skins.append(skin);
         }
         
-        mCreateAvdTask.error("Specified resolution \"%s\" is not a valid. \n"+
+        mAvdTask.error("Specified resolution \"%s\" is not a valid. \n"+
                 "Make sure it's a valid resolution alias (one of: %s); \n" + 
                 "Or a valid skin for current target %s (one of: %s); \n"+
                 "Or a valid resolution specifier (like: 100x200 or 120DP*300px).",
-                resolution, resolutionAliases, mCreateAvdTask.getTarget(), skins);    
+                resolution, resolutionAliases, mAvdTask.getTarget(), skins);    
      }
 }

@@ -1,18 +1,18 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 import com.android.sdklib.IAndroidTarget;
 import com.android.sdklib.ISystemImage;
 
 public class AvdAbiType {
 
-    private final CreateAvdTask mCreateAvdTask;
+    private final AvdConfigTask mAvdTask;
     private String mAbiTypeName;
-    public AvdAbiType(CreateAvdTask task) {
-        mCreateAvdTask = task;
+    public AvdAbiType(AvdConfigTask task) {
+        mAvdTask = task;
     }
     
     public void setType(String name) {
-        IAndroidTarget target = mCreateAvdTask.getResolvedTarget();
+        IAndroidTarget target = mAvdTask.getResolvedTarget();
         while(target != null) {
             ISystemImage [] images = target.getSystemImages();
             for(ISystemImage image : images) {
@@ -23,14 +23,14 @@ public class AvdAbiType {
             }
             target = target.getParent();
         }
-        mCreateAvdTask.error("Specified abi type \"%s\" is invalid for target %s", 
-                              name, mCreateAvdTask.getTarget());
+        mAvdTask.error("Specified abi type \"%s\" is invalid for target %s", 
+                              name, mAvdTask.getTarget());
     }
     
     public String getType() {
         if(mAbiTypeName == null) {
             
-            IAndroidTarget target = mCreateAvdTask.getResolvedTarget();
+            IAndroidTarget target = mAvdTask.getResolvedTarget();
             while(target != null) {
                 ISystemImage [] images = target.getSystemImages();
                 if(images != null && images.length > 0) {
@@ -41,8 +41,8 @@ public class AvdAbiType {
             }
             
             if(mAbiTypeName == null) {
-                mCreateAvdTask.error("No system images are available for target: %s", 
-                                      mCreateAvdTask.getTarget());
+                mAvdTask.error("No system images are available for target: %s", 
+                                mAvdTask.getTarget());
             }
         } 
         return mAbiTypeName;

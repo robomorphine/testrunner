@@ -1,4 +1,4 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 import java.util.HashMap;
 
@@ -24,7 +24,7 @@ public class AvdHardware {
             return mValue;
         }
         
-        public void verify(CreateAvdTask task) {
+        public void verify(AvdConfigTask task) {
             if(mKey == null || mKey.length() == 0 || mValue == null) {
                 task.error("Hardware argument \"%s\" must have both \"key\" and \"value\" speicifed.",
                             mKey, mValue);
@@ -64,25 +64,25 @@ public class AvdHardware {
         }
     }
     
-    private final CreateAvdTask mCreateAvdTask;
+    private final AvdConfigTask mAvdTask;
     private final HashMap<String, String> mHardware;
-    public AvdHardware(CreateAvdTask task, HashMap<String, String> hw) {
-        mCreateAvdTask = task;
+    public AvdHardware(AvdConfigTask task, HashMap<String, String> hw) {
+        mAvdTask = task;
         mHardware = hw;
     }
     
     public void addConfiguredArg(Arg arg) {
-        arg.verify(mCreateAvdTask);
+        arg.verify(mAvdTask);
         mHardware.put(arg.getKey(), arg.getValue());
     }
     
     public void addConfiguredRam(RamSize arg) {
-        arg.verify(mCreateAvdTask);
+        arg.verify(mAvdTask);
         mHardware.put(arg.getKey(), arg.getValue());
     }
     
     public void addConfiguredHeap(HeapSize arg) {
-        arg.verify(mCreateAvdTask);
+        arg.verify(mAvdTask);
         mHardware.put(arg.getKey(), arg.getValue());
     }
 }

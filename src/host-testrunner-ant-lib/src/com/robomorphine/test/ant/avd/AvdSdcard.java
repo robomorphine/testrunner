@@ -1,4 +1,4 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -29,9 +29,9 @@ public class AvdSdcard {
     private final static long GB_SCALE = 1 << 30;
     private final static Pattern SDCARD_SIZE_PATTERN = Pattern.compile("(\\d+)(.*)"); 
     
-    private final CreateAvdTask mCreateAvdTask;    
-    public AvdSdcard(CreateAvdTask task) {
-        mCreateAvdTask = task;
+    private final AvdConfigTask mAvdTask;    
+    public AvdSdcard(AvdConfigTask task) {
+        mAvdTask = task;
     }
     
     private static boolean isModifierFrom(String [] modifiers, String modifier) {
@@ -56,7 +56,7 @@ public class AvdSdcard {
         if(isModifierFrom(GB_MODIFIERS, modifier)) {
             return GB_SCALE; 
         }
-        mCreateAvdTask.error("Invalid sdcard size modifier: \"%s\".", modifier);
+        mAvdTask.error("Invalid sdcard size modifier: \"%s\".", modifier);
         return KB_SCALE;
     }
     
@@ -68,7 +68,7 @@ public class AvdSdcard {
         
         Matcher m = SDCARD_SIZE_PATTERN.matcher(size);
         if(!m.matches()) {
-            mCreateAvdTask.error("Value \"%s\" doesn't look like sdcard size.", size);
+            mAvdTask.error("Value \"%s\" doesn't look like sdcard size.", size);
         }
         
         String value = m.group(1);
@@ -79,7 +79,7 @@ public class AvdSdcard {
             long parsedValue = Integer.parseInt(value);
             mSize = scale * parsedValue;
         } catch(NumberFormatException ex) {
-            mCreateAvdTask.error("Failed to parse sdcard size: %s", size);
+            mAvdTask.error("Failed to parse sdcard size: %s", size);
         }
     }
     

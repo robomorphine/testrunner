@@ -16,12 +16,28 @@
 	         classname="com.robomorphine.test.ant.SetupTask"
 	         classpathref="testmanager.classpath" />
 	
+	<taskdef name="rbm-avd-config" loaderref="testmanager.loader"
+	                 classname="com.robomorphine.test.ant.avd.AvdConfigTask"
+	                 classpathref="testmanager.classpath" />
+	
 	<taskdef name="rbm-avd-create" loaderref="testmanager.loader"
 	             classname="com.robomorphine.test.ant.CreateAvdTask"
 	             classpathref="testmanager.classpath" />
 	
+	
 	<target name="default">
-    	<rbm-setup sdkdir="${sdk.dir}" />
+		<rbm-setup sdkdir="${sdk.dir}" />
+	    <rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
+            <abi type="armeabi-v7a" />
+            <snapshot enable="true" />
+            <sdcard size="10" />            
+            <screen resolution="100dp*123" density="hdpi" />
+            <hardware>
+                <ram size="1024" />
+                <heap size="32" />
+                <arg key="a" value="c" />
+            </hardware>
+	    </rbm-avd-config>
     	<rbm-avd-create name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
     		<abi type="armeabi-v7a" />
     		<snapshot enable="true" />
@@ -33,5 +49,6 @@
     			<arg key="a" value="b" />
     		</hardware>
     	</rbm-avd-create>
+		<rbm-avd-create name="test-avd15" avdconfig="avd15" force="true"/>
     </target>
 </project>

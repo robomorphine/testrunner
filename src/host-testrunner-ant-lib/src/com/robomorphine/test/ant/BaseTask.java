@@ -84,28 +84,28 @@ public class BaseTask extends Task {
         return null;
     }
     
-    protected void error(String format, Object...args) {
+    public void error(String format, Object...args) {
         error(null, format, args);        
     }
     
-    protected void error(Throwable ex, String format, Object...args) {
+    public void error(Throwable ex, String format, Object...args) {
         String msg = String.format(format, args);
         throw new BuildException(msg, ex, getLocation());
     }
     
-    protected void warn(String format, Object...args) {
+    public void warn(String format, Object...args) {
         log(String.format(format, args), Project.MSG_WARN);        
     }
     
-    protected void info(String format, Object...args) {
+    public void info(String format, Object...args) {
         log(String.format(format, args), Project.MSG_INFO);        
     }
     
-    protected void dbg(String format, Object...args) {
+    public void dbg(String format, Object...args) {
         log(String.format(format, args), Project.MSG_DEBUG);        
     }
     
-    protected void verbose(String format, Object...args) {
+    public void verbose(String format, Object...args) {
         log(String.format(format, args), Project.MSG_VERBOSE);        
     }
 }
