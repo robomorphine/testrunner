@@ -4,27 +4,29 @@ package com.robomorphine.test.ant;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
+import com.android.sdklib.SdkManager;
 import com.robomorphine.test.TestManager;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Reference;
 
 public class BaseTask extends Task {
     
     protected static final String DEFAULT_CONTEXT_REF_NAME = "rbm-context";
      
-    private Reference mContextRef;
+    private String mContextRefName = DEFAULT_CONTEXT_REF_NAME;
+    private String mDeviceSerialNumber;
     private Context mContext;
     
-    public void setContextRef(Reference ref) {
-        mContextRef = ref;
+    public void setContextRef(String ref) {
+        mContextRefName = ref;
     }
     
     public Context getContext() {
         if(mContext != null) return mContext;
-        if(mContextRef != null) {
-            mContext = (Context)mContextRef.getReferencedObject(getProject());
+        if(mContextRefName != null) {
+            mContext = (Context)getProject().getReference(mContextRefName);
             return mContext;
         }
         mContext = (Context)getProject().getReference(DEFAULT_CONTEXT_REF_NAME);
@@ -52,7 +54,16 @@ public class BaseTask extends Task {
         return adb;
     }
     
+    public SdkManager getSdkManager() {
+        TestManager manager = getTestManager();
+        return manager.getSdkManager();
+    }
+    
     public String getDeviceSerialNumber() {
+        if(mDeviceSerialNumber != null) {
+            return mDeviceSerialNumber;
+        }
+        
         String serialNo = getContext().getDeviceSerialNumber();
         if(serialNo == null) {
             error("Device serial number is not set.");
@@ -82,4 +93,19 @@ public class BaseTask extends Task {
         throw new BuildException(msg, ex, getLocation());
     }
     
+    protected void warn(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_WARN);        
+    }
+    
+    protected void info(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_INFO);        
+    }
+    
+    protected void dbg(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_DEBUG);        
+    }
+    
+    protected void verbose(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_VERBOSE);        
+    }
 }

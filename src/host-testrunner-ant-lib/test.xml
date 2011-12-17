@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="tester" default="default">
+    
+	<property file="../../local.properties" />
+	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
+	
+	<path id="testmanager.classpath">
+        <fileset dir="${sdk.dir}/tools/lib" includes="*.jar" />
+		<pathelement path="bin" />
+		<pathelement path="../host-testrunner-lib/bin" />
+    </path>
+	
+    <classloader name="testmanager.loader" classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-setup" loaderref="testmanager.loader"
+	         classname="com.robomorphine.test.ant.SetupTask"
+	         classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-create-avd" loaderref="testmanager.loader"
+	             classname="com.robomorphine.test.ant.CreateAvdTask"
+	             classpathref="testmanager.classpath" />
+	
+    <target name="default">
+    	<rbm-setup sdkdir="${sdk.dir}" />
+    	<rbm-create-avd name="test-avd-name" target="android-9" >
+    		<sdcard size="102430K" />
+    	</rbm-create-avd>
+    </target>
+</project>

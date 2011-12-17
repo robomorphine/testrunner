@@ -6,23 +6,25 @@ import com.android.sdklib.ISdkLog;
 import com.android.sdklib.ISystemImage;
 import com.android.sdklib.SdkManager;
 import com.android.sdklib.internal.avd.AvdInfo;
+import com.android.sdklib.internal.avd.AvdManager;
 
 import java.io.File;
 import java.util.HashMap;
 
-public class AvdManager {
+public class AvdHelper {
     
     private final SdkManager mSdkManager;
     private final ISdkLog mSdkLog;
     private final com.android.sdklib.internal.avd.AvdManager mSdkAvdManager;
         
-    AvdManager(SdkManager sdkManager, ISdkLog sdkLogger) throws AndroidLocationException {
+    AvdHelper(SdkManager sdkManager, AvdManager avdManager, ISdkLog sdkLogger)
+            throws AndroidLocationException {
         mSdkManager = sdkManager;
         mSdkLog = sdkLogger;
-        mSdkAvdManager = new com.android.sdklib.internal.avd.AvdManager(mSdkManager, mSdkLog);
+        mSdkAvdManager = avdManager;
     }
     
-    public AvdInfo createAvd(String avdName, String targetId, int sdcardSizeMb,
+    public AvdInfo createAvd(String avdName, String targetId, int sdcardSizeKb,
             HashMap<String, String> hardwareConfig, boolean enableSnapshot, boolean removePrevious)
             throws AndroidLocationException {
         
@@ -40,8 +42,8 @@ public class AvdManager {
         abiType = images[0].getAbiType();
         
         String sdcardSize = null;
-        if(sdcardSizeMb > 0) {
-            sdcardSize = String.format("%dM", sdcardSizeMb);
+        if(sdcardSizeKb > 0) {
+            sdcardSize = String.format("%dK", sdcardSizeKb);
         }
                  
         AvdInfo info = mSdkAvdManager.createAvd(avdPath, avdName, 

@@ -1,0 +1,14 @@
+<project>
+    <rbm-setup sdkdir="path.to.dir" />
+
+    <rbm-create-avd name="emulator-2.2" target="2.2" force="true" >
+        <sdcard size="1" />
+        <display resolution="100x100" density="160;mdpi;hdpi;etc" />
+        <snapshot enable="true" />
+        <hardware>
+            <arg key="a" value="1" />
+            <arg key="b" value="2" />
+            <arg key="c" value="3" />
+        </hardware>
+    </rbm-create-avd>
+</project>

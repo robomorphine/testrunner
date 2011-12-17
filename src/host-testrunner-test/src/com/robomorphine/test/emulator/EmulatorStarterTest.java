@@ -3,7 +3,7 @@ package com.robomorphine.test.emulator;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.internal.avd.AvdInfo;
 import com.robomorphine.test.AdbConnectionException;
-import com.robomorphine.test.AvdManager;
+import com.robomorphine.test.AvdHelper;
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.StdLog;
@@ -26,10 +26,13 @@ public class EmulatorStarterTest extends TestCase {
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
         
-        AvdManager avd = testManager.getAvdManager();
+        AvdHelper avd = testManager.getAvdHelper();
         
         String avdName = "test-avd";
-        AvdInfo info = avd.createAvd(avdName, "android-4", -1, new HashMap<String, String>(), false, true);
+        AvdInfo info = avd.createAvd(avdName, "android-4", -1, new HashMap<String, String>(),
+                false, true);
+        
+        assertNotNull(info);
         
         EmulatorStarter starter = new EmulatorStarter(testManager);
         String serialNo = starter.start(avdName, new LinkedList<String>());

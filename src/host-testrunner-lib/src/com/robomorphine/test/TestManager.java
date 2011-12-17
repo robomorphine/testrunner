@@ -4,6 +4,7 @@ import com.android.ddmlib.AndroidDebugBridge;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.ISdkLog;
 import com.android.sdklib.SdkManager;
+import com.android.sdklib.internal.avd.AvdManager;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.ISdkLog2ILog;
 import com.robomorphine.test.log.PrefixedLog;
@@ -25,6 +26,7 @@ public class TestManager {
     private AndroidDebugBridge mAdb;
     
     private final ToolsManager mToolsManager;
+    private final AvdHelper mAvdHelper;
     private final AvdManager mAvdManager;
     private final ApkManager mApkManager;
     
@@ -38,6 +40,7 @@ public class TestManager {
         
         mToolsManager = new ToolsManager(sdkPath, mOriginalLog);
         mAvdManager = new AvdManager(mSdkManager, mSdkLog);
+        mAvdHelper = new AvdHelper(mSdkManager, mAvdManager, mSdkLog);
         mApkManager = new ApkManager(this);
     }
     
@@ -62,6 +65,10 @@ public class TestManager {
     
     public ToolsManager getToolsManager() {
         return mToolsManager;
+    }
+    
+    public AvdHelper getAvdHelper() {
+        return mAvdHelper;
     }
     
     public AvdManager getAvdManager() {

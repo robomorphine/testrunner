@@ -16,7 +16,7 @@ public class AvdManagerTest extends TestCase {
         ILog logger = new StdLog();
         
         TestManager testManager = new TestManager(path, logger);                               
-        AvdManager avdManager = testManager.getAvdManager();
+        AvdHelper avdManager = testManager.getAvdHelper();
         
         HashMap<String, String> config = new HashMap<String, String>();
         config.put("hw.ramSize", "1024");
@@ -32,7 +32,7 @@ public class AvdManagerTest extends TestCase {
         ILog logger = new StdLog();
         
         TestManager testManager = new TestManager(path, logger);                               
-        AvdManager avdManager = testManager.getAvdManager();
+        AvdHelper avdManager = testManager.getAvdHelper();
         
         HashMap<String, String> config = new HashMap<String, String>();       
         AvdInfo avdInfo = avdManager.createAvd("test-name2", "android-14", 
