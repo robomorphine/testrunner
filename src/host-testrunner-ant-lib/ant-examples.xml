@@ -11,4 +11,10 @@
             <arg key="c" value="3" />
         </hardware>
     </rbm-create-avd>
+    
+    <rbm-start-emulator avd="test-avd" connect-timeout="100" boot-timeout="100" attempts="3">
+        <arg value="--no-sound" />
+        <arg value="--no-luck" />
+    </rbm-start-emulator>
+    
 </project>

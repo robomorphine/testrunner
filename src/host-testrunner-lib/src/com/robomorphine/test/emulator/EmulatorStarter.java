@@ -15,8 +15,8 @@ import java.util.UUID;
 public class EmulatorStarter {
     
     private final static String DEVICE_PROP_NAME = "rbm.starter.uuid";
-    private final static long DEFAULT_CONNECT_TIMEOUT = 60 * 2 * 1000;
-    private final static long DEFAULT_BOOT_TIMEOUT = 60 * 5 * 1000;
+    public final static long DEFAULT_CONNECT_TIMEOUT = 60 * 2 * 1000;
+    public final static long DEFAULT_BOOT_TIMEOUT = 60 * 5 * 1000;
     
     private final long mConnectTimeout; 
     private final long mBootTimeout;

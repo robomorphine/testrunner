@@ -20,15 +20,18 @@
 	                 classname="com.robomorphine.test.ant.avd.AvdConfigTask"
 	                 classpathref="testmanager.classpath" />
 	
-	<taskdef name="rbm-avd-create" loaderref="testmanager.loader"
+	<taskdef name="rbm-create-avd" loaderref="testmanager.loader"
 	             classname="com.robomorphine.test.ant.CreateAvdTask"
 	             classpathref="testmanager.classpath" />
 	
 
-    <taskdef name="rbm-avd-delete" loaderref="testmanager.loader"
+    <taskdef name="rbm-delete-avd" loaderref="testmanager.loader"
                  classname="com.robomorphine.test.ant.DeleteAvdTask"
                  classpathref="testmanager.classpath" />
 	
+	<taskdef name="rbm-start-emulator" loaderref="testmanager.loader"
+	                 classname="com.robomorphine.test.ant.StartEmulatorTask"
+	                 classpathref="testmanager.classpath" />
 	
 	<target name="default">
 		<rbm-setup sdkdir="${sdk.dir}" />
@@ -36,26 +39,29 @@
             <abi type="armeabi-v7a" />
             <snapshot enable="true" />
             <sdcard size="10" />            
-            <screen resolution="100dp*123" density="hdpi" />
+            <screen resolution="large" density="hdpi" />
             <hardware>
                 <ram size="1024" />
                 <heap size="32" />
                 <arg key="a" value="c" />
             </hardware>
 	    </rbm-avd-config>
-    	<rbm-avd-create name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
+    	<rbm-create-avd name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
     		<abi type="armeabi-v7a" />
     		<snapshot enable="true" />
     		<sdcard size="10" />    		
-    		<screen resolution="100dp*123" density="hdpi" />
+    		<screen resolution="xlarge" density="hdpi" />
     		<hardware>
     			<ram size="1024" />
-    			<heap size="32" />
+    			<heap size="64" />
     			<arg key="a" value="b" />
     		</hardware>
-    	</rbm-avd-create>
-		<rbm-avd-create name="test-avd15" avdconfig="avd15" force="true"/>
-		<rbm-avd-delete name="test-avd15" />
-		<rbm-avd-delete name="test-avd15" />
+    	</rbm-create-avd>
+		
+		<rbm-create-avd name="test-avd15" avdconfig="avd15" force="true"/>
+		<rbm-start-emulator avd="test-avd15" connectTimeout="100000" bootTimeout="300000" attempts="3" >
+			<arg value="-no-audio" />
+		</rbm-start-emulator>
+		<rbm-delete-avd name="test-avd15" />
     </target>
 </project>
