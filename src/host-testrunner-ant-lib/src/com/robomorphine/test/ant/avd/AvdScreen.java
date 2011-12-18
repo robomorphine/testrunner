@@ -87,7 +87,7 @@ public class AvdScreen {
     
     String mResolution = null;
     String mResolvedResolution = null;
-    int mDensity = NORMAL_DENSITY;
+    int mDensity = -1;
     
     /**
      * Density. Can be specified using a number or one of the aliases.
