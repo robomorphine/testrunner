@@ -1,5 +1,6 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.emulator;
 
+import com.robomorphine.test.ant.BaseTask;
 import com.robomorphine.test.emulator.EmulatorStopper;
 
 import org.apache.tools.ant.BuildException;

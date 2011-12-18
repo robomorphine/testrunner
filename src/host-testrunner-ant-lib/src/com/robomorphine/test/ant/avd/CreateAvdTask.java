@@ -1,6 +1,5 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
-import com.robomorphine.test.ant.avd.AvdConfigTask;
 
 import org.apache.tools.ant.BuildException;
 

@@ -21,29 +21,70 @@
 	                 classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-create-avd" loaderref="testmanager.loader"
-	             classname="com.robomorphine.test.ant.CreateAvdTask"
+	             classname="com.robomorphine.test.ant.avd.CreateAvdTask"
 	             classpathref="testmanager.classpath" />
 	
 
     <taskdef name="rbm-delete-avd" loaderref="testmanager.loader"
-                 classname="com.robomorphine.test.ant.DeleteAvdTask"
+                 classname="com.robomorphine.test.ant.avd.DeleteAvdTask"
                  classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-start-emulator" loaderref="testmanager.loader"
-	                 classname="com.robomorphine.test.ant.StartEmulatorTask"
-	                 classpathref="testmanager.classpath" />
+                 classname="com.robomorphine.test.ant.emulator.StartEmulatorTask"
+                 classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-stop-emulator" loaderref="testmanager.loader"
-	                     classname="com.robomorphine.test.ant.StopEmulatorTask"
-	                     classpathref="testmanager.classpath" />
+                 classname="com.robomorphine.test.ant.emulator.StopEmulatorTask"
+                 classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-stop-all-emulators" loaderref="testmanager.loader"
-	                      classname="com.robomorphine.test.ant.StopEmulatorsTask"
+                  classname="com.robomorphine.test.ant.emulator.StopEmulatorsTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-lock-device" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.LockDeviceTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-unlock-device" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.UnlockDeviceTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-get-apk-package" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.GetApkPackageTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-install-apk" loaderref="testmanager.loader"
+	                  classname="com.robomorphine.test.ant.device.InstallApkTask"
+	                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-uninstall-apk" loaderref="testmanager.loader"
+	                      classname="com.robomorphine.test.ant.device.UninstallApkTask"
 	                      classpathref="testmanager.classpath" />
 	
-	<target name="default">
+	<target name="default" >
+	    <rbm-setup sdkdir="${sdk.dir}" />
+	    
+		<property name="tester.apk" location="../../bin/debug/tester.app.apk" />
+		<property name="tested.apk" location="../../bin/debug/tested.app.apk" />
+			
+		<rbm-get-apk-package file="${tested.apk}" property="tested.package" />
+		<rbm-get-apk-package file="${tester.apk}" property="tester.package" />
+		<echo>${tested.package}</echo>
+		<echo>${tester.package}</echo>
+		
+		<rbm-lock-device serial="emulator-5554" />
+		<rbm-install-apk file="${tested.apk}"/>
+		<rbm-install-apk file="${tested.apk}"/>
+		<rbm-uninstall-apk package="${tested.package}" />
+		<rbm-uninstall-apk file="${tester.apk}" />
+		
+		<rbm-unlock-device />
+	</target>
+	
+	<target name="default-create-and-start">
 		<rbm-setup sdkdir="${sdk.dir}" />
-	    <rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
+	    
+		<rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
             <abi type="armeabi-v7a" />
             <snapshot enable="true" />
             <sdcard size="10" />            
@@ -54,6 +95,7 @@
                 <arg key="a" value="c" />
             </hardware>
 	    </rbm-avd-config>
+		
     	<rbm-create-avd name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
     		<abi type="armeabi-v7a" />
     		<snapshot enable="true" />
@@ -64,14 +106,14 @@
     			<heap size="64" />
     			<arg key="a" value="b" />
     		</hardware>
-    	</rbm-create-avd>
-				
+    	</rbm-create-avd>				
 		<rbm-create-avd name="test-avd15" avdconfig="avd15" force="true"/>
 		
 		<rbm-stop-all-emulators />
 		<rbm-start-emulator avd="test-avd15" serialProperty="emulator-serial" >
 			<arg value="-no-audio" />
 		</rbm-start-emulator>
+		
 		<rbm-stop-emulator serial="${emulator-serial}" />
 		<rbm-delete-avd name="test-avd15" />
     </target>

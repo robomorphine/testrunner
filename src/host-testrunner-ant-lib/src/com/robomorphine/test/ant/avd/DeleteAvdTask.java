@@ -1,8 +1,9 @@
-package com.robomorphine.test.ant;
+package com.robomorphine.test.ant.avd;
 
 import com.android.sdklib.internal.avd.AvdInfo;
 import com.android.sdklib.internal.avd.AvdManager;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.ant.BaseTask;
 
 import org.apache.tools.ant.BuildException;
 

@@ -44,8 +44,8 @@ public class ApkManager {
         
         
         long delta = System.currentTimeMillis() - time;
-        mLog.info("Installed %s to %s in %d seconds.", 
-                  apkFile.getName(), device.getSerialNumber(), delta/1000);
+        mLog.info("Installed %s to %s in %.2f seconds.", 
+                  apkFile.getName(), device.getSerialNumber(), delta/1000.0);
     }
     
     public void uninstall(String deviceSerialNo, File apkFile) throws IOException, InstallException {
@@ -65,7 +65,12 @@ public class ApkManager {
     }
     
     public void uninstall(IDevice device, String pkgName) throws IOException, InstallException {
+        mLog.info("Uninstalling %s...", pkgName);
+        long time = System.currentTimeMillis();
         device.uninstallPackage(pkgName);
+        long delta = System.currentTimeMillis() - time;
+        
+        mLog.info("Uninstalled %s in %.2f seconds.", pkgName, delta/1000.0);
     }
     
   }

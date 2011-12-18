@@ -23,6 +23,10 @@ public class BaseTask extends Task {
         mContextRefName = ref;
     }
     
+    public void setSerial(String deviceSerial) {
+        mDeviceSerialNumber = deviceSerial;
+    }
+    
     public Context getContext() {
         if(mContext != null) return mContext;
         if(mContextRefName != null) {
@@ -73,6 +77,10 @@ public class BaseTask extends Task {
     
     public IDevice getDevice() {
         String serialNo = getDeviceSerialNumber();
+        if(serialNo == null) {
+            error("No device is locked to context.");
+        }
+        
         AndroidDebugBridge adb = getAdb();
         
         for(IDevice device : adb.getDevices()) {
