@@ -33,13 +33,21 @@
 	                 classname="com.robomorphine.test.ant.StartEmulatorTask"
 	                 classpathref="testmanager.classpath" />
 	
+	<taskdef name="rbm-stop-emulator" loaderref="testmanager.loader"
+	                     classname="com.robomorphine.test.ant.StopEmulatorTask"
+	                     classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-stop-all-emulators" loaderref="testmanager.loader"
+	                      classname="com.robomorphine.test.ant.StopEmulatorsTask"
+	                      classpathref="testmanager.classpath" />
+	
 	<target name="default">
 		<rbm-setup sdkdir="${sdk.dir}" />
 	    <rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
             <abi type="armeabi-v7a" />
             <snapshot enable="true" />
             <sdcard size="10" />            
-            <screen resolution="large" density="hdpi" />
+	        <screen resolution="QVGA" density="hdpi" />
             <hardware>
                 <ram size="1024" />
                 <heap size="32" />
@@ -57,11 +65,14 @@
     			<arg key="a" value="b" />
     		</hardware>
     	</rbm-create-avd>
-		
+				
 		<rbm-create-avd name="test-avd15" avdconfig="avd15" force="true"/>
-		<rbm-start-emulator avd="test-avd15" connectTimeout="100000" bootTimeout="300000" attempts="3" >
+		
+		<rbm-stop-all-emulators />
+		<rbm-start-emulator avd="test-avd15" serialProperty="emulator-serial" >
 			<arg value="-no-audio" />
 		</rbm-start-emulator>
+		<rbm-stop-emulator serial="${emulator-serial}" />
 		<rbm-delete-avd name="test-avd15" />
     </target>
 </project>
