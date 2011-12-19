@@ -7,7 +7,7 @@
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="12"/>
     
     <instrumentation android:targetPackage="com.robomorphine.tested.app" android:name="android.test.InstrumentationTestRunner" />    
-    <instrumentation android:targetPackage="com.robomorphine.tested.app" android:name="android.test.RobomorphineTestRunner" />
+    <instrumentation android:targetPackage="com.robomorphine.tested.app" android:name="com.robomorphine.test.runner.RobomorphineTestRunner" />
     
     <application android:icon="@drawable/icon" android:label="@string/app_name" >
     	<uses-library android:name="android.test.runner" />

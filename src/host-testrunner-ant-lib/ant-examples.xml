@@ -17,4 +17,27 @@
         <arg value="--no-luck" />
     </rbm-start-emulator>
     
+    <rbm-run-tests serial="serial" package="name" runner="name" >
+        <apks fileset="">
+            <tester file="" />
+            <tested file="" />
+            <dependency file="" />
+            <dependency file="" />
+            <dependency file="" />
+            <dependency file="" />s
+        </apks>
+        <listeners>
+            <junitlistener file="filename.ext"/>
+            <listenerref id="" />
+            <listener />
+        </listeners>
+        <args>
+            <arg key="" value="" />
+            <coverage enable="true" />
+            <debug enable="true" />
+            <size value="" />
+            <logonly enable="true" />
+        </args>
+    </rbm-run-tests>
+    
 </project>

@@ -61,6 +61,10 @@
 	                      classname="com.robomorphine.test.ant.device.UninstallApkTask"
 	                      classpathref="testmanager.classpath" />
 	
+	<taskdef name="rbm-run-tests" loaderref="testmanager.loader"
+	                          classname="com.robomorphine.test.ant.device.runner.RunTestsTask"
+	                          classpathref="testmanager.classpath" />
+	
 	<target name="default" >
 	    <rbm-setup sdkdir="${sdk.dir}" />
 	    
@@ -72,11 +76,35 @@
 		<echo>${tested.package}</echo>
 		<echo>${tester.package}</echo>
 		
-		<rbm-lock-device serial="emulator-5554" />
-		<rbm-install-apk file="${tested.apk}"/>
-		<rbm-install-apk file="${tested.apk}"/>
-		<rbm-uninstall-apk package="${tested.package}" />
-		<rbm-uninstall-apk file="${tester.apk}" />
+		<rbm-lock-device device="true" />
+		<!--rbm-install-apk file="${tested.apk}"/>
+		<rbm-install-apk file="${tester.apk}"/-->
+		
+		<fileset dir="../../bin/debug/" id="apks" >
+			<include name="*.apk"/>
+		</fileset>
+		
+		<rbm-run-tests package="${tester.package}" >
+			<apks>
+				<tester file="${tester.apk}" />
+				<apk file="${tested.apk}" />
+				<apk file="${tested.apk}" />
+			    <apk file="${tested.apk}" />
+				<fileset refid="apks" />
+			</apks>
+			<args>
+			  <coverage enable="false" />
+			  <logonly enable="true" />
+			  <debug enable="false" />
+			  <class>
+			  	<name name="com.robomorphine.tester.MainActivityTest" />
+			  	<name name="com.robomorphine.tester.ExampleTestB" />
+			  </class>
+			</args>
+		</rbm-run-tests>
+		
+		<!--rbm-uninstall-apk package="${tested.package}" />
+		<rbm-uninstall-apk file="${tester.apk}" /-->
 		
 		<rbm-unlock-device />
 	</target>

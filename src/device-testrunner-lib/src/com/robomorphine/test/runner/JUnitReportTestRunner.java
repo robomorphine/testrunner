@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.robomorphine.test.testrunner;
+package com.robomorphine.test.runner;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.robomorphine.test.testrunner;
+package com.robomorphine.test.runner;
 
 import org.xmlpull.v1.XmlSerializer;
 

@@ -1,4 +1,4 @@
-package com.robomorphine.test.testrunner;
+package com.robomorphine.test.runner;
 
 import java.util.ArrayList;
 import java.util.List;
