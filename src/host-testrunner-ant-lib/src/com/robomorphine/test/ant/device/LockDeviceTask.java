@@ -11,7 +11,7 @@ public class LockDeviceTask extends BaseTask {
     private String mSerial;
     private boolean mVerify = true;
     private Boolean mIsEmulator = null;
-    private boolean mLockFirst = false;
+    private boolean mUseFirst = false;
     
     public void setSerial(String serial) {
         mSerial = serial;
@@ -35,8 +35,8 @@ public class LockDeviceTask extends BaseTask {
         mIsEmulator = !device;
     }
     
-    public void setLockFirst(boolean lockFirst) {
-        mLockFirst = lockFirst;
+    public void setUseFirst(boolean lockFirst) {
+        mUseFirst = lockFirst;
     }
     
     @Override
@@ -80,7 +80,7 @@ public class LockDeviceTask extends BaseTask {
             }
             
             if(multiple) {
-                if(mLockFirst) {
+                if(mUseFirst) {
                     warn("Multiple devices were available, locking first device.");
                 } else {
                     error("More than one device is available. Can only lock single device.");

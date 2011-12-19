@@ -7,8 +7,7 @@ import org.apache.tools.ant.BuildException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class RunnerArgs {
@@ -38,12 +37,15 @@ public class RunnerArgs {
             return mValue;
         }
         
+        public void onConfigured(BaseTask task) {
+        }
+        
         public void verify(BaseTask task) {
-            if(mKey == null) {
+            if(getKey() == null) {
                 task.error("TestRunner arguments must have key specified.");
             }
             
-            if(mValue == null) {
+            if(getValue() == null) {
                 task.error("TestRunner arguments must have value specified.");
             }
         }
@@ -122,7 +124,7 @@ public class RunnerArgs {
             }
         }
         
-        private List<String> mNames = new LinkedList<String>();        
+        private Set<String> mNames = new LinkedHashSet<String>();        
         public TestClassArg() {
             super("class", "name");
         }
@@ -131,23 +133,27 @@ public class RunnerArgs {
             setValue(name);
         }
         
-        public void setNames(List<String> names) {
-            StringBuilder builder = new StringBuilder();
-            for(String name : names) {
+        public void addConfiguredName(ClassName className) {
+            if(className.getName() == null) {
+                throw new BuildException("Class name attribute not specified");
+            }
+            mNames.add(className.getName());
+        }
+        
+        @Override
+        public void onConfigured(BaseTask task) {
+            if(getValue() != null) {
+                mNames.add(getValue());
+            }
+            
+            StringBuilder builder = new StringBuilder();            
+            for(String name : mNames) {
                 if(builder.length() > 0) {
                     builder.append(",");
                 }
                 builder.append(name);
             }
             setValue(builder.toString());
-        }
-        
-        public void addConfiguredName(ClassName className) {
-            if(className.getName() == null) {
-                throw new BuildException("Class name attribute not specified");
-            }
-            mNames.add(className.getName());
-            setNames(mNames);
         }
     }
     
@@ -159,6 +165,7 @@ public class RunnerArgs {
     }
     
     private void addBaseArg(BaseArg arg) {
+        arg.onConfigured(mTask);
         if(!arg.allowMultiple()) {
             if(mExistingArgType.contains(arg.getClass())) {
                 mTask.error("Mutltiple entries of %s are not allowed.", arg.getClass().getSimpleName());

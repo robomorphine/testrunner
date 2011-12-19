@@ -76,7 +76,7 @@
 		<echo>${tested.package}</echo>
 		<echo>${tester.package}</echo>
 		
-		<rbm-lock-device device="true" />
+		<rbm-lock-device device="false" />
 		<!--rbm-install-apk file="${tested.apk}"/>
 		<rbm-install-apk file="${tester.apk}"/-->
 		
@@ -84,7 +84,7 @@
 			<include name="*.apk"/>
 		</fileset>
 		
-		<rbm-run-tests package="${tester.package}" >
+		<rbm-run-tests package="${tester.package}" uninstall="false">
 			<apks>
 				<tester file="${tester.apk}" />
 				<apk file="${tested.apk}" />
@@ -96,9 +96,8 @@
 			  <coverage enable="false" />
 			  <logonly enable="true" />
 			  <debug enable="false" />
-			  <class>
+			  <class name="com.robomorphine.tester.ExampleTestB">
 			  	<name name="com.robomorphine.tester.MainActivityTest" />
-			  	<name name="com.robomorphine.tester.ExampleTestB" />
 			  </class>
 			</args>
 		</rbm-run-tests>

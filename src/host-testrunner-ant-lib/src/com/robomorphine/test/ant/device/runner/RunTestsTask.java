@@ -20,7 +20,7 @@ public class RunTestsTask extends BaseTask {
     private String mRunnerName = DEFAULT_RUNNER_NAME;
     private RunnerArgs mArgs = new RunnerArgs(this);
     private RunnerApks mApks = new RunnerApks(this);
-    
+    private boolean mUninstall = true;
     private boolean mFailOnError = false;
     
     
@@ -36,6 +36,10 @@ public class RunTestsTask extends BaseTask {
         mFailOnError = fail;
     }
     
+    public void setUninstall(boolean uninstall) {
+        mUninstall = uninstall;
+    }
+    
     public RunnerArgs createArgs() {
         return mArgs;
     }
@@ -44,11 +48,11 @@ public class RunTestsTask extends BaseTask {
         return mApks;
     }
     
-    private void installApks(List<File> apks) {
+    private void installApks(List<File> apks, boolean reinstall) {
         ApkManager apkManager = getTestManager().getApkManager();
         for(File apk : apks) {
             try {
-                apkManager.install(getDevice(), apk, false);
+                apkManager.install(getDevice(), apk, reinstall);
             } catch(Exception ex) {
                 error(ex, "Failed to install apk: %s", apk.getAbsolutePath());
             }
@@ -90,8 +94,10 @@ public class RunTestsTask extends BaseTask {
         }
         
         List<File> apks = mApks.getApks();
-        uninstallApks(apks, false);
-        installApks(apks);        
+        if(mUninstall) {
+            uninstallApks(apks, false);
+        }
+        installApks(apks, !mUninstall);/* if not uninstalled, use reinstall */        
         
         DefaultTestRunListener listener = new DefaultTestRunListener(this);
         RemoteAndroidTestRunner runner = new RemoteAndroidTestRunner(mPackageName, mRunnerName, getDevice());
@@ -112,7 +118,8 @@ public class RunTestsTask extends BaseTask {
             error("Failing because %d tests failed.", listener.getFailedTestCount());
         }
         
-        uninstallApks(apks, false);
-        
+        if(mUninstall) {
+            uninstallApks(apks, false);
+        }
     }
 }
