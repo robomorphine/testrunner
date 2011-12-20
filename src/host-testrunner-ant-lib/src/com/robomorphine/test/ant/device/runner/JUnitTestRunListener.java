@@ -253,7 +253,7 @@ public class JUnitTestRunListener implements ITestRunListener {
                 FileOutputStream fout = new FileOutputStream(reportFile);
                 
                 try {
-                    marshaller.marshal(this, fout);
+                    marshaller.marshal(suite, fout);
                 } finally {
                     fout.close();
                 }
