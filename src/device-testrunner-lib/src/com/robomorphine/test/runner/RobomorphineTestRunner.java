@@ -1,6 +1,6 @@
 package com.robomorphine.test.runner;
 
 
-public class RobomorphineTestRunner extends JUnitReportTestRunner {
+public class RobomorphineTestRunner extends FilterTestRunner {
     
 }
