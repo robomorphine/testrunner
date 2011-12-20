@@ -85,6 +85,7 @@
 		</fileset>
 		
 		<rbm-run-tests package="${tester.package}" uninstall="false">
+			<junit dir="bin" multiple="true" />
 			<apks>
 				<tester file="${tester.apk}" />
 				<apk file="${tested.apk}" />
@@ -96,7 +97,7 @@
 			  <coverage enable="false" />
 			  <logonly enable="true" />
 			  <debug enable="false" />
-			  <class name="com.robomorphine.tester.ExampleTestB">
+			  <class name="com.robomorphine.tester.ExampleTestA">
 			  	<name name="com.robomorphine.tester.MainActivityTest" />
 			  </class>
 			</args>
