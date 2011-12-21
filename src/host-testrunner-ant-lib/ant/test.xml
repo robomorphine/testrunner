@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tester" default="default">
+<project name="tester" default="default" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
@@ -49,23 +49,63 @@
                   classname="com.robomorphine.test.ant.device.UnlockDeviceTask"
                   classpathref="testmanager.classpath" />
 	
+	<taskdef name="rbm-get-locked-device" loaderref="testmanager.loader"
+	              classname="com.robomorphine.test.ant.device.GetLockedDeviceTask"
+	              classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-get-device-property" loaderref="testmanager.loader"
+              classname="com.robomorphine.test.ant.device.GetDevicePropertyTask"
+              classpathref="testmanager.classpath" />
+	
 	<taskdef name="rbm-get-apk-package" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.GetApkPackageTask"
-                  classpathref="testmanager.classpath" />
+              classname="com.robomorphine.test.ant.device.GetApkPackageTask"
+              classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-install-apk" loaderref="testmanager.loader"
-	                  classname="com.robomorphine.test.ant.device.InstallApkTask"
-	                  classpathref="testmanager.classpath" />
+              classname="com.robomorphine.test.ant.device.InstallApkTask"
+              classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-uninstall-apk" loaderref="testmanager.loader"
-	                      classname="com.robomorphine.test.ant.device.UninstallApkTask"
-	                      classpathref="testmanager.classpath" />
+                  classname="com.robomorphine.test.ant.device.UninstallApkTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-adb-push" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.AdbPushTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-adb-pull" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.AdbPullTask"
+                  classpathref="testmanager.classpath" />
+	
+	<taskdef name="rbm-adb-shell" loaderref="testmanager.loader"
+                  classname="com.robomorphine.test.ant.device.AdbShellTask"
+                  classpathref="testmanager.classpath" />
 	
 	<taskdef name="rbm-run-tests" loaderref="testmanager.loader"
-	                          classname="com.robomorphine.test.ant.device.runner.RunTestsTask"
-	                          classpathref="testmanager.classpath" />
+                  classname="com.robomorphine.test.ant.device.runner.RunTestsTask"
+                  classpathref="testmanager.classpath" />
 	
 	<target name="default" >
+		<rbm-setup sdkdir="${sdk.dir}" />
+		<rbm-lock-device device="true" />
+		<rbm-get-device-property local="local.prop" remote="ro.runtime.firstboot" />
+		<rbm-adb-shell log="false" outputproperty="local.prop2" 
+			           exitCodeFail="true" exitCodeProperty="exitCode"
+			           exitCodeExpected="127" >
+			<arg value="ls2" />
+			<arg value="-lsa" />
+			<arg value="sys/*" />
+	    </rbm-adb-shell>
+		<echo>${exitCode}</echo>
+		<echo>${local.prop2}</echo>
+		<rbm-adb-shell cmd="echo test > /sdcard/file" />
+		<rbm-adb-pull remote="/sdcard/file" local="file" />
+		<rbm-adb-shell cmd="rm /sdcard/file" />
+		<rbm-adb-push remote="/sdcard/file" local="file" />
+		<rbm-adb-shell cmd="cat /sdcard/file" />
+	</target>
+	
+	<target name="default-device" >
 	    <rbm-setup sdkdir="${sdk.dir}" />
 	    
 		<property name="tester.apk" location="../../bin/debug/tester.app.apk" />
@@ -77,8 +117,10 @@
 		<echo>${tester.package}</echo>
 		
 		<rbm-lock-device device="false" />
+		<rbm-get-locked-device property="device.serial" />
 		<!--rbm-install-apk file="${tested.apk}"/>
 		<rbm-install-apk file="${tester.apk}"/-->
+		<echo>${device.serial}</echo>
 		
 		<fileset dir="../../bin/debug/" id="apks" >
 			<include name="*.apk"/>
@@ -107,6 +149,7 @@
 		<rbm-uninstall-apk file="${tester.apk}" /-->
 		
 		<rbm-unlock-device />
+		<rbm-get-locked-device property="device.serial" />
 	</target>
 	
 	<target name="default-create-and-start">
