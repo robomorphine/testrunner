@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="rbm-testrunner" default="rbm-testrunner-demo">
+<project name="rbm-testrunner" >
 	
     <macrodef name="rbm-define-tasks">
         <attribute name="sdkdir" />
