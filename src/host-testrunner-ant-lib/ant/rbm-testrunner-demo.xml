@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="rbm-testrunner-demo" default="rbm-testrunner-demo">
+	
+	<import file="rbm-testrunner.xml" /> 
+	
+	<target name="rbm-testrunner-demo" >
+		<property name="root.dir" location="../../.." />
+		<property file="${root.dir}/local.properties" />
+		<property name="rmb-testrunner-jar" 
+			      location="${root.dir}/bin/release/packaged/rbm.host.tesetrunner.ant.jar" />
+		
+		<fail unless="sdk.dir" message="sdk.dir is not set" />
+		
+		<!-- rbm-define-tasks sdkdir="${sdk.dir}" jar="${rmb-testrunner-jar}" / -->
+		<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
+			<classpath>
+			    <pathelement path="../bin" />
+			    <pathelement path="../../host-testrunner-lib/bin" />
+			</classpath>
+	    </rbm-define-tasks>
+		
+		<rbm-setup sdkdir="${sdk.dir}" />
+		
+		<rbm-define-avd-configs />
+		<rbm-create-avd-configs />
+		<rbm-stop-all-emulators />
+	</target>
+</project>

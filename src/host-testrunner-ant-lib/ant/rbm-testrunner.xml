@@ -4,10 +4,12 @@
     <macrodef name="rbm-define-tasks">
         <attribute name="sdkdir" />
         <attribute name="jar" />
+    	<element name="classpath" />
         <sequential>
         	<path id="rbm.testrunner.classpath">
     	        <fileset dir="@{sdkdir}/tools/lib" includes="*.jar" />
-        		<pathelement path="@{jar}"/>
+        		<pathelement path="@{jar}" />
+        		<classpath />
     	    </path>
     	    
     	    <classloader name="rbm.testrunner.classloader" 
@@ -164,20 +166,5 @@
 			<rbm-create-avd name="rbm-avd-15-tablet" avdconfig="rbm-avd-15-tablet"   force="true"/>
 		</sequential>
 	</macrodef>
-	
-	<target name="rbm-testrunner-demo" >
-		<property name="root.dir" location="../../.." />
-		<property file="${root.dir}/local.properties" />
-		<property name="rmb-testrunner-jar" 
-			      location="${root.dir}/bin/release/packaged/rbm.host.tesetrunner.ant.jar" />
-		
-		<fail unless="sdk.dir" message="sdk.dir is not set" />
-		
-		<rbm-define-tasks sdkdir="${sdk.dir}" jar="${rmb-testrunner-jar}" />
-		
-		<rbm-setup sdkdir="${sdk.dir}" />
-		<rbm-define-avd-configs />
-		<rbm-create-avd-configs />
-		<rbm-stop-all-emulators />
-	</target>
+
 </project>
