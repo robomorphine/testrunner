@@ -11,8 +11,11 @@ import java.io.File;
 
 public class SetupTask extends BaseTask {
     
+    private static String SETUP_DONE_REF_NAME = "rbm-setup-done";
+    
     private String mReferenceName = DEFAULT_CONTEXT_REF_NAME;
     private File mSdkDir;
+    private boolean mForce = false;
     
     public void setReference(String name) {
         mReferenceName = name;
@@ -22,8 +25,18 @@ public class SetupTask extends BaseTask {
         mSdkDir = dir;
     }
     
+    public void setForce(boolean force) {
+        mForce = force;
+    }
+    
     @Override
     public void execute() throws BuildException {
+        Boolean setupDone = (Boolean)getProject().getReference(SETUP_DONE_REF_NAME);
+        if(setupDone!=null && setupDone && !mForce) {
+            info("Setup was already done. Skipping it this time...");
+            return;
+        }
+        
         if(mSdkDir == null) {
             error("Sdk directory was not set.");
         }
@@ -43,5 +56,6 @@ public class SetupTask extends BaseTask {
         }
         
         getProject().addReference(mReferenceName, context);
+        getProject().addReference(SETUP_DONE_REF_NAME, true);
     }
 }
