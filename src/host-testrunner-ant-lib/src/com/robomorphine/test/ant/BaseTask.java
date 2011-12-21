@@ -29,14 +29,14 @@ public class BaseTask extends Task {
     
     public Context getContext() {
         if(mContext != null) return mContext;
+        String refName = DEFAULT_CONTEXT_REF_NAME;
         if(mContextRefName != null) {
-            mContext = (Context)getProject().getReference(mContextRefName);
-            return mContext;
+            refName = mContextRefName;
         }
-        mContext = (Context)getProject().getReference(DEFAULT_CONTEXT_REF_NAME);
+        mContext = (Context)getProject().getReference(refName);
         
         if(mContext == null) {
-           error("Context reference is not set.");
+           error("Context reference is not set. Make sure you've called setup task.");
         }
         return mContext;
     }
