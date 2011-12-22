@@ -3,14 +3,10 @@
          default="build" >
   
   <property name="project.name" value="builder" />
-
   <import file="builder/builder.properties.xml" />
-  <import file="${builder.dir}/tools.xml" />
-
+  <import file="builder/ant-tasks.xml" />
   <property name="tester.filter" value="s+m+l" />
-  <property name="cc.blocks.threshold" value="90" />
-  <property name="cc.lines.threshold" value="90" />
-
+  
   <target name="pre-build">
     <mkdir dir="${drop.dir}"/>
   </target>
@@ -130,28 +126,7 @@
          <property name="test.targets" value="${test.targets}" />
       </ant>
   </target>
-
-  <target name="check-code-coverage" if="${tester.coverage}">
-    <!-- hardcoded path for now -->
-    <property name="cc.file" 
-              location="${drop.dir}/${build.mode}/coverage-reports/com.okta.auth/coverage.txt" />
-    <available file="${cc.file}" property="cc.file.exists" />
-    <fail unless="cc.file.exists" message="Code Coverage report does not exist: ${cc.file}" />
-    <ant antfile="${builder.dir}/tools.emulator.xml" 
-         target="check-code-coverage" inheritall="true" >
-      <property name="coverage.txt"  value="${cc.file}" />
-      <property name="blocks.threshold" value="${cc.blocks.threshold}" />
-      <property name="lines.threshold" value="${cc.lines.threshold}" />
-    </ant>
-  </target>
-
-  <target name="check-test-report"  depends="defaults" >
-    <ant antfile="${builder.dir}/test.manager.xml" 
-         target="check-test-report" inheritall="true" >
-      <property name="build.mode"  value="${build.mode}" />
-    </ant>
-  </target>
-
+  
   <target name="subclean" depends="buildlist" description="clean all projects">
     <subant target="clean" buildpathref="all-projects" />	    
   </target>

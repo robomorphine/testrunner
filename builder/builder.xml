@@ -50,8 +50,6 @@
     
     <!-- all custom and 3d-party tasks -->
     <import file="${builder.dir}/ant-tasks.xml" />
-    <!-- import tools -->
-    <import file="${builder.dir}/tools.xml" />
 
     <!-- import project type specific build file -->
     <property name="builder.imported" value="true" />

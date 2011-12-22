@@ -2,8 +2,6 @@
 <project name="test.emulator.manager"  default="test-on-all-emulators" >
 
     <import file="test.manager.xml" /> 
-    <import file="tools.xml" />
-    <import file="tools.emulator.xml" />
     
     <property name="emulator.report.dir" location="${drop.build.mode.dir}/platform-test-reports" />
     <property name="emulator.tmp.dir" location="${drop.build.mode.dir}/tmp" />

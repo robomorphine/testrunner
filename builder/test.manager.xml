@@ -5,8 +5,7 @@
         
     <import file="builder.properties.xml" />
     <import file="${builder.dir}/ant-tasks.xml" />
-	<import file="${builder.dir}/tools.xml" />
-    
+	    
     <fail unless="sdk.dir" message="SDK dir is not set." />
     
     <property name="build.mode" value="debug" />
@@ -89,13 +88,5 @@
             <report format="frames" todir="${report.dir.html}"/>
         </junitreport>
     </target>
-    
-    <target name="check-test-report" >
-        <run-python name="check-test">
-            <args>
-                <arg value="${report.dir}/all-suites.xml" />
-            </args>
-        </run-python>
-    </target>
-
+	
 </project>

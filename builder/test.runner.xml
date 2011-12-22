@@ -5,8 +5,6 @@
                 
     <import file="builder.properties.xml" />
     <import file="${builder.dir}/ant-tasks.xml" />
-    <import file="${builder.dir}/tools.xml" />
-	<import file="${builder.dir}/rbm-testrunner.xml" />
     
     <fail unless="sdk.dir" message="SDK dir is not set." />
     <rbm-define-tasks sdkdir="${sdk.dir}" jar="${root.dir}/libs/rbm.host.testrunner.ant.jar" />
