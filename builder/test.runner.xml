@@ -64,8 +64,6 @@
     -->
             
     <target name="run" >
-    	<!-- do not setup rbm again if it was already setup -->
-    	<rbm-setup sdkdir="${sdk.dir}" force="false" />
     	<!-- do not re-lock device, if it was already locked -->
     	<rbm-lock-device force="false" />
     	<!-- run tests -->

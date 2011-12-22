@@ -16,6 +16,7 @@ public class SetupTask extends BaseTask {
     private String mReferenceName = DEFAULT_CONTEXT_REF_NAME;
     private File mSdkDir;
     private boolean mForce = false;
+    private boolean mLazy = true;
     
     public void setReference(String name) {
         mReferenceName = name;
@@ -27,6 +28,10 @@ public class SetupTask extends BaseTask {
     
     public void setForce(boolean force) {
         mForce = force;
+    }
+    
+    public void setLazy(boolean lazy) {
+        mLazy = lazy;
     }
     
     @Override
@@ -47,7 +52,11 @@ public class SetupTask extends BaseTask {
         Context context = new Context();
         try {
             TestManager manager = new TestManager(mSdkDir, new StdLog());
-            manager.connectAdb();
+            if(!mLazy) {
+                manager.connectAdb();
+            } else {
+                dbg("Skipping adb connection. Lazy setup is enabled.");
+            }
             context.setTestManager(manager);
         } catch(AndroidLocationException ex) {
             error(ex, "Failed to create TestManager.");

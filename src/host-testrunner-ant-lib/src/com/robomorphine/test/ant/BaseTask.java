@@ -5,6 +5,7 @@ package com.robomorphine.test.ant;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.sdklib.SdkManager;
+import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
 
 import org.apache.tools.ant.BuildException;
@@ -19,6 +20,31 @@ public class BaseTask extends Task {
     private String mDeviceSerialNumber;
     private Context mContext;
     
+    public void error(String format, Object...args) {
+        error(null, format, args);        
+    }
+    
+    public void error(Throwable ex, String format, Object...args) {
+        String msg = String.format(format, args);
+        throw new BuildException(msg, ex, getLocation());
+    }
+    
+    public void warn(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_WARN);        
+    }
+    
+    public void info(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_INFO);        
+    }
+    
+    public void dbg(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_DEBUG);        
+    }
+    
+    public void verbose(String format, Object...args) {
+        log(String.format(format, args), Project.MSG_VERBOSE);        
+    }
+    
     public void setContextRef(String ref) {
         mContextRefName = ref;
     }
@@ -27,14 +53,18 @@ public class BaseTask extends Task {
         mDeviceSerialNumber = deviceSerial;
     }
     
-    public Context getContext() {
+    private Context getContextUnchecked() {
         if(mContext != null) return mContext;
         String refName = DEFAULT_CONTEXT_REF_NAME;
         if(mContextRefName != null) {
             refName = mContextRefName;
         }
-        mContext = (Context)getProject().getReference(refName);
-        
+        return (Context)getProject().getReference(refName);
+    }
+    
+    public Context getContext() {
+        if(mContext != null) return mContext;        
+        mContext = getContextUnchecked();
         if(mContext == null) {
            error("Context reference is not set. Make sure you've called setup task.");
         }
@@ -92,28 +122,21 @@ public class BaseTask extends Task {
         return null;
     }
     
-    public void error(String format, Object...args) {
-        error(null, format, args);        
+    @Override
+    public void maybeConfigure() throws BuildException {
+        Context context = getContextUnchecked();
+        if(context != null) {
+            TestManager testManager = context.getTestManager();
+            if(testManager != null && !testManager.isAdbConnected()) {            
+                dbg("Connecting to adb (lazy setup is in effect).");
+                try {
+                    context.getTestManager().connectAdb();
+                } catch(AdbConnectionException ex) {
+                    error(ex, "Deferred ADB connect: failed to connect to adb.");
+                }
+            }
+        }
+        super.maybeConfigure();
     }
     
-    public void error(Throwable ex, String format, Object...args) {
-        String msg = String.format(format, args);
-        throw new BuildException(msg, ex, getLocation());
-    }
-    
-    public void warn(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_WARN);        
-    }
-    
-    public void info(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_INFO);        
-    }
-    
-    public void dbg(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_DEBUG);        
-    }
-    
-    public void verbose(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_VERBOSE);        
-    }
 }
