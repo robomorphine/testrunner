@@ -147,7 +147,8 @@ public class RunTestsTask extends BaseTask {
         try {
             runner.run(listeners);
         } catch(Exception ex) {
-            error(ex, "Failed to run tests in package \"%s\" using runner \"%s\".", mPackageName, mRunnerName);
+            error(ex, "Failed to run tests in package \"%s\" using runner \"%s\". Error: %s",
+                       mPackageName, mRunnerName, ex.getMessage());
         }
         info("Finished tests from package \"%s\" on device \"%s\"", mPackageName, getDevice().getSerialNumber());
                 
