@@ -62,6 +62,7 @@
                     </then>
                </if>
     
+              <property name="target.apk" location="@{tester.apk}" />
               <echo>#################################################</echo>
               <echo></echo>
               <echo>Target: ${target.apk}</echo>
@@ -69,26 +70,13 @@
               <echo></echo>    
               <echo>#################################################</echo>
 
-              <if>
-                  <condition>
-                      <isset property="target.apk" />
-                  </condition>
-                  <then>
-                      <subant target="run" inheritall="true" >
-                          <property name="target.apk" value="${target.apk}" />
-                          <property name="tester.apk" value="@{tester.apk}" />
-                          <property name="tester.report.dir" value="${tester.report.dir}" />
-                          <fileset dir="${builder.dir}" includes="test.runner.xml"/>
-                      </subant>
-                </then>
-                <else>
-                    <subant target="run" inheritall="true" >
-                        <property name="tester.apk" value="@{tester.apk}" />
-                        <property name="tester.report.dir" value="${tester.report.dir}" />
-                        <fileset dir="${builder.dir}" includes="test.runner.xml"/>
-                      </subant>
-                </else>
-            </if>
+              
+              <subant target="run" inheritall="true" >
+                  <property name="target.apk" value="${target.apk}" />
+                  <property name="tester.apk" value="@{tester.apk}" />
+                  <property name="tester.report.dir" value="${tester.report.dir}" />
+                  <fileset dir="${builder.dir}" includes="test.runner.xml"/>
+              </subant>
           </sequential>
         </for>
     </target>
