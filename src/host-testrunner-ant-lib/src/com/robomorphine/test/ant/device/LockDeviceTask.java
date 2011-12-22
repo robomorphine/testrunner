@@ -12,6 +12,7 @@ public class LockDeviceTask extends BaseTask {
     private boolean mVerify = true;
     private Boolean mIsEmulator = null;
     private boolean mUseFirst = false;
+    private boolean mForce = false;
     
     public void setSerial(String serial) {
         mSerial = serial;
@@ -39,8 +40,16 @@ public class LockDeviceTask extends BaseTask {
         mUseFirst = lockFirst;
     }
     
+    public void setForce(boolean force) {
+        mForce = force;
+    }
+    
     @Override
     public void execute() throws BuildException {
+        if(getContext().getDeviceSerialNumber() != null && !mForce) {
+            info("Device is already locked. Skipping locked...");
+            return;
+        }
        
         if(mSerial == null) {
             info("Serial is not specified. Autolock is started... ");
