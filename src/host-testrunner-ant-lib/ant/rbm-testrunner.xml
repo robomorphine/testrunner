@@ -4,7 +4,7 @@
     <macrodef name="rbm-define-tasks">
         <attribute name="sdkdir" />
         <attribute name="jar" />
-    	<element name="classpath" />
+    	<element name="classpath" optional="true"/>
         <sequential>
         	<path id="rbm.testrunner.classpath">
     	        <fileset dir="@{sdkdir}/tools/lib" includes="*.jar" />
