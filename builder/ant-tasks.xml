@@ -10,7 +10,7 @@
 	
 	<import file="${builder.dir}/rbm-testrunner.xml" />
     <rbm-define-tasks sdkdir="${sdk.dir}" jar="${root.dir}/libs/rbm.host.testrunner.ant.jar" />
-    <rbm-setup sdkdir="${sdk.dir}" lazy="true" />
+    <rbm-setup sdkdir="${sdk.dir}" lazy="true" force="false" />
     
     <!-- Override ant-contrib if task with android's if task.
          Android's if task requires <condition> element, while 

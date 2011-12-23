@@ -68,14 +68,13 @@
               <echo>Tester: @{tester.apk}</echo>
               <echo></echo>    
               <echo>#################################################</echo>
-
               
-              <subant target="run" inheritall="true" >
+              <ant antfile="${builder.dir}/test.runner.xml" target="run"
+              	   inheritall="true" inheritrefs="true">
                   <property name="target.apk" value="${target.apk}" />
                   <property name="tester.apk" value="@{tester.apk}" />
                   <property name="tester.report.dir" value="${tester.report.dir}" />
-                  <fileset dir="${builder.dir}" includes="test.runner.xml"/>
-              </subant>
+              </ant>
           </sequential>
         </for>
     </target>

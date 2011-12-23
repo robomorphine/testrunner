@@ -8,7 +8,7 @@
 
   <!-- defaults --> 
   <property name="test.targets" value="7,8,9,10,13" />
-  <property name="test.target" value="8" />
+  <property name="test.target" value="android-14" />
   <property name="tester.filter" value="s+m+l" />
   
   
@@ -117,6 +117,7 @@
 	
   <target name="deploy" depends="set-build-mode, package" >
   	<copy file="${package.dir}/rbm.host.testrunner.ant.jar" todir="libs" />
+  	<copy file="${package.dir}/rbm-testrunner.xml" todir="builder" />
   </target>
 	
   <!-- test -->

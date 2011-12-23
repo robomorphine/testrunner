@@ -16,6 +16,10 @@ public class StopEmulatorTask extends BaseTask {
     @Override
     public void execute() throws BuildException {
         if(mSerialNo == null) {
+            mSerialNo = getContext().getDeviceSerialNumber();
+        }
+         
+        if(mSerialNo == null) {
             error("Serial number is not specified.");
         }
         

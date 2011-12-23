@@ -47,7 +47,8 @@ public class LockDeviceTask extends BaseTask {
     @Override
     public void execute() throws BuildException {
         if(getContext().getDeviceSerialNumber() != null && !mForce) {
-            info("Device is already locked. Skipping locked...");
+            info("Device is already locked to \"%s\". Skipping lock...", 
+                  getContext().getDeviceSerialNumber());
             return;
         }
        
