@@ -18,29 +18,29 @@
         	
         	<rbm-create-avd name="${avd-name}" target="@{test-target}" force="true">
 	            <sdcard size="100M" />
+        		<hardware>
+	                <ram size="512" />
+	                <heap size="32" />
+	            </hardware>
 	        </rbm-create-avd>
         	
         	<rbm-start-emulator avd="${avd-name}" serialProperty="device-serial" />        	
         	<trycatch reference="exception" property="exception-message">
-        		<try>
-        			<rbm-lock-device serial="${device-serial}" force="true" />
-        			<fileset id="test-ref" dir="">
-        			        <include name="*.xml"/>
-        			</fileset>
+        	    <try>
+        		    <rbm-lock-device serial="${device-serial}" force="true" />
         			<ant antfile="${builder.dir}/test.manager.xml"
-		                    target="create-test-report" 
-		                    inheritall="true" inheritrefs="true">
+		                 target="create-test-report" inheritall="true" inheritrefs="true">
 		                <property name="build.mode" value="@{build-mode}" />
 		            </ant>		            
 		            <rbm-unlock-device />
-        	     </try>
-        		 <catch>
-        			<echo level="error">Test run failed: ${exception-message}</echo>
-        		 	<throw refid="exception" />
-        		 </catch>
-        		 <finally>
-        		 	<rbm-stop-emulator serial="${device-serial}" />
-        		 </finally>
+        	    </try>
+        		<catch>
+        		    <echo level="error">Test run failed: ${exception-message}</echo>
+        		    <throw refid="exception" />
+        		</catch>
+        		<finally>
+        		    <rbm-stop-emulator serial="${device-serial}" />
+        		</finally>
         	</trycatch>
         	
         	<rbm-delete-avd name="${avd-name}" />
