@@ -1,91 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tester" default="default" basedir="..">
+<project name="tester" default="test-inheritance" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
 	
-	<path id="testmanager.classpath">
-        <fileset dir="${sdk.dir}/tools/lib" includes="*.jar" />
-		<pathelement path="bin" />
-		<pathelement path="../host-testrunner-lib/bin" />
-    </path>
+	<import file="rbm-testrunner.xml" />
+	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
+        <classpath>
+            <pathelement path="bin" />
+            <pathelement path="../host-testrunner-lib/bin" />
+        </classpath>
+    </rbm-define-tasks>
+	<rbm-setup sdkdir="${sdk.dir}" lazy="false" force="false" />
 	
-    <classloader name="testmanager.loader" classpathref="testmanager.classpath" />
 	
-	<taskdef name="rbm-setup" loaderref="testmanager.loader"
-	         classname="com.robomorphine.test.ant.SetupTask"
-	         classpathref="testmanager.classpath" />
+	<target name="define" if="false">
+    	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
+            <classpath>
+                <pathelement path="bin" />
+                <pathelement path="../host-testrunner-lib/bin" />
+            </classpath>
+        </rbm-define-tasks>
+	</target>
 	
-	<taskdef name="rbm-avd-config" loaderref="testmanager.loader"
-	                 classname="com.robomorphine.test.ant.avd.AvdConfigTask"
-	                 classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-create-avd" loaderref="testmanager.loader"
-	             classname="com.robomorphine.test.ant.avd.CreateAvdTask"
-	             classpathref="testmanager.classpath" />
-	
-
-    <taskdef name="rbm-delete-avd" loaderref="testmanager.loader"
-                 classname="com.robomorphine.test.ant.avd.DeleteAvdTask"
-                 classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-start-emulator" loaderref="testmanager.loader"
-                 classname="com.robomorphine.test.ant.emulator.StartEmulatorTask"
-                 classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-stop-emulator" loaderref="testmanager.loader"
-                 classname="com.robomorphine.test.ant.emulator.StopEmulatorTask"
-                 classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-stop-all-emulators" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.emulator.StopEmulatorsTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-lock-device" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.LockDeviceTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-unlock-device" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.UnlockDeviceTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-get-locked-device" loaderref="testmanager.loader"
-	              classname="com.robomorphine.test.ant.device.GetLockedDeviceTask"
-	              classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-get-device-property" loaderref="testmanager.loader"
-              classname="com.robomorphine.test.ant.device.GetDevicePropertyTask"
-              classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-get-apk-package" loaderref="testmanager.loader"
-              classname="com.robomorphine.test.ant.device.GetApkPackageTask"
-              classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-install-apk" loaderref="testmanager.loader"
-              classname="com.robomorphine.test.ant.device.InstallApkTask"
-              classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-uninstall-apk" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.UninstallApkTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-adb-push" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.AdbPushTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-adb-pull" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.AdbPullTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-adb-shell" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.AdbShellTask"
-                  classpathref="testmanager.classpath" />
-	
-	<taskdef name="rbm-run-tests" loaderref="testmanager.loader"
-                  classname="com.robomorphine.test.ant.device.runner.RunTestsTask"
-                  classpathref="testmanager.classpath" />
-	
-	<target name="default" >
+	<target name="default" depends="define" >
 		<rbm-setup sdkdir="${sdk.dir}" />
 		<rbm-lock-device device="true" />
 		<rbm-get-device-property local="local.prop" remote="ro.runtime.firstboot" />
@@ -105,7 +43,7 @@
 		<rbm-adb-shell cmd="cat /sdcard/file" />
 	</target>
 	
-	<target name="default-device" >
+	<target name="default-device" depends="define">
 	    <rbm-setup sdkdir="${sdk.dir}" />
 	    
 		<property name="tester.apk" location="../../bin/debug/tester.app.apk" />
@@ -152,7 +90,7 @@
 		<rbm-get-locked-device property="device.serial" />
 	</target>
 	
-	<target name="default-create-and-start">
+	<target name="default-create-and-start" depends="define">
 		<rbm-setup sdkdir="${sdk.dir}" />
 	    
 		<rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
@@ -188,4 +126,15 @@
 		<rbm-stop-emulator serial="${emulator-serial}" />
 		<rbm-delete-avd name="test-avd15" />
     </target>
+	
+	<target name="test-inheritance" depends="define" >
+		<rbm-lock-device force="false"/>
+		<rbm-lock-device force="false"/>
+        <ant antfile="ant/test.xml" target="print" inheritrefs="true" />
+	</target>  
+	    
+    <target name="print" depends="define" >
+    	<rbm-lock-device force="false" />
+    </target>
+	   
 </project>
