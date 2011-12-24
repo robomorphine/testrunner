@@ -57,11 +57,11 @@
                          classname="com.robomorphine.test.ant.device.InstallApkTask" />
             <rbm-taskdef name="rbm-uninstall-apk"      
                          classname="com.robomorphine.test.ant.device.UninstallApkTask" />
-            <rbm-taskdef name="rbm-adb-push" loaderref="testmanager.loader"
+            <rbm-taskdef name="rbm-adb-push" 
                          classname="com.robomorphine.test.ant.device.AdbPushTask" />                
-            <rbm-taskdef name="rbm-adb-pull" loaderref="testmanager.loader"
+            <rbm-taskdef name="rbm-adb-pull" 
                          classname="com.robomorphine.test.ant.device.AdbPullTask" />                
-            <rbm-taskdef name="rbm-adb-shell" loaderref="testmanager.loader"
+            <rbm-taskdef name="rbm-adb-shell"
                          classname="com.robomorphine.test.ant.device.AdbShellTask" />
             <rbm-taskdef name="rbm-run-tests"          
                          classname="com.robomorphine.test.ant.device.runner.RunTestsTask" />
@@ -72,6 +72,7 @@
         <attribute name="sdkdir" />
         <attribute name="jar" />
     	<attribute name="force" default="false" />
+    	<attribute name="skip" default="false" />
     	<element name="classpath" optional="true"/>
         <sequential>
         	<path id="rbm-sdk-dir-antlib">
@@ -85,6 +86,7 @@
         		<condition>
         		   <and>
         		   	  <not><isset property="rbm.define.tasks.done" /></not>
+        		   	  <isfalse value="@{skip}"  /> 
         			  <isfalse value="@{force}" />
         		   </and>
         		</condition>
