@@ -8,6 +8,7 @@ public class CreateAvdTask extends AvdConfigTask {
     private String mAvdConfigId;
     private String mName;
     private boolean mRemovePrevious = false;
+    private boolean mFailIfExists = true;
     
     public void setAvdConfig(String avdId) {
         mAvdConfigId = avdId;
@@ -27,6 +28,10 @@ public class CreateAvdTask extends AvdConfigTask {
     public void setForce(boolean force) {
         mRemovePrevious = true;
     }
+    
+    public void setFailIfExists(boolean fail) {
+        mFailIfExists = fail;
+    }
      
     @Override
     public void execute() throws BuildException {
@@ -34,6 +39,6 @@ public class CreateAvdTask extends AvdConfigTask {
         if(mAvdConfigId != null) {
             avd = (AvdConfigTask)getProject().getReference(mAvdConfigId);
         }
-        avd.create(getName(), mRemovePrevious);
+        avd.create(getName(), mRemovePrevious, mFailIfExists);
     }
 }

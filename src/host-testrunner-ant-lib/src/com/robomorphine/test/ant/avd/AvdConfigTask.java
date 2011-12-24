@@ -103,10 +103,23 @@ public class AvdConfigTask extends BaseTask {
         return mHardware;
     }
     
-    public void create(String avdName, boolean force) throws BuildException {
+    public void create(String avdName, boolean force, boolean failIfExists) throws BuildException {
     
         AvdManager avdManager = getTestManager().getAvdManager();
         IAndroidTarget target = getResolvedTarget();
+        
+        if(!force) {
+            for(AvdInfo info : avdManager.getAllAvds()) {
+                if(info.getName().equals(avdName)) {                
+                    if(failIfExists) {
+                        error("Avd %s already exsits.");
+                    } else {
+                        /* avd already exists, we're done here */
+                        return;
+                    }
+                }
+            }
+        }
         
         /* 1. AVD path  - where created avd will be placed */
         File avdPath = null;
