@@ -2,6 +2,7 @@ package com.robomorphine.test.emulator;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
+import com.android.ddmlib.IShellOutputReceiver;
 import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.log.ILog;
@@ -17,21 +18,56 @@ public class EmulatorStarter {
     private final static String DEVICE_PROP_NAME = "rbm.starter.uuid";
     public final static long DEFAULT_CONNECT_TIMEOUT = 60 * 2 * 1000;
     public final static long DEFAULT_BOOT_TIMEOUT = 60 * 5 * 1000;
+    public final static long DEFAULT_LOW_CPU_TIMEOUT = 60 * 1 * 1000;
+    public final static int DEFAULT_LOW_CPU_THRESHOLD = 30; /* 0 - 100 */
+    private final static long CPU_CHECK_INTERVAL = 5000;
     
-    private final long mConnectTimeout; 
-    private final long mBootTimeout;
+    private long mConnectTimeout; 
+    private long mBootTimeout;
+    private long mLowCpuTimeout;
+    private int mLowCpuThreshold;
     private final TestManager mTestManager;
     private final ILog mLog;
     
-    public EmulatorStarter(TestManager testManager, long connectTimeout, long bootTimeout) {
+    public EmulatorStarter(TestManager testManager) {
         mTestManager = testManager;
         mLog = new PrefixedLog(EmulatorStarter.class.getSimpleName(), mTestManager.getLogger());
-        mConnectTimeout = connectTimeout;
-        mBootTimeout = bootTimeout;
+        mConnectTimeout = DEFAULT_CONNECT_TIMEOUT;
+        mBootTimeout = DEFAULT_BOOT_TIMEOUT;
+        mLowCpuTimeout = DEFAULT_LOW_CPU_TIMEOUT;
+        mLowCpuThreshold = DEFAULT_LOW_CPU_THRESHOLD;
     }
     
-    public EmulatorStarter(TestManager testManager) {
-        this(testManager, DEFAULT_CONNECT_TIMEOUT, DEFAULT_BOOT_TIMEOUT);
+    public long getConnectTimeout() {
+        return mConnectTimeout;
+    }
+    
+    public void setConnectTimeout(long timeout) {
+        mConnectTimeout = timeout;
+    }
+    
+    public long getBootTimeout() {
+        return mBootTimeout;
+    }
+    
+    public void setBootTimeout(long timeout) {
+        mBootTimeout = timeout;
+    }
+    
+    public long getLowCpuTimeout() {
+        return mBootTimeout;
+    }
+    
+    public void setLowCpuTimeout(long timeout) {
+        mLowCpuTimeout = timeout;
+    }
+    
+    public int getLowCpuThreshold() {
+        return mLowCpuThreshold;
+    }
+    
+    public void setLowCpuThreshold(int threshold) {
+        mLowCpuThreshold = threshold;
     }
      
     private boolean reconnectEmulator(String serialNo) {
@@ -85,7 +121,11 @@ public class EmulatorStarter {
         emulator.startExecution();
         
         try{
-            return waitForBoot(uuidPropName, uuidPropValue);
+            String serial = waitForBoot(uuidPropName, uuidPropValue);
+            if(mLowCpuTimeout > 0) {
+                waitForLowCpu(serial);
+            }
+            return serial;
         } catch(EmulatorStarterException ex) {
             emulator.terminate();
             throw ex;
@@ -100,7 +140,8 @@ public class EmulatorStarter {
         
         String serialNo = waiter.waitForDeviceToConnect(mConnectTimeout, uuidPropName, uuidPropValue);
         if(serialNo == null) {
-            mLog.error(null, "Emulator did not connect to adb for %d ms.", mConnectTimeout);            
+            mLog.error(null, "Emulator did not connect to adb for %s.", 
+                              AdbDeviceWaiter.formatTime(mConnectTimeout));            
             throw new EmulatorStarterException("Emulator was started, but failed to connect to adb.");
         }
         
@@ -124,10 +165,128 @@ public class EmulatorStarter {
         }
         
         if(!bootSuccess) {
-            mLog.error(null, "Emulator connected but failed to boot within %d ms.", mBootTimeout);
+            mLog.error(null, "Emulator connected but failed to boot within %s.", 
+                              AdbDeviceWaiter.formatTime(mBootTimeout));
             throw new EmulatorStarterException("Failed to wait for emulator to boot.");
         }
         return serialNo;
+    }
+    
+    private String readProcStatCpuLine(String serialNo) throws EmulatorStarterException {
+        AndroidDebugBridge adb = mTestManager.getAndroidDebugBridge();
+        IDevice device = null;
+        for(IDevice curDevice : adb.getDevices()) {
+            if(curDevice.getSerialNumber().equals(serialNo)) {
+                device = curDevice;
+                break;
+            }
+        }
+        if(device == null) {
+            mLog.error(null, "Device %s is not found, failed to calculate cpu load.", serialNo);
+            throw new EmulatorStarterException("Device not found");
+        }
+        
+        final StringBuilder builder = new StringBuilder();
+        try {
+            device.executeShellCommand("cat /proc/stat", new IShellOutputReceiver() {
+                @Override public boolean isCancelled() {return false;}                
+                @Override public void flush() {}                
+                @Override public void addOutput(byte[] buf, int offset, int len) {
+                    builder.append(new String(buf, offset, len));
+                }
+            });
+        } catch(Exception ex) {
+            mLog.error(ex, "Failed to get /proc/stats data from %s emulator.", serialNo);
+        }
+        
+        String [] lines = builder.toString().split("\n");
+        if(lines.length == 0) {
+            return null;
+        } else {
+            return lines[0];
+        }
+    }
+    
+    public int getCpuLoad(String serialNo) throws EmulatorStarterException {
+
+        /* read CPU data for the 1st time */
+        String load = readProcStatCpuLine(serialNo);
+        if(load == null) {
+            return -1;
+        }
+        String[] toks = load.split(" ");
+        if(toks.length < 8) {
+            return -1;
+        }
+        long idle1 = Long.parseLong(toks[5]);
+        long cpu1 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+                    + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+        
+        try {
+            /* wait a bit to have at least 2 samples of data */
+            Thread.sleep(500);
+        } catch(InterruptedException ex) {
+            return -1;
+        }
+        
+        /* read CPU data for the 2nd time */
+        load =  readProcStatCpuLine(serialNo);
+        if(load == null) {
+            return -1;
+        }
+        toks = load.split(" ");
+        if(toks.length < 8) {
+            return -1;
+        }
+        
+        long idle2 = Long.parseLong(toks[5]);
+        long cpu2 = Long.parseLong(toks[2]) + Long.parseLong(toks[3]) + Long.parseLong(toks[4])
+            + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
+
+        /* calculate */
+        long result= (cpu2 - cpu1) * 100 / ((cpu2 + idle2) - (cpu1 + idle1) + 1);
+        return (int)result;
+    }
+    
+    public void waitForLowCpu(String serialNo) throws EmulatorStarterException {
+        long end = System.currentTimeMillis() + mLowCpuTimeout;
+        int cpuLoadCounter = 0;
+        int cpuLoadCounterTarget = 3;
+        mLog.info("Waiting for low cpu (< %d%%) on emulator %s", mLowCpuThreshold, serialNo);
+        while(true) {
+            long timeout = end - System.currentTimeMillis();
+            if(timeout <= 0) {
+                break;
+            }
+   
+            int cpu = getCpuLoad(serialNo);
+            if(cpu < 0) {
+                mLog.info("Failed to read cpu load.");
+            } else {
+                mLog.info("Emulator %s has cpu load %d%%, threshold %d%% (time left %s).", 
+                           serialNo, cpu, mLowCpuThreshold, AdbDeviceWaiter.formatTime(timeout));
+                if(cpu < mLowCpuThreshold) {
+                    cpuLoadCounter++;
+                    mLog.info("Score: %d", cpuLoadCounter);
+                } else {
+                    cpuLoadCounter=0;
+                }
+            }
+                        
+            if(cpuLoadCounter >= cpuLoadCounterTarget) {
+                mLog.info("Emulator had low cpu (< %d%%) %d time in a row. Done waiting.", 
+                           mLowCpuThreshold, cpuLoadCounterTarget);
+                return;
+            }
+            
+            try {
+                Thread.sleep(CPU_CHECK_INTERVAL);
+            } catch(InterruptedException ex){
+                 return;
+            }
+        }        
+        /* don't fail, just give it a chance */
+        mLog.info("Timed out waiting for low cpu. Assuming that's ok to continue.");
     }
     
     public String start(int tries, String avdName, List<String> emulatorArgs) throws IOException,

@@ -32,7 +32,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         mLog = new PrefixedLog(AdbDeviceWaiter.class.getSimpleName(), testManager.getLogger());
     }
     
-    private static String formatTime(long ms) {
+    public static String formatTime(long ms) {
         return String.format("%02d:%02d", ms/1000/60, ms/1000 % 60);
     }
     

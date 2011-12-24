@@ -27,6 +27,8 @@ public class StartEmulatorTask extends BaseTask {
     private List<String> mEmulatorArgs = new LinkedList<String>();
     private long mConnectTimeout = EmulatorStarter.DEFAULT_CONNECT_TIMEOUT;
     private long mBootTimeout = EmulatorStarter.DEFAULT_BOOT_TIMEOUT;
+    private long mLowCpuTimeout = EmulatorStarter.DEFAULT_LOW_CPU_TIMEOUT;
+    private int mLowCpuThreshold = EmulatorStarter.DEFAULT_LOW_CPU_THRESHOLD;
     private int mAttempts = 3;
     
     public void setAvd(String name) {
@@ -43,6 +45,14 @@ public class StartEmulatorTask extends BaseTask {
     
     public void setBootTimeout(long timeout) {
         mBootTimeout = timeout;
+    }
+    
+    public void setLowCpuTimeout(long timeout) {
+        mLowCpuTimeout = timeout;
+    }
+    
+    public void setLowCpuThreshold(int threshold) {
+        mLowCpuThreshold = threshold;
     }
     
     public void setAttempts(int count) {
@@ -68,7 +78,11 @@ public class StartEmulatorTask extends BaseTask {
         }
         
         TestManager testManager = getTestManager();
-        EmulatorStarter starter = new EmulatorStarter(testManager, mConnectTimeout, mBootTimeout);
+        EmulatorStarter starter = new EmulatorStarter(testManager);
+        starter.setBootTimeout(mBootTimeout);
+        starter.setConnectTimeout(mConnectTimeout);
+        starter.setLowCpuTimeout(mLowCpuTimeout);
+        starter.setLowCpuThreshold(mLowCpuThreshold);
         try {
             String serialNo = starter.start(mAttempts, mAvdName, mEmulatorArgs);
             getProject().setProperty(mSerialNumberPropertyName, serialNo);

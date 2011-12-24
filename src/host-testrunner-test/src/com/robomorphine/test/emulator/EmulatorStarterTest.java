@@ -29,19 +29,28 @@ public class EmulatorStarterTest extends TestCase {
         AvdHelper avd = testManager.getAvdHelper();
         
         String avdName = "test-avd";
-        AvdInfo info = avd.createAvd(avdName, "android-4", -1, new HashMap<String, String>(),
-                false, true);
-        
-        assertNotNull(info);
+        AvdInfo info = avd.createAvd(avdName, "android-15", -1, new HashMap<String, String>(),
+                    false, true);
+        //assertNotNull(info);
         
         EmulatorStarter starter = new EmulatorStarter(testManager);
-        String serialNo = starter.start(avdName, new LinkedList<String>());
+        String serialNo = starter.start(3, avdName, new LinkedList<String>());
         assertNotNull(serialNo);
         
 //        EmulatorStopper stopper = new EmulatorStopper(testManager);
 //        stopper.stop(serialNo);
     }
     
+    public void testWaitForLowCput() throws Exception {
+        File path = new File("r:\\repository\\dev\\bin\\android-sdk");
+        ILog logger = new StdLog();        
+        
+        TestManager testManager = new TestManager(path, logger);
+        testManager.connectAdb();
+        EmulatorStarter starter = new EmulatorStarter(testManager);
+        starter.setLowCpuThreshold(50);
+        starter.waitForLowCpu("304D1990904CFC6E");
+    }
     
     public void adbRestart() throws AndroidLocationException, IOException,
             EmulatorStarterException, AdbConnectionException {
