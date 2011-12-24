@@ -89,7 +89,14 @@
         </zips>
       </archives>
     </zip>
-    <zip destfile="${package.dir}/rbm.host.testrunner.ant.jar" duplicate="preserve" >
+    <zip destfile="${package.dir}/rbm.host.tesetrunner.ant.jar" duplicate="preserve" >
+      <zipgroupfileset dir="${bin.dir}">
+        <include name="com.robomorphine.testrunner.common.jar" />
+        <include name="com.robomorphine.testrunner.host.jar" />
+        <include name="com.robomorphine.testrunner.host.ant.jar" />
+      </zipgroupfileset>
+    </zip>    
+    <!--zip destfile="${package.dir}/rbm.host.testrunner.ant.jar" duplicate="preserve" >
 	  <archives>
         <zips>
           <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.ant.jar" />
@@ -97,7 +104,7 @@
           <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.common.jar" />
         </zips>
       </archives>
-    </zip>
+    </zip-->
   	
   	<zip destfile="${package.dir}/rbm-host-testrunner-ant.zip" duplicate="fail" >
   		<fileset dir="${package.dir}" >
