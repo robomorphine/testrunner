@@ -28,6 +28,9 @@
         	<trycatch reference="exception" property="exception-message">
         	    <try>
         		    <rbm-lock-device serial="${device-serial}" force="true" />
+        		    	
+        		    <!-- unlock emulator, so ui tests can run -->
+        		    <rbm-adb-shell cmd="input keyevent 82" />
         			<ant antfile="${builder.dir}/test.manager.xml"
 		                 target="create-test-report" inheritall="true" inheritrefs="true">
 		                <property name="build.mode" value="@{build-mode}" />
