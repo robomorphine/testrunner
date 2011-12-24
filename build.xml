@@ -121,10 +121,13 @@
   </target>
 	
   <!-- test -->
-
+  <target name="kill-all" >
+    <rbm-stop-all-emulators />	
+  </target>
+	
   <target name="test" depends="set-build-mode" >
     <ant antfile="${builder.dir}/test.manager.xml" 
-         target="create-test-report" inheritall="true">
+         target="create-test-report" inheritall="true" inheritrefs="true">
       <property name="build.mode" value="${build.mode}" />
     </ant>
   </target>
@@ -132,7 +135,7 @@
   <target name="test-on-emulator" depends="set-build-mode">
 
     <ant antfile="${builder.dir}/test.manager.emulator.xml" 
-         target="test-on-emulator" inheritall="true">
+         target="test-on-emulator" inheritall="true" inheritrefs="true">
        <property name="build.mode"  value="${build.mode}" />
        <property name="test.target" value="${test.target}" />
     </ant>
@@ -141,7 +144,7 @@
   <target name="test-on-all-emulators" depends="set-build-mode" >
   
       <ant antfile="${builder.dir}/test.manager.emulator.xml" 
-               target="test-on-all-emulators" inheritall="true" >
+               target="test-on-all-emulators" inheritall="true" inheritrefs="true" >
          <property name="build.mode"  value="${build.mode}" />
          <property name="test.targets" value="${test.targets}" />
       </ant>
