@@ -71,9 +71,10 @@
   	<delete dir="${package.dir}" />
     <mkdir dir="${package.dir}" />
     
-  	<copy file="src/host-testrunner-ant-lib/ant/rbm-testrunner.xml" todir="${package.dir}"/>
+  	<copy file="src/host-testrunner-ant-lib/ant/rbm-testrunner.xml" 
+  		  tofile="${package.dir}/robomorphine-testrunner.xml"/>
   		
-    <zip destfile="${package.dir}/rbm.testrunner.device.jar" duplicate="preserve" >
+    <zip destfile="${package.dir}/robomorphine.testrunner.device.jar" duplicate="preserve" >
       <archives>
         <zips>
           <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.device.jar" />
@@ -81,7 +82,7 @@
         </zips>
       </archives>
     </zip>
-    <zip destfile="${package.dir}/rbm.testrunner.host.jar" duplicate="preserve" >
+    <zip destfile="${package.dir}/robomorphine.testrunner.host.jar" duplicate="preserve" >
       <archives>
         <zips>
           <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.jar" />
@@ -89,7 +90,7 @@
         </zips>
       </archives>
     </zip>
-    <zip destfile="${package.dir}/rbm.testrunner.host.ant.jar" duplicate="preserve" >
+    <zip destfile="${package.dir}/robomorphine.testrunner.host.ant.jar" duplicate="preserve" >
 	  <archives>
         <zips>
           <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.ant.jar" />
@@ -98,25 +99,25 @@
         </zips>
       </archives>
     </zip>
-  	<zip destfile="${package.dir}/rbm-testrunner-host-ant.zip" duplicate="fail" >
+  	<zip destfile="${package.dir}/robomorphine-testrunner-host-ant.zip" duplicate="fail" >
   		<fileset dir="${package.dir}" >
   			<include name="rbm.host.testrunner.ant.jar"/>
   			<include name="rbm-testrunner.xml"/>
   		</fileset>
   	</zip>
-  	<zip destfile="${package.dir}/rbm-testrunner.zip" duplicate="fail" >
+  	<zip destfile="${package.dir}/robomorphine-testrunner.zip" duplicate="fail" >
         <fileset dir="${package.dir}" >
-        	<include name="rbm.testrunner.device.jar"/>
-            <include name="rbm.testrunner.host.ant.jar"/>
-        	<include name="rbm.testrunner.host.jar"/>
-            <include name="rbm-testrunner.xml"/>
+        	<include name="robomorphine.testrunner.device.jar"/>
+            <include name="robomorphine.testrunner.host.ant.jar"/>
+        	<include name="robomorphine.testrunner.host.jar"/>
+            <include name="robomorphine-testrunner.xml"/>
         </fileset>
     </zip>
   </target>
 	
   <target name="deploy" depends="set-build-mode, package" >
-  	<copy file="${package.dir}/rbm.testrunner.host.ant.jar" todir="libs" />
-  	<copy file="${package.dir}/rbm-testrunner.xml" todir="builder" />
+  	<copy file="${package.dir}/robomorphine.testrunner.host.ant.jar" todir="libs" />
+  	<copy file="${package.dir}/robomorphine-testrunner.xml" todir="builder" />
   </target>
 	
   <!-- test -->
