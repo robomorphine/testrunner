@@ -11,12 +11,18 @@ public class InstallApkTask extends BaseTask {
 
     private File mApkFile;
     private boolean mReinstall;
+    private int mAttempts = ApkManager.DEFAULT_ATTEMPTS_COUNT;
+    
     public void setFile(File file) {
         mApkFile = file;
     }
     
     public void setReinstall(boolean reinstall) {
         mReinstall = reinstall;
+    }
+    
+    public void setAttempts(int attempts) {
+        mAttempts = attempts;
     }
     
     @Override
@@ -31,7 +37,7 @@ public class InstallApkTask extends BaseTask {
         
         ApkManager apkManager = getTestManager().getApkManager();
         try {
-            apkManager.install(getDevice(), mApkFile, mReinstall);
+            apkManager.install(getDevice(), mApkFile, mReinstall, mAttempts);
         } catch(Exception ex) {
             error(ex, "Failed to install apk to device %s: %s", 
                        getDeviceSerialNumber(), mApkFile.getAbsolutePath());
