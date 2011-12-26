@@ -7,12 +7,15 @@ import com.robomorphine.test.log.PrefixedLog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class EmulatorConsole {
     
+    private final static int DEFAULT_CONNECT_TIMEOUT = 5000;
+    private final static int DEFAULT_SO_TIMEOUT = 10000;
     
     private final static String EMU_OK_RESPONSE = "OK";
     private final static String EMU_OK_RESPONSE_PREFIX = "OK:";
@@ -108,7 +111,12 @@ public class EmulatorConsole {
     
     public boolean consoleRunCommand(int port, String cmd) {
         try {
-            Socket socket = new Socket("127.0.0.1", port);
+            InetSocketAddress addr = new InetSocketAddress("127.0.0.1", port);
+            
+            Socket socket = new Socket();
+            socket.setSoTimeout(DEFAULT_SO_TIMEOUT);
+            socket.connect(addr, DEFAULT_CONNECT_TIMEOUT);
+            
             OutputStream out = socket.getOutputStream();
             InputStream in = socket.getInputStream();
             
