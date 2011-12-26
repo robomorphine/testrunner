@@ -1,1 +1,0 @@
-This project aims to improve experience with running tests on device.
