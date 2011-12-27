@@ -67,51 +67,57 @@
   <!-- package & deploy -->
   
   <target name="package" depends="set-build-mode" >
-    
+    <property file="version.properties" />
   	<delete dir="${package.dir}" />
     <mkdir dir="${package.dir}" />
     
   	<copy file="src/host-testrunner-ant-lib/ant/rbm-testrunner.xml" 
   		  tofile="${package.dir}/robomorphine-testrunner.xml"/>
-  		
-    <zip destfile="${package.dir}/robomorphine.testrunner.device.jar" duplicate="preserve" >
-      <archives>
-        <zips>
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.device.jar" />
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.common.jar" />
-        </zips>
-      </archives>
-    </zip>
-    <zip destfile="${package.dir}/robomorphine.testrunner.host.jar" duplicate="preserve" >
-      <archives>
-        <zips>
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.jar" />
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.common.jar" />
-        </zips>
-      </archives>
-    </zip>
-    <zip destfile="${package.dir}/robomorphine.testrunner.host.ant.jar" duplicate="preserve" >
-	  <archives>
-        <zips>
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.ant.jar" />
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.host.jar" />
-          <fileset dir="${bin.dir}" includes="com.robomorphine.testrunner.common.jar" />
-        </zips>
-      </archives>
-    </zip>
+
+    <jarjar jarfile="${package.dir}/robomorphine.testrunner.device.jar">
+        <zipfileset src="${bin.dir}/com.robomorphine.testrunner.device.jar"/>
+        <zipfileset src="${bin.dir}/com.robomorphine.testrunner.common.jar"/>
+    	  <manifest>
+    	    <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Implementation-Vendor" value="${vendor}"/>
+    	    <attribute name="Implementation-Title" value="robomorphine-device-testrunner"/>
+    	    <attribute name="Implementation-Version" value="${jar.version}"/>
+    	  </manifest>
+    </jarjar>
+    <jarjar jarfile="${package.dir}/robomorphine.testrunner.host.jar">
+       <zipfileset src="${bin.dir}/com.robomorphine.testrunner.host.jar"/>
+       <zipfileset src="${bin.dir}/com.robomorphine.testrunner.common.jar"/>
+    	 <manifest>
+    	    <attribute name="Built-By" value="${user.name}"/>
+    	    <attribute name="Implementation-Vendor" value="${vendor}"/>
+    	    <attribute name="Implementation-Title" value="robomorphine-host-testrunner"/>
+    	    <attribute name="Implementation-Version" value="${jar.version}"/>
+       </manifest>
+    </jarjar>
+  	<jarjar jarfile="${package.dir}/robomorphine.testrunner.host.ant.jar">
+         <zipfileset src="${bin.dir}/com.robomorphine.testrunner.host.ant.jar"/>
+	       <zipfileset src="${bin.dir}/com.robomorphine.testrunner.host.jar"/>
+	       <zipfileset src="${bin.dir}/com.robomorphine.testrunner.common.jar"/>
+  		   <manifest>
+  		      <attribute name="Built-By" value="${user.name}"/>
+  		      <attribute name="Implementation-Vendor" value="${vendor}"/>
+  		      <attribute name="Implementation-Title" value="robomorphine-host-testrunner-ant"/>
+  		      <attribute name="Implementation-Version" value="${jar.version}"/>
+  		   </manifest>
+	  </jarjar>
   	<zip destfile="${package.dir}/robomorphine-testrunner-host-ant.zip" duplicate="fail" >
   		<fileset dir="${package.dir}" >
-  			<include name="rbm.host.testrunner.ant.jar"/>
-  			<include name="rbm-testrunner.xml"/>
+  			<include name="robomorphine.testrunner.host.jar"/>
+  			<include name="robomorphine-testrunner.xml"/>
   		</fileset>
   	</zip>
   	<zip destfile="${package.dir}/robomorphine-testrunner.zip" duplicate="fail" >
-        <fileset dir="${package.dir}" >
-        	<include name="robomorphine.testrunner.device.jar"/>
-            <include name="robomorphine.testrunner.host.ant.jar"/>
-        	<include name="robomorphine.testrunner.host.jar"/>
-            <include name="robomorphine-testrunner.xml"/>
-        </fileset>
+      <fileset dir="${package.dir}" >
+      	<include name="robomorphine.testrunner.device.jar"/>
+        <include name="robomorphine.testrunner.host.ant.jar"/>
+      	<include name="robomorphine.testrunner.host.jar"/>
+        <include name="robomorphine-testrunner.xml"/>
+      </fileset>
     </zip>
   </target>
 	
@@ -133,7 +139,6 @@
   </target>
 
   <target name="test-on-emulator" depends="set-build-mode">
-
     <ant antfile="${builder.dir}/test.manager.emulator.xml" 
          target="test-on-emulator" inheritall="true" inheritrefs="true">
        <property name="build.mode"  value="${build.mode}" />
