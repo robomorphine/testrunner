@@ -224,7 +224,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         String serialNo = device.getSerialNumber();
         try {
             if(device.isOffline()) {
-                mLog.info("Device %s is offline."); 
+                mLog.info("Device %s is offline.", serialNo); 
                 return false;
             }
             
