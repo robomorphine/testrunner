@@ -7,6 +7,8 @@
         <pathelement location="${prebuilt.libs.dir}/ant-contrib.jar"/>
       </classpath>
     </typedef>
+
+    <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${root.dir}/libs/jarjar.jar"/>
 	
 	<import file="${builder.dir}/robomorphine-testrunner.xml" />
     <rbm-define-tasks sdkdir="${sdk.dir}" jar="${root.dir}/libs/robomorphine.testrunner.host.ant.jar" />
