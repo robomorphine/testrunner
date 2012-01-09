@@ -1,4 +1,4 @@
-package com.robomorphine.test.emulator;
+package com.robomorphine.test.exception;
 
 public class DeviceNotConnectedException extends Exception {
     

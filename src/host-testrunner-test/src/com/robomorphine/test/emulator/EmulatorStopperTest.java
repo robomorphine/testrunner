@@ -1,8 +1,8 @@
 package com.robomorphine.test.emulator;
 
 import com.android.prefs.AndroidLocation.AndroidLocationException;
-import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.StdLog;
 

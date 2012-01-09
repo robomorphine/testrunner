@@ -11,17 +11,22 @@ public class PrefixedLog implements ILog {
     }
     
     @Override
-    public void info(String format, Object... args) {
-        mLog.info(mTag + ": " + format, args);
+    public void v(String format, Object... args) {
+        mLog.v(mTag + ": " + format, args);
     }
     
     @Override
-    public void warning(String format, Object... args) {
-        mLog.warning(mTag + ": " + format, args);
+    public void i(String format, Object... args) {
+        mLog.i(mTag + ": " + format, args);
     }
     
     @Override
-    public void error(Throwable ex, String format, Object... args) {
-        mLog.error(ex, mTag + ": " + format, args);
+    public void w(String format, Object... args) {
+        mLog.w(mTag + ": " + format, args);
+    }
+    
+    @Override
+    public void e(Throwable ex, String format, Object... args) {
+        mLog.e(ex, mTag + ": " + format, args);
     }
 }

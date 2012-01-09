@@ -1,4 +1,4 @@
-package com.robomorphine.test;
+package com.robomorphine.test.exception;
 
 public class AdbConnectionException  extends Exception {
     static final long serialVersionUID = 1L;
@@ -14,5 +14,4 @@ public class AdbConnectionException  extends Exception {
     public AdbConnectionException(String msg) {
         super(msg);
     }
-
 }

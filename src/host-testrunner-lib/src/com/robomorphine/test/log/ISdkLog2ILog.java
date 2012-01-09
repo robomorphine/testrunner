@@ -12,16 +12,16 @@ public class ISdkLog2ILog implements ISdkLog {
     
     @Override
     public void printf(String format, Object... args) {
-        mLogger.info(format, args);        
+        mLogger.v(format, args);        
     }
     
     @Override
     public void warning(String format, Object... args) {
-        mLogger.warning(format, args);
+        mLogger.w(format, args);
     }
     
     @Override
     public void error(Throwable ex, String format, Object... args) {
-        mLogger.error(ex, format, args);
+        mLogger.e(ex, format, args);
     }
 }

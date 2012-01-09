@@ -11,8 +11,9 @@
     <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${root.dir}/libs/jarjar.jar"/>
 	
 	<import file="${builder.dir}/robomorphine-testrunner.xml" />
+	<property name="rbm.verbose" value="false" />
     <rbm-define-tasks sdkdir="${sdk.dir}" jar="${root.dir}/libs/robomorphine.testrunner.host.ant.jar" />
-    <rbm-setup sdkdir="${sdk.dir}" lazy="true" force="false" />
+    <rbm-setup sdkdir="${sdk.dir}" lazy="true" force="false" verbose="${rbm.verbose}" />
     
     <!-- Override ant-contrib if task with android's if task.
          Android's if task requires <condition> element, while 

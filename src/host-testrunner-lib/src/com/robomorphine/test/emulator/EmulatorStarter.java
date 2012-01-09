@@ -3,10 +3,10 @@ package com.robomorphine.test.emulator;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
-import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.exception.AdbConnectionException;
+import com.robomorphine.test.exception.DeviceNotConnectedException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.EmulatorTool;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class EmulatorStarter {
     
     public EmulatorStarter(TestManager testManager) {
         mTestManager = testManager;
-        mLog = new PrefixedLog(EmulatorStarter.class.getSimpleName(), mTestManager.getLogger());
+        mLog = mTestManager.newPrefixedLogger(EmulatorStarter.class);
         mConnectTimeout = DEFAULT_CONNECT_TIMEOUT;
         mBootTimeout = DEFAULT_BOOT_TIMEOUT;
         mLowCpuTimeout = DEFAULT_LOW_CPU_TIMEOUT;
@@ -71,7 +71,7 @@ public class EmulatorStarter {
     }
      
     private boolean reconnectEmulator(String serialNo) {
-        mLog.info("Reconnecting to %s device by restarting adb.", serialNo);
+        mLog.v("Reconnecting to %s device by restarting adb.", serialNo);
         EmulatorConsole console = new EmulatorConsole(mTestManager);
         
         /* So device is disconnected from adb. 
@@ -82,23 +82,23 @@ public class EmulatorStarter {
          }
          
          try {
-             mLog.info("Restarting & reconnecting to adb...");
+             mLog.v("Restarting & reconnecting to adb...");
              mTestManager.reconnectAdb();
-             mLog.info("Reconnected to adb.");
+             mLog.v("Reconnected to adb.");
          } catch(AdbConnectionException ex) {
-             mLog.info("Failed to restart or reconnected to adb.");
+             mLog.v("Failed to restart or reconnected to adb.");
              return false;
          }
          
          AndroidDebugBridge adb = mTestManager.getAndroidDebugBridge();
          for(IDevice device : adb.getDevices()) {
              if(device.getSerialNumber().equals(serialNo)) {
-                 mLog.info("Restarted adb, device %s is now connected again.", serialNo);
+                 mLog.v("Restarted adb, device %s is now connected again.", serialNo);
                  return true;
              }
          }
          
-         mLog.error(null, "Restarted adb, but device %s was not found.", serialNo);
+         mLog.e(null, "Restarted adb, but device %s was not found.", serialNo);
          return false;
     }
     
@@ -140,7 +140,7 @@ public class EmulatorStarter {
         
         String serialNo = waiter.waitForDeviceToConnect(mConnectTimeout, uuidPropName, uuidPropValue);
         if(serialNo == null) {
-            mLog.error(null, "Emulator did not connect to adb for %s.", 
+            mLog.e(null, "Emulator did not connect to adb for %s.", 
                               AdbDeviceWaiter.formatTime(mConnectTimeout));            
             throw new EmulatorStarterException("Emulator was started, but failed to connect to adb.");
         }
@@ -155,7 +155,7 @@ public class EmulatorStarter {
                 }
                 
                 bootSuccess = waiter.waitForDeviceToBoot(timeout, serialNo);
-                mLog.info("Boot result: %s", bootSuccess?"success":"failure");
+                mLog.v("Boot result: %s", bootSuccess?"success":"failure");
                 break;
             } catch(DeviceNotConnectedException ex) {                
                 if(!reconnectEmulator(serialNo)) {
@@ -165,7 +165,7 @@ public class EmulatorStarter {
         }
         
         if(!bootSuccess) {
-            mLog.error(null, "Emulator connected but failed to boot within %s.", 
+            mLog.e(null, "Emulator connected but failed to boot within %s.", 
                               AdbDeviceWaiter.formatTime(mBootTimeout));
             throw new EmulatorStarterException("Failed to wait for emulator to boot.");
         }
@@ -182,7 +182,7 @@ public class EmulatorStarter {
             }
         }
         if(device == null) {
-            mLog.error(null, "Device %s is not found, failed to calculate cpu load.", serialNo);
+            mLog.e(null, "Device %s is not found, failed to calculate cpu load.", serialNo);
             throw new EmulatorStarterException("Device not found");
         }
         
@@ -196,7 +196,7 @@ public class EmulatorStarter {
                 }
             });
         } catch(Exception ex) {
-            mLog.error(ex, "Failed to get /proc/stats data from %s emulator.", serialNo);
+            mLog.e(ex, "Failed to get /proc/stats data from %s emulator.", serialNo);
         }
         
         String [] lines = builder.toString().split("\n");
@@ -252,7 +252,7 @@ public class EmulatorStarter {
         long end = System.currentTimeMillis() + mLowCpuTimeout;
         int cpuLoadCounter = 0;
         int cpuLoadCounterTarget = 3;
-        mLog.info("Waiting for low cpu (< %d%%) on emulator %s", mLowCpuThreshold, serialNo);
+        mLog.v("Waiting for low cpu (< %d%%) on emulator %s", mLowCpuThreshold, serialNo);
         while(true) {
             long timeout = end - System.currentTimeMillis();
             if(timeout <= 0) {
@@ -261,20 +261,20 @@ public class EmulatorStarter {
    
             int cpu = getCpuLoad(serialNo);
             if(cpu < 0) {
-                mLog.info("Failed to read cpu load.");
+                mLog.e(null, "Failed to read cpu load of \"%s\".", serialNo);
             } else {
-                mLog.info("Emulator %s has cpu load %d%%, threshold %d%% (time left %s).", 
+                mLog.i("Emulator %s has cpu load %d%%, threshold %d%% (time left %s).", 
                            serialNo, cpu, mLowCpuThreshold, AdbDeviceWaiter.formatTime(timeout));
                 if(cpu < mLowCpuThreshold) {
                     cpuLoadCounter++;
-                    mLog.info("Score: %d", cpuLoadCounter);
+                    mLog.v("Score: %d", cpuLoadCounter);
                 } else {
                     cpuLoadCounter=0;
                 }
             }
                         
             if(cpuLoadCounter >= cpuLoadCounterTarget) {
-                mLog.info("Emulator had low cpu (< %d%%) %d time in a row. Done waiting.", 
+                mLog.i("Emulator had low cpu (< %d%%) %d time in a row. Done waiting.", 
                            mLowCpuThreshold, cpuLoadCounterTarget);
                 return;
             }
@@ -286,7 +286,7 @@ public class EmulatorStarter {
             }
         }        
         /* don't fail, just give it a chance */
-        mLog.info("Timed out waiting for low cpu. Assuming that's ok to continue.");
+        mLog.i("Timed out waiting for low cpu. Assuming that's ok to continue.");
     }
     
     public String start(int tries, String avdName, List<String> emulatorArgs) throws IOException,

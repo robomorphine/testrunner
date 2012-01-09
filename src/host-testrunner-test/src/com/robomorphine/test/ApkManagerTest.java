@@ -2,6 +2,7 @@ package com.robomorphine.test;
 
 import com.android.ddmlib.InstallException;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
+import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.StdLog;
 

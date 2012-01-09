@@ -10,11 +10,12 @@ public class ToolsManager {
 
     private final File mSdkPath;
     private final ILog mLogger;
-    private ConcurrentHashMap<Process, Boolean> mRunningProcesses = new ConcurrentHashMap<Process, Boolean>();
+    private ConcurrentHashMap<Process, Boolean> mRunningProcesses;
     
     public ToolsManager(File sdkPath, ILog log) {
         mSdkPath = sdkPath;
         mLogger = log;         
+        mRunningProcesses = new ConcurrentHashMap<Process, Boolean>();
     }
     
     ILog getLogger() {

@@ -24,8 +24,10 @@ public class StopEmulatorTask extends BaseTask {
         }
         
         EmulatorStopper stopper = new EmulatorStopper(getTestManager());
+        info("Stopping emulator \"%s\".", mSerialNo);
         if(!stopper.stop(mSerialNo)) {
             error("Failed to stop emulator.");
         }
+        info("Stopped emulator \"%s\".", mSerialNo);
     }
 }

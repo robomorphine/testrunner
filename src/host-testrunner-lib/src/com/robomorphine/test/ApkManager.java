@@ -5,12 +5,14 @@ import com.android.ddmlib.IDevice;
 import com.android.ddmlib.InstallException;
 import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.AaptTool;
 
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Handles installation and uninstallation of .apk to/from device or emulator
+ */
 public class ApkManager {
     
     public static final int DEFAULT_ATTEMPTS_COUNT = 3;
@@ -20,7 +22,7 @@ public class ApkManager {
     
     public ApkManager(TestManager testManager) {
         mTestManager = testManager;
-        mLog = new PrefixedLog(ApkManager.class.getSimpleName(), testManager.getLogger());
+        mLog = mTestManager.newPrefixedLogger(ApkManager.class);
     }
     
     private IDevice findDevice(String serialNo) throws InstallException {
@@ -49,15 +51,15 @@ public class ApkManager {
         
         long time = System.currentTimeMillis();
         String path = apkFile.getAbsolutePath();
-        mLog.info("Installing %s to %s...", apkFile.getName(), device.getSerialNumber());
+        mLog.i("Installing %s to %s...", apkFile.getName(), device.getSerialNumber());
         try {
             device.installPackage(path, reinstall);
         } catch(InstallException ex) {
             boolean unresponsive = ex.getCause() instanceof ShellCommandUnresponsiveException;
             if(unresponsive ){
-                mLog.warning("Failed to install apk due to unresponsive shell: %s", path);
+                mLog.w("Failed to install apk due to unresponsive shell: %s", path);
                 if(attempts > 1) {
-                    mLog.warning("Attempts left: %d", attempts);
+                    mLog.w("Attempts left: %d", attempts);
                     install(device, apkFile, reinstall, attempts - 1);
                 } else {
                     throw ex;
@@ -65,7 +67,7 @@ public class ApkManager {
             }
         }        
         long delta = System.currentTimeMillis() - time;
-        mLog.info("Installed %s to %s in %.2f seconds.", 
+        mLog.i("Installed %s to %s in %.2f seconds.", 
                   apkFile.getName(), device.getSerialNumber(), delta/1000.0);
     }
     
@@ -80,31 +82,34 @@ public class ApkManager {
     public void uninstall(IDevice device, File apkFile, int attempts) throws IOException,
             InstallException {
         AaptTool aapt = mTestManager.getToolsManager().createAaptTool();
-        mLog.info("Extracting package from %s...", apkFile.getName());
+        mLog.v("Extracting package from %s...", apkFile.getName());
         String pkgName = aapt.getPacakgeName(apkFile);
-        mLog.info("Package %s: %s", apkFile.getName(), pkgName, attempts);
+        mLog.v("Package %s: %s", apkFile.getName(), pkgName, attempts);
         uninstall(device, pkgName);
     }
     
-    public void uninstall(String deviceSerialNo, String pkgName) throws IOException, InstallException {
-            uninstall(findDevice(deviceSerialNo), pkgName);
+    public void uninstall(String deviceSerialNo, String pkgName) throws IOException,
+            InstallException {
+        uninstall(findDevice(deviceSerialNo), pkgName);
     }
     
     public void uninstall(IDevice device, String pkgName) throws IOException, InstallException {
         uninstall(device, pkgName, DEFAULT_ATTEMPTS_COUNT);
     }
     
-    public void uninstall(IDevice device, String pkgName, int attempts) throws IOException, InstallException {
-        mLog.info("Uninstalling %s...", pkgName);
+    public void uninstall(IDevice device, String pkgName, int attempts) throws IOException,
+            InstallException {
+        
+        mLog.i("Uninstalling %s...", pkgName);
         long time = System.currentTimeMillis();
         try {
             device.uninstallPackage(pkgName);
         } catch(InstallException ex) {
             boolean unresponsive = ex.getCause() instanceof ShellCommandUnresponsiveException;
             if(unresponsive ){
-                mLog.warning("Failed to uninstall apk due to unresponsive shell: %s", pkgName);
+                mLog.w("Failed to uninstall apk due to unresponsive shell: %s", pkgName);
                 if(attempts > 1) {
-                    mLog.warning("Attempts left: %d", attempts);
+                    mLog.w("Attempts left: %d", attempts);
                     uninstall(device, pkgName, attempts - 1);
                 } else {
                     throw ex;
@@ -112,7 +117,6 @@ public class ApkManager {
             }
         }
         long delta = System.currentTimeMillis() - time;
-        mLog.info("Uninstalled %s in %.2f seconds.", pkgName, delta/1000.0);
+        mLog.i("Uninstalled %s in %.2f seconds.", pkgName, delta/1000.0);
     }
-    
   }

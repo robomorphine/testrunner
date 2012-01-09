@@ -84,7 +84,7 @@ public class SdkTool {
             if(mManager != null) {
                 mManager.onProcessCompleted(mProcess);
             }
-            mLog.info("Tool %s exit code: %d", SdkTool.this.getClass().getSimpleName(), exitValue);
+            mLog.v("Tool %s exit code: %d", SdkTool.this.getClass().getSimpleName(), exitValue);
             mState = State.COMPLETED;
         }
     };
@@ -182,7 +182,7 @@ public class SdkTool {
             args4Log.append(arg);
             args4Log.append(" ");
         }
-        mLog.info("Executing %s tool: %s", getClass().getSimpleName(), args4Log.toString());
+        mLog.v("Executing %s tool: %s", getClass().getSimpleName(), args4Log.toString());
                     
         
         /* env */
@@ -206,11 +206,13 @@ public class SdkTool {
             mStdErr = new ByteArrayOutputStream();
         }
         
-        mStdErrHandler = new ProcessOutputHandler(mProcess.getErrorStream(), mStdErr, mStdErrHandlerListener);
+        mStdErrHandler = new ProcessOutputHandler(mProcess.getErrorStream(), mStdErr,
+                                                  mStdErrHandlerListener);
         mStdErrHandlerThread = new Thread(mStdErrHandler);
         mStdErrHandlerThread.start();
         
-        mStdOutHandler = new ProcessOutputHandler(mProcess.getInputStream(), mStdOut, mStdOutHandlerListener);
+        mStdOutHandler = new ProcessOutputHandler(mProcess.getInputStream(), mStdOut,
+                                                  mStdOutHandlerListener);
         mStdOutHandlerThread = new Thread(mStdOutHandler);
         mStdOutHandlerThread.start();        
     }

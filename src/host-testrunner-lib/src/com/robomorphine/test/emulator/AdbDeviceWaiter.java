@@ -8,8 +8,8 @@ import com.android.ddmlib.IShellOutputReceiver;
 import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.android.ddmlib.TimeoutException;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.exception.DeviceNotConnectedException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.PrefixedLog;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
     
     public AdbDeviceWaiter(TestManager testManager) {
         mTestManager = testManager;
-        mLog = new PrefixedLog(AdbDeviceWaiter.class.getSimpleName(), testManager.getLogger());
+        mLog = mTestManager.newPrefixedLogger(AdbDeviceWaiter.class);
     }
     
     public static String formatTime(long ms) {
@@ -44,40 +44,40 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
     
     @Override
     public void deviceConnected(IDevice device) {
-        mLog.info("Device connected: %s", device.getSerialNumber());
+        mLog.v("Device connected: %s", device.getSerialNumber());
         notifyChanged();
     }
             
     @Override
     public void deviceChanged(IDevice device, int changeMask) {
-        mLog.info("Device changed: %s", device.getSerialNumber());
+        mLog.v("Device changed: %s", device.getSerialNumber());
         notifyChanged();
     }
     
     @Override
     public void deviceDisconnected(IDevice device) {
-        mLog.info("Device disconnected: %s", device.getSerialNumber());
+        mLog.v("Device disconnected: %s", device.getSerialNumber());
         notifyChanged();            
     }
     
     private void printGetPropError(IDevice device, Throwable ex, String msg) {
         msg = String.format("Device %s: failed to get property value, %s",
                              device.getSerialNumber(), msg);
-        mLog.error(ex, msg);
+        mLog.e(ex, msg);
     }
     
     private IDevice findByUUID(String uuidPropName, String uuidPropValue) {
         for(IDevice device : mTestManager.getAndroidDebugBridge().getDevices()) {
             try {
                 if(device.isOffline()) {
-                    mLog.info("Device %s is offline. Skipped.", device.getSerialNumber());
+                    mLog.v("Device %s is offline. Skipped.", device.getSerialNumber());
                     continue;
                 }
                 
                 String value = device.getPropertySync(uuidPropName);
-                mLog.info("Device %s has uuid %s", device.getSerialNumber(), value);
+                mLog.v("Device %s has uuid %s", device.getSerialNumber(), value);
                 if(uuidPropValue.equals(value)) {
-                    mLog.info("Device %s is a match!", device.getSerialNumber());
+                    mLog.v("Device %s is a match!", device.getSerialNumber());
                     return device;
                 }
             } catch(ShellCommandUnresponsiveException ex) {
@@ -104,7 +104,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
     
     public String waitForDeviceToConnect(long timeout, String uuidPropName, String uuidPropValue) {
         try {
-            mLog.info("Registered for ADB device notifications");
+            mLog.v("Registered for ADB device notifications");
             AndroidDebugBridge.addDeviceChangeListener(this);                
             return _waitForDeviceToConnect(timeout, uuidPropName, uuidPropValue);
         } finally {
@@ -113,7 +113,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
     }
     
     private String _waitForDeviceToConnect(long timeout, String uuidPropName, String uuidPropValue) {
-        mLog.info("Waiting for device to connect with property: %s=%s (timeout: %s)",
+        mLog.v("Waiting for device to connect with property: %s=%s (timeout: %s)",
                   uuidPropName, uuidPropValue, formatTime(timeout));
         
         long start = System.currentTimeMillis();
@@ -122,13 +122,13 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
             IDevice device = findByUUID(uuidPropName, uuidPropValue);
             if(device != null) {
                 long elapsed = System.currentTimeMillis() - start;
-                mLog.info("Device is now connected to adb: %s (elapsed: %s).", 
+                mLog.i("Device is now connected to adb: %s (elapsed: %s).", 
                            device.getSerialNumber(), formatTime(elapsed));
                 return device.getSerialNumber();
             }
             
             long delta = end - System.currentTimeMillis();            
-            mLog.info("Device is still not connected to adb (left: %s)", formatTime(delta));
+            mLog.i("Device is still not connected to adb (left: %s)", formatTime(delta));
             
             if(delta < 0) break;
             if(delta > CONNECTED_CHECK_INTERVAL) {
@@ -150,7 +150,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
             throws DeviceNotConnectedException {
         
         try {
-            mLog.info("Registered for ADB device notifications.");
+            mLog.v("Registered for ADB device notifications.");
             AndroidDebugBridge.addDeviceChangeListener(this);                
             return _waitForDeviceToBoot(timeout, serialNo);
         } finally {
@@ -170,7 +170,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         try {
             state = Integer.parseInt(devBootValue.trim());
         } catch(NumberFormatException ex) {
-            mLog.warning("Failed to parse %s as dev boot status!", devBootValue);
+            mLog.w("Failed to parse %s as dev boot status!", devBootValue);
         }
         return state != 0;
     }
@@ -187,7 +187,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         try {
             state = Integer.parseInt(sysBootValue.trim());
         } catch(NumberFormatException ex) {
-            mLog.warning("Failed to parse %s as sys boot status!", sysBootValue);
+            mLog.w("Failed to parse %s as sys boot status!", sysBootValue);
         }
         return state != 0;
     }
@@ -204,7 +204,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         try {
             level = Integer.parseInt(levelValue.trim());
         } catch(NumberFormatException ex) {
-            mLog.warning("Failed to parse %s as sdk level!", levelValue);
+            mLog.w("Failed to parse %s as sdk level!", levelValue);
         }
         return level;
     }
@@ -224,12 +224,12 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         String serialNo = device.getSerialNumber();
         try {
             if(device.isOffline()) {
-                mLog.info("Device %s is offline.", serialNo); 
+                mLog.v("Device %s is offline.", serialNo); 
                 return false;
             }
             
             if(!getDevBootedStatus(device)) {
-                mLog.info("Device %s is not booted.", serialNo);
+                mLog.v("Device %s is not booted.", serialNo);
                 return false;
             }
             
@@ -238,16 +238,16 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
             if(level >= 10) {
                 sysbooted = getSysBootedStatus(device);                              
             } else if(level < 0) {
-                mLog.info("Failed to detect sdk level of %s device.", serialNo);
+                mLog.v("Failed to detect sdk level of %s device.", serialNo);
             }
             
             if(!sysbooted) {
-                mLog.info("Device %s is booted, but system is not yet booted", serialNo);
+                mLog.v("Device %s is booted, but system is not yet booted", serialNo);
                 return false;
             }
             
             if(!isBootAnimStopped(device)) {
-                mLog.info("Device %s is booted, system is booted, but boot animation is still running.", 
+                mLog.v("Device %s is booted, system is booted, but boot animation is still running.", 
                           serialNo);
                 return false;
             }
@@ -294,25 +294,25 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
     private boolean _waitForDeviceToBoot(long timeout, String serialNo)
             throws DeviceNotConnectedException {
         
-        mLog.info("Waiting for device %s to boot (timeout: %s).", serialNo, formatTime(timeout));
+        mLog.v("Waiting for device %s to boot (timeout: %s).", serialNo, formatTime(timeout));
         
         long start = System.currentTimeMillis();                
         long end = System.currentTimeMillis() + timeout;
         while(System.currentTimeMillis() < end) {
             IDevice device = findBySerialNo(serialNo);
             if(device == null) {
-                mLog.error(null, "Device %s is not connected to adb.", serialNo);
+                mLog.e(null, "Device %s is not connected to adb.", serialNo);
                 throw new DeviceNotConnectedException();
             }
             
             if(isBootCompleted(device)) {
                 long elapsed = System.currentTimeMillis() - start;
-                mLog.info("Device %s has booted (elapsed: %s).", serialNo, formatTime(elapsed));
+                mLog.i("Device %s has booted (elapsed: %s).", serialNo, formatTime(elapsed));
                 return true;
             }
             
             long delta = end - System.currentTimeMillis();
-            mLog.info("Device %s is still not fully booted (processes: %d, left: %s)", 
+            mLog.i("Device %s is still not fully booted (processes: %d, left: %s)", 
                        serialNo, getDeviceProcessCount(device), formatTime(delta));            
             
             if(delta < 0) break;            

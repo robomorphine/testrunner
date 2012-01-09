@@ -2,7 +2,6 @@ package com.robomorphine.test.emulator;
 
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.PrefixedLog;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +24,7 @@ public class EmulatorConsole {
     private final ILog mLog;
             
     public EmulatorConsole(TestManager testManager) {
-        mLog = new PrefixedLog(EmulatorConsole.class.getSimpleName(), testManager.getLogger());
+        mLog = testManager.newPrefixedLogger(EmulatorConsole.class);
     } 
     
     /**
@@ -38,7 +37,7 @@ public class EmulatorConsole {
         Matcher matcher = pattern.matcher(serial);
         if(!matcher.matches()) {
             String msg = "Serial number \"%s\" in invalid. Failed to extract port number.";
-            mLog.error(new IllegalArgumentException(), msg, serialNo);
+            mLog.e(new IllegalArgumentException(), msg, serialNo);
             return -1;
         }
         String strPort = matcher.group(1);
@@ -46,7 +45,7 @@ public class EmulatorConsole {
         try {
             port = Integer.parseInt(strPort);
         } catch(NumberFormatException ex) {
-            mLog.error(ex, "Failed to convert \"%s\" to port number.", strPort);
+            mLog.e(ex, "Failed to convert \"%s\" to port number.", strPort);
             return -1;
         }
         return port;
@@ -123,7 +122,7 @@ public class EmulatorConsole {
             String msg = consoleReadMessage(in);
             if(!consoleExtractStatus(msg)) {
                 String error = consoleExtractError(msg);
-                mLog.error(null, "Greeting failure. Response: %s", error);
+                mLog.e(null, "Greeting failure. Response: %s", error);
                 return false;
             }
                         
@@ -131,19 +130,19 @@ public class EmulatorConsole {
             consoleWriteMessage(out, "help");
             msg = consoleReadMessage(in);
             
-            mLog.info("Sending \"%s\" to emulator console...", cmd);
+            mLog.v("Sending \"%s\" to emulator console...", cmd);
             consoleWriteMessage(out, cmd);
             msg = consoleReadMessage(in);
                         
             if(!consoleExtractStatus(msg)) {
                 String error = consoleExtractError(msg);
-                mLog.error(null, "Command failure. Response: %s", error);
+                mLog.e(null, "Command failure. Response: %s", error);
                 return false;
             }
-            mLog.info("Emulator console response:\n%s", msg);
+            mLog.v("Emulator console response:\n%s", msg);
             return true;
         } catch(IOException ex) {
-            mLog.error(ex, "Failed to run \"%s\" on emulator console.", cmd);
+            mLog.e(ex, "Failed to run \"%s\" on emulator console.", cmd);
             return false;
         }       
     }
@@ -165,9 +164,9 @@ public class EmulatorConsole {
     }
     
     public boolean consoleIsRunning(int port) {
-        mLog.info("Sending command to console on %d port to detect if its alive...", port);        
+        mLog.v("Sending command to console on %d port to detect if its alive...", port);        
         boolean res = consoleRunCommand(port, "power display");
-        mLog.info("Conclusiong: emulator on port %d is %s.", port, res ? "alive" : "dead");
+        mLog.v("Conclusiong: emulator on port %d is %s.", port, res ? "alive" : "dead");
         return res;
     }
     

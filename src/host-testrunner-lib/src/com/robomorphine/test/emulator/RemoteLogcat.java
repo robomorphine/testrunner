@@ -3,6 +3,7 @@ package com.robomorphine.test.emulator;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
+import com.robomorphine.test.exception.DeviceNotConnectedException;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.PrefixedLog;
 
@@ -31,7 +32,7 @@ public class RemoteLogcat {
     public RemoteLogcat(AndroidDebugBridge adb, String serialNo, File file, ILog log) {
         mAdb = adb;
         mSerialNo = serialNo;
-        mLog = new PrefixedLog("Logcat", log);
+        mLog = new PrefixedLog(RemoteLogcat.class.getSimpleName(), log);
         mOutputFile = file;
     }
     
@@ -54,7 +55,7 @@ public class RemoteLogcat {
     public void start(boolean async) throws DeviceNotConnectedException, IOException {
         synchronized (mSync) {
             if(mRunning) {
-                mLog.warning("Logcat is already running. Ignored.");
+                mLog.w("Logcat is already running. Ignored.");
                 return;
             }
         }
@@ -71,14 +72,14 @@ public class RemoteLogcat {
         if(async) {
             mOutputThread.start();
         } else {
-            mOutputThread.run();
+            mOutputThread.run(false);
         }
     }
     
     public void stop() {
         synchronized (mSync) {
             if(!mRunning) {
-                mLog.warning("Logcat wasn't running. Ignored.");
+                mLog.w("Logcat wasn't running. Ignored.");
                 return;
             }
             mRunning = false;
@@ -113,11 +114,15 @@ public class RemoteLogcat {
         
         @Override
         public void run() {
-            mLog.info("Logcat started.");
+            run(true);
+        }
+        
+        public void run(boolean async) {
+            mLog.v("Logcat started.");
             try {
                 mDevice.executeShellCommand(getCmd(), mOutputReceiver);
             } catch(Exception ex) {
-                mLog.error(ex, "Failed to start logcat.");
+                mLog.e(ex, "Failed to start logcat.");
             }
             
             try {
@@ -127,12 +132,14 @@ public class RemoteLogcat {
             }
             
             if(isRunning()) {
-                mLog.warning("Logcat has prematurely stopped.");
+                if(async) {
+                    mLog.w("Logcat has prematurely stopped.");
+                }
                 synchronized (mSync) {
                     mRunning = false;
                 }
             } else {
-                mLog.info("Logcat has stopped.");
+                mLog.v("Logcat has stopped.");
             }
         }
     }
@@ -146,7 +153,7 @@ public class RemoteLogcat {
                 }
                 mOutputStream.write(buffer, offset, len);
             } catch(IOException ex) {
-                mLog.error(ex, "Failed to write logcat data to file.");
+                mLog.e(ex, "Failed to write logcat data to file.");
             }
         }
         
@@ -158,7 +165,7 @@ public class RemoteLogcat {
                 }                
                 mOutputStream.flush();
             } catch(IOException ex) {
-                mLog.error(ex, "Failed to flush.");
+                mLog.e(ex, "Failed to flush.");
             }
         }
         

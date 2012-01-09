@@ -5,6 +5,7 @@ import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.ISdkLog;
 import com.android.sdklib.SdkManager;
 import com.android.sdklib.internal.avd.AvdManager;
+import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.ISdkLog2ILog;
 import com.robomorphine.test.log.PrefixedLog;
@@ -26,7 +27,6 @@ public class TestManager {
     private AndroidDebugBridge mAdb;
     
     private final ToolsManager mToolsManager;
-    private final AvdHelper mAvdHelper;
     private final AvdManager mAvdManager;
     private final ApkManager mApkManager;
     
@@ -40,12 +40,15 @@ public class TestManager {
         
         mToolsManager = new ToolsManager(sdkPath, mOriginalLog);
         mAvdManager = new AvdManager(mSdkManager, mSdkLog);
-        mAvdHelper = new AvdHelper(mSdkManager, mAvdManager, mSdkLog);
         mApkManager = new ApkManager(this);
     }
     
     public ILog getLogger() {
         return mOriginalLog;
+    }
+    
+    public ILog newPrefixedLogger(Class<?> clazz) {
+        return new PrefixedLog(clazz.getSimpleName(), getLogger()); 
     }
     
     public ISdkLog getSdkLogger() {
@@ -65,10 +68,6 @@ public class TestManager {
     
     public ToolsManager getToolsManager() {
         return mToolsManager;
-    }
-    
-    public AvdHelper getAvdHelper() {
-        return mAvdHelper;
     }
     
     public AvdManager getAvdManager() {
@@ -91,7 +90,7 @@ public class TestManager {
     public void connectAdb()  throws AdbConnectionException {
         try {
             AndroidDebugBridge.init(false);
-            mLog.info("ADB initialized.");
+            mLog.i("ADB initialized.");
         } catch(IllegalStateException ex) {
             //ignore, thrown if ADB was already initialized            
         }
@@ -100,17 +99,17 @@ public class TestManager {
         if(mAdb == null) {
             throw new AdbConnectionException("Failed to start adb connection");
         }
-        mLog.info("ADB created.");
+        mLog.i("ADB created.");
         
         while(!mAdb.hasInitialDeviceList()) {
             try {
                 Thread.sleep(ADB_CONNECTION_CHECK_INTERVAL);
-                mLog.info("ADB connecting...");
+                mLog.v("ADB connecting...");
             } catch(InterruptedException ex){
                 //ignore
             }
         }
-        mLog.info("ADB connected.");
+        mLog.i("ADB connected.");
     }
     
     public void disconnectAdb() {

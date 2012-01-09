@@ -83,9 +83,11 @@ public class StartEmulatorTask extends BaseTask {
         starter.setConnectTimeout(mConnectTimeout);
         starter.setLowCpuTimeout(mLowCpuTimeout);
         starter.setLowCpuThreshold(mLowCpuThreshold);
+        info("Starting emulator - %s.", mAvdName);
         try {
             String serialNo = starter.start(mAttempts, mAvdName, mEmulatorArgs);
             getProject().setProperty(mSerialNumberPropertyName, serialNo);
+            info("Emulator successfuly started: \"%s\"", serialNo);
         } catch(Throwable ex) {
             error(ex, "Failed to start emulator.");
         }

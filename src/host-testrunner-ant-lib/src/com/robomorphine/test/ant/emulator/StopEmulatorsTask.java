@@ -10,6 +10,7 @@ public class StopEmulatorsTask extends BaseTask {
     @Override
     public void execute() throws BuildException {
         EmulatorStopper stopper = new EmulatorStopper(getTestManager());
+        info("Stopping all emulators.");
         stopper.stopAll();
     }
 }

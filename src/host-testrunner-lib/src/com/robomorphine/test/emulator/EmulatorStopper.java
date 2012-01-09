@@ -4,7 +4,6 @@ import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.AdbTool;
 import com.robomorphine.test.sdktool.SdkTool.Result;
 import com.robomorphine.test.sdktool.ToolsManager;
@@ -18,7 +17,7 @@ public class EmulatorStopper {
     private final TestManager mTestManager;
             
     public EmulatorStopper(TestManager testManager) {
-        mLog = new PrefixedLog(EmulatorStopper.class.getSimpleName(), testManager.getLogger());
+        mLog = testManager.newPrefixedLogger(EmulatorStopper.class);
         mConsole = new EmulatorConsole(testManager);
         mTestManager = testManager;
     }
@@ -50,7 +49,7 @@ public class EmulatorStopper {
     /**                Stop                   **/      
     /*******************************************/
     
-    public boolean abdStop(String serialNo) {
+    public boolean adbStop(String serialNo) {
        ToolsManager toolsManager = mTestManager.getToolsManager();
        AdbTool adbTool = toolsManager.createAdbTool();
        
@@ -59,20 +58,20 @@ public class EmulatorStopper {
            Result result = adbTool.execute();
            return result.getExitCode() == 0;
        } catch(Exception ex) {
-           mLog.error(ex, "Failed to stop emulator \"%s\" using adb.", serialNo);
+           mLog.e(ex, "Failed to stop emulator \"%s\" using adb.", serialNo);
            return false;
        }
     }
     
     public boolean waitForEmualtorStopped(String serialNo, long ms) {
-        mLog.info("Waiting for emulator \"%s\" to stop.", serialNo);
+        mLog.v("Waiting for emulator \"%s\" to stop.", serialNo);
         long end = System.currentTimeMillis() + ms;
         long sleepStep = 1000;
         while(end > System.currentTimeMillis()) {
             if(!isRunning(serialNo)) {
                 return true;
             }
-            mLog.info("Emulator \"%s\" is still alive...", serialNo);
+            mLog.v("Emulator \"%s\" is still alive...", serialNo);
             
             long delta = end - System.currentTimeMillis();
             if(delta <= 0) {
@@ -100,7 +99,7 @@ public class EmulatorStopper {
         }
         
         if(!isRunning(serialNo)) {
-            mLog.info("Emualtor \"%s\" is not running. Nothing to stop.", serialNo);
+            mLog.v("Emualtor \"%s\" is not running. Nothing to stop.", serialNo);
             return true;
         }
         
@@ -119,31 +118,31 @@ public class EmulatorStopper {
         
         if(!skipAdbStop) {
             /* Killing emulator using adb's embedded control over emulator console */        
-            mLog.info("Killing emulator \"%s\" using adb.", serialNo); 
-            if(abdStop(serialNo)) {
+            mLog.v("Killing emulator \"%s\" using adb.", serialNo); 
+            if(adbStop(serialNo)) {
                 if(waitForEmualtorStopped(serialNo, DEFAULT_TIMEOUT)) {
-                    mLog.info("Emulator \"%s\" is no longer running.", serialNo);
+                    mLog.v("Emulator \"%s\" is no longer running.", serialNo);
                     return true;
                 }        
             } else {
-                mLog.info("Failed to stop emulator \"%s\" using avd.", serialNo);                  
+                mLog.v("Failed to stop emulator \"%s\" using avd.", serialNo);                  
             }        
         } else {
-            mLog.warning("Emulator \"%s\" is not visible from adb.", serialNo);
+            mLog.w("Emulator \"%s\" is not visible from adb.", serialNo);
         }
         
         /* Let's kill emulator using emulator console */        
-        mLog.info("Killing emulator \"%s\" using emulator console.", serialNo); 
+        mLog.v("Killing emulator \"%s\" using emulator console.", serialNo); 
         if(mConsole.consoleStop(serialNo)) {
             if(waitForEmualtorStopped(serialNo, DEFAULT_TIMEOUT)) {
-                mLog.info("Emulator \"%s\" is no longer running.", serialNo);
+                mLog.v("Emulator \"%s\" is no longer running.", serialNo);
                 return true;
             }
         } else {
-            mLog.info("Failed to stop emulator \"%s\" using emulator console.", serialNo);
+            mLog.v("Failed to stop emulator \"%s\" using emulator console.", serialNo);
         }
         
-        mLog.error(null, "I really tried to kill \"%s\" emulator. But failed.", serialNo);        
+        mLog.e(null, "I really tried to kill \"%s\" emulator. But failed.", serialNo);        
         return false;
     }
     
@@ -152,7 +151,7 @@ public class EmulatorStopper {
             firstPort++;
         }
         
-        mLog.info("Starting to kill emulators on ports %d - %d.", firstPort, lastPort);
+        mLog.v("Starting to kill emulators on ports %d - %d.", firstPort, lastPort);
         
         boolean ok = true;
         for(int i = firstPort; i <= lastPort; i+=2) {
@@ -168,7 +167,7 @@ public class EmulatorStopper {
     }
     
     public boolean stopAll() {
-        mLog.info("Killing all running emulators.");
+        mLog.v("Killing all running emulators...");
         return stopMultiple(5554, 5584);
     }
 }

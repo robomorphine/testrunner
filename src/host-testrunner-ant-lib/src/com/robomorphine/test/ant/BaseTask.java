@@ -5,8 +5,8 @@ package com.robomorphine.test.ant;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.android.sdklib.SdkManager;
-import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.exception.AdbConnectionException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

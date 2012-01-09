@@ -1,9 +1,8 @@
 package com.robomorphine.test.ant;
 
 import com.android.prefs.AndroidLocation.AndroidLocationException;
-import com.robomorphine.test.AdbConnectionException;
 import com.robomorphine.test.TestManager;
-import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.exception.AdbConnectionException;
 
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
@@ -17,7 +16,8 @@ public class SetupTask extends BaseTask implements BuildListener {
     private File mSdkDir;
     private boolean mForce = false;
     private boolean mLazy = true;
-    
+    private boolean mVerbose = false;
+        
     public void setReference(String name) {
         mReferenceName = name;
     }
@@ -34,6 +34,10 @@ public class SetupTask extends BaseTask implements BuildListener {
         mLazy = lazy;
     }
     
+    public void setVerbose(boolean verbose) {
+        mVerbose = verbose;
+    }
+    
     public void setup() throws BuildException {
         Context context = (Context)getProject().getReference(DEFAULT_CONTEXT_REF_NAME);
         if(context != null && !mForce) {
@@ -48,9 +52,13 @@ public class SetupTask extends BaseTask implements BuildListener {
             error("Sdk directory %s does not exist.", mSdkDir.getAbsolutePath());
         }
         
+        AntLog log = new AntLog(getProject());
+        log.setVerbose(mVerbose);
+        
         context = new Context();
+        
         try {
-            TestManager manager = new TestManager(mSdkDir, new StdLog());
+            TestManager manager = new TestManager(mSdkDir, log);
             if(!mLazy) {
                 manager.connectAdb();
             } else {

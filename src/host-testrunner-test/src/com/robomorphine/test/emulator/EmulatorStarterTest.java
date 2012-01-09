@@ -2,11 +2,11 @@ package com.robomorphine.test.emulator;
 
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.internal.avd.AvdInfo;
-import com.robomorphine.test.AdbConnectionException;
-import com.robomorphine.test.AvdHelper;
 import com.robomorphine.test.TestManager;
+import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.util.AvdHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class EmulatorStarterTest extends TestCase {
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
         
-        AvdHelper avd = testManager.getAvdHelper();
+        AvdHelper avd = new AvdHelper(testManager);
         
         String avdName = "test-avd";
         AvdInfo info = avd.createAvd(avdName, "android-15", -1, new HashMap<String, String>(),
