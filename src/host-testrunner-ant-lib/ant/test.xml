@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tester" default="test-inheritance" basedir="..">
+<project name="tester" default="logcat" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
@@ -131,7 +131,18 @@
 		<rbm-lock-device force="false"/>
 		<rbm-lock-device force="false"/>
         <ant antfile="ant/test.xml" target="print" inheritrefs="true" />
-	</target>  
+	</target>
+	
+	<target name="logcat" depends="define" >
+		<rbm-setup sdkdir="${sdk.dir}" />
+        <rbm-lock-device />
+		<rbm-start-logcat file="bin/logcat.txt" dump="false" format="long" reference="logcat" >
+			<tag name="*" level="error" />
+			<tag name="CONTEXT" level="verbose" />
+		</rbm-start-logcat>
+		<sleep seconds="1"/>
+		<rbm-stop-logcat logcatref="logcat" />
+	</target>
 	    
     <target name="print" depends="define" >
     	<rbm-lock-device force="false" />

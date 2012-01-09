@@ -21,7 +21,7 @@ public class RemoteLogcatTest extends TestCase {
                                     "304D1990904CFC6E", new File("bin/logcat.txt"), logger);
         logcat.addArg("-b asd");
         
-        logcat.start();
+        logcat.start(true);
         Thread.sleep(1000);
         logcat.stop();
     }

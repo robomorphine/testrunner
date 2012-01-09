@@ -52,7 +52,7 @@ public class RemoteLogcat {
         mArgs.add(arg);
     }
     
-    public void start() throws DeviceNotConnectedException, IOException {
+    public void start(boolean async) throws DeviceNotConnectedException, IOException {
         mLog.info("Starting logcat...");
         synchronized (mSync) {
             if(mRunning) {
@@ -66,7 +66,12 @@ public class RemoteLogcat {
         mOutputStream = new FileOutputStream(mOutputFile);
         mOutputReceiver = new ShellOutputReceiver();
         mOutputThread = new ShellOutputThread(device);
-        mOutputThread.start();
+        
+        if(async) {
+            mOutputThread.start();
+        } else {
+            mOutputThread.run();
+        }
     }
     
     public void stop() {
@@ -77,6 +82,11 @@ public class RemoteLogcat {
                 return;
             }
             mRunning = false;
+        }
+        try {
+            mOutputStream.flush();
+        } catch(IOException ex) {
+            //ignore
         }
         mOutputThread.interrupt();
     }
@@ -103,6 +113,7 @@ public class RemoteLogcat {
         
         @Override
         public void run() {
+            mLog.info("Logcat started.");
             try {
                 mDevice.executeShellCommand(getCmd(), mOutputReceiver);
             } catch(Exception ex) {
@@ -123,7 +134,6 @@ public class RemoteLogcat {
             } else {
                 mLog.info("Logcat has stopped.");
             }
-            
         }
     }
     
