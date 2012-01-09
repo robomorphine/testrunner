@@ -9,7 +9,7 @@ public class StopLogcatTask extends BaseTask {
 
     private String mReferenceName;
     
-    public void setLogcatRef(String name) {
+    public void setRefId(String name) {
         mReferenceName = name;
     }
     
@@ -21,6 +21,11 @@ public class StopLogcatTask extends BaseTask {
         }
         
         RemoteLogcat logcat = (RemoteLogcat)getProject().getReference(mReferenceName);
+        if(logcat == null) {
+            warn("No logcat instance is found at reference %s", mReferenceName);
+            return;
+        }
+        info("Stopping logcat %s", mReferenceName);
         logcat.stop();
     }
 }

@@ -5,7 +5,6 @@ import com.android.ddmlib.IDevice;
 import com.android.ddmlib.IShellOutputReceiver;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.PrefixedLog;
-import com.sun.xml.internal.txw2.IllegalSignatureException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,25 +46,27 @@ public class RemoteLogcat {
     
     public void addArg(String arg) {
         if(isRunning()) {
-            throw new IllegalSignatureException("Can't add arguments while running.");
+            throw new IllegalStateException("Can't add arguments while running.");
         }
         mArgs.add(arg);
     }
     
     public void start(boolean async) throws DeviceNotConnectedException, IOException {
-        mLog.info("Starting logcat...");
         synchronized (mSync) {
             if(mRunning) {
                 mLog.warning("Logcat is already running. Ignored.");
                 return;
             }
-            mRunning = true;
         }
         
         IDevice device = getDevice();
         mOutputStream = new FileOutputStream(mOutputFile);
         mOutputReceiver = new ShellOutputReceiver();
         mOutputThread = new ShellOutputThread(device);
+        
+        synchronized (mSync) {
+            mRunning = true;
+        }
         
         if(async) {
             mOutputThread.start();
@@ -75,7 +76,6 @@ public class RemoteLogcat {
     }
     
     public void stop() {
-        mLog.info("Stopping logcat...");
         synchronized (mSync) {
             if(!mRunning) {
                 mLog.warning("Logcat wasn't running. Ignored.");

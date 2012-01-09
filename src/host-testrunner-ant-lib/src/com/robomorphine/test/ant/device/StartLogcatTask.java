@@ -77,6 +77,7 @@ public class StartLogcatTask extends BaseTask {
     };
     
     private String mReferenceName = null;
+    private String mName;
     private File mFile = null;
     private String mBufferName = null;
     private String mFormat = null;
@@ -85,7 +86,7 @@ public class StartLogcatTask extends BaseTask {
     private boolean mDump = false;
     private List<LogcatTag> mTags = new LinkedList<LogcatTag>();
     
-    public void setReference(String name) {
+    public void setId(String name) {
         mReferenceName = name;
     }
     
@@ -122,13 +123,16 @@ public class StartLogcatTask extends BaseTask {
     @Override
     public void execute() throws BuildException {
         
+        if(mReferenceName != null) {
+            mName = String.format("\"%s\"", mReferenceName);
+        }
+        
         if(mFile == null) {
-            error("File is not specified. Use \"file\" attribute.");
+            error("Logcat %s file is not specified. Use \"file\" attribute.", mName);
         }
         
         IDevice device = getDevice();
-        RemoteLogcat logcat = new RemoteLogcat(getAdb(), 
-                                               device.getSerialNumber(), mFile, 
+        RemoteLogcat logcat = new RemoteLogcat(getAdb(), device.getSerialNumber(), mFile, 
                                                getTestManager().getLogger());
         
         if(mSilent) {
@@ -150,7 +154,7 @@ public class StartLogcatTask extends BaseTask {
                 }
             }
             if(!hasFormat) {
-                warn("Unknown logcat format: %s", mFormat);                
+                warn("Unknown logcat %s format: %s", mName, mFormat);                
                 warn("Known formats are: %s", knownFormats.toString());
             }
             logcat.addArg("-v " + mFormat);
@@ -174,7 +178,7 @@ public class StartLogcatTask extends BaseTask {
                 }
             }
             if(!hasName) {
-                warn("Unknown logcat buffer name: %s", mBufferName);                
+                warn("Unknown logcat %s buffer name: %s", mName, mBufferName);                
                 warn("Known buffer names are: %s", knownNames.toString());
             }
             logcat.addArg("-b " + mBufferName);
@@ -193,6 +197,7 @@ public class StartLogcatTask extends BaseTask {
         }
         
         try {
+            info("Starting logcat %s", mName);
             logcat.start(!mDump);
         } catch(Exception ex) {
             error(ex, "Failed to start logcat: %s", ex.getMessage());
