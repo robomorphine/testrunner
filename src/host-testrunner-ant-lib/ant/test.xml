@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="tester" default="logcat" basedir="..">
+<project name="tester" default="restart-adb" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
@@ -142,6 +142,16 @@
 		</rbm-start-logcat>
 		<sleep seconds="1"/>
 		<rbm-stop-logcat logcatref="logcat" />
+	</target>
+	
+	<target name="restart-adb" depends="define">
+        <rbm-restart-adb />
+    </target>
+	
+	<target name="hanged-devices" depends="define">
+		<rbm-start-emulator avd="test-avd" serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+		<sleep minutes="5"/>
 	</target>
 	    
     <target name="print" depends="define" >
