@@ -166,7 +166,7 @@ public class EmulatorConsole {
     public boolean consoleIsRunning(int port) {
         mLog.v("Sending command to console on %d port to detect if its alive...", port);        
         boolean res = consoleRunCommand(port, "power display");
-        mLog.v("Conclusiong: emulator on port %d is %s.", port, res ? "alive" : "dead");
+        mLog.v("Conclusion: emulator on port %d is %s.", port, res ? "alive" : "dead");
         return res;
     }
     
