@@ -1,7 +1,6 @@
 package com.robomorphine.test;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.internal.avd.AvdInfo;
-import com.android.sdklib.internal.avd.AvdManager;
 import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.log.StdLog;
 import com.robomorphine.test.util.AvdHelper;
