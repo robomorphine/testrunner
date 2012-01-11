@@ -24,7 +24,7 @@ public class StartEmulatorTask extends BaseTask {
     
     private String mAvdName;
     private String mSerialNumberPropertyName;
-    private List<String> mEmulatorArgs = new LinkedList<String>();
+    private final List<String> mEmulatorArgs = new LinkedList<String>();
     private long mConnectTimeout = EmulatorStarter.DEFAULT_CONNECT_TIMEOUT;
     private long mBootTimeout = EmulatorStarter.DEFAULT_BOOT_TIMEOUT;
     private long mLowCpuTimeout = EmulatorStarter.DEFAULT_LOW_CPU_TIMEOUT;
@@ -88,7 +88,7 @@ public class StartEmulatorTask extends BaseTask {
             String serialNo = starter.start(mAttempts, mAvdName, mEmulatorArgs);
             getProject().setProperty(mSerialNumberPropertyName, serialNo);
             info("Emulator successfuly started: \"%s\"", serialNo);
-        } catch(Throwable ex) {
+        } catch(Exception ex) {
             error(ex, "Failed to start emulator.");
         }
     };

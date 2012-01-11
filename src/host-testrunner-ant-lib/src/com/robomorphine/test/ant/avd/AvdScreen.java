@@ -5,6 +5,7 @@ import com.android.sdklib.IAndroidTarget;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,10 +74,10 @@ public class AvdScreen {
     private static final Map<String, String> RESOLUTION_ALIASES;
     static {
         HashMap<String, String> aliases = new HashMap<String, String>();
-        aliases.put("small".toLowerCase(), "426dp*320dp");
-        aliases.put("normal".toLowerCase(), "470dp*320dp");
-        aliases.put("large".toLowerCase(), "640dp*480dp");
-        aliases.put("xlarge".toLowerCase(), "960dp*720dp");
+        aliases.put("small".toLowerCase(Locale.ENGLISH),  "426dp*320dp");
+        aliases.put("normal".toLowerCase(Locale.ENGLISH), "470dp*320dp");
+        aliases.put("large".toLowerCase(Locale.ENGLISH),  "640dp*480dp");
+        aliases.put("xlarge".toLowerCase(Locale.ENGLISH), "960dp*720dp");
         RESOLUTION_ALIASES = Collections.unmodifiableMap(aliases);
     }
     
@@ -85,9 +86,9 @@ public class AvdScreen {
         mAvdTask = task;
     }
     
-    String mResolution = null;
-    String mResolvedResolution = null;
-    int mDensity = -1;
+    private String mResolution = null;
+    private String mResolvedResolution = null;
+    private int mDensity = -1;
     
     /**
      * Density. Can be specified using a number or one of the aliases.
@@ -103,7 +104,7 @@ public class AvdScreen {
                 mAvdTask.error("Failed to parse %s as density.", density);
             }
         } else {
-            Integer value = DENISTY_ALIASES.get(density.toLowerCase());
+            Integer value = DENISTY_ALIASES.get(density.toLowerCase(Locale.ENGLISH));
             if(value == null) {
                 mAvdTask.error("Density alias is not recognized: %s", density);
             }
@@ -141,7 +142,7 @@ public class AvdScreen {
     }
     
     public void setResolution(String resoltuion) {
-        String aliased = RESOLUTION_ALIASES.get(resoltuion.toLowerCase());
+        String aliased = RESOLUTION_ALIASES.get(resoltuion.toLowerCase(Locale.ENGLISH));
         if(aliased != null) {
             mResolution = aliased;
         } else {

@@ -54,7 +54,7 @@ public class BaseTask extends Task {
     }
     
     private Context getContextUnchecked() {
-        if(mContext != null) return mContext;
+        if(mContext != null) return mContext; //NOPMD
         String refName = DEFAULT_CONTEXT_REF_NAME;
         if(mContextRefName != null) {
             refName = mContextRefName;
@@ -63,7 +63,7 @@ public class BaseTask extends Task {
     }
     
     public Context getContext() {
-        if(mContext != null) return mContext;        
+        if(mContext != null) return mContext; //NOPMD
         mContext = getContextUnchecked();
         if(mContext == null) {
            error("Context reference is not set. Make sure you've called setup task.");

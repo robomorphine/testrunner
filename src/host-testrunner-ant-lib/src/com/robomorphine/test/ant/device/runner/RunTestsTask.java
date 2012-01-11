@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-public class RunTestsTask extends BaseTask {
+public class RunTestsTask extends BaseTask { //NOPMD
 
     private static final String DEFAULT_RUNNER_NAME = "android.test.InstrumentationTestRunner";
     
@@ -26,7 +26,7 @@ public class RunTestsTask extends BaseTask {
             mMultiple = multiple;
         }
         
-        public boolean getMultiple() {
+        public boolean isMultiple() {
             return mMultiple;
         }
         
@@ -41,8 +41,8 @@ public class RunTestsTask extends BaseTask {
         
     private String mPackageName;
     private String mRunnerName = DEFAULT_RUNNER_NAME;
-    private RunnerArgs mArgs = new RunnerArgs(this);
-    private RunnerApks mApks = new RunnerApks(this);
+    private final  RunnerArgs mArgs = new RunnerArgs(this);
+    private final RunnerApks mApks = new RunnerApks(this);
     private JUnitTestRunListener mJUnitListener;
     private boolean mUninstall = true;
     private boolean mFailOnError = false;
@@ -77,7 +77,7 @@ public class RunTestsTask extends BaseTask {
             error("Missing junit attribute: \"dir\".");
         }
         
-        mJUnitListener = new JUnitTestRunListener(junit.getDir(), junit.getMultiple());
+        mJUnitListener = new JUnitTestRunListener(junit.getDir(), junit.isMultiple());
     }
     
     private void installApks(List<File> apks, boolean reinstall) {
@@ -107,7 +107,7 @@ public class RunTestsTask extends BaseTask {
     }
     
     @Override
-    public void execute() throws BuildException {
+    public void execute() throws BuildException {  //NOPMD
         
         if(mPackageName == null) {
             warn("Tester package is not specified. Trying to extract package name from tester apk.");

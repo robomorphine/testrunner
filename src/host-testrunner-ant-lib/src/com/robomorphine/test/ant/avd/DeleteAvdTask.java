@@ -15,10 +15,10 @@ public class DeleteAvdTask extends BaseTask {
         mName = name;
     }
     
-    AvdInfo findAvdInfo(String name) {
+    private AvdInfo findAvdInfo(String name) {
         AvdManager avdManager = getTestManager().getAvdManager();
         for(AvdInfo info : avdManager.getAllAvds()) {
-            if(info.getName().equals(mName)) {
+            if(info.getName().equals(name)) {
                 return info;
             }
         }        

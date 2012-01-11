@@ -44,10 +44,10 @@ public class DefaultTestRunListener implements ITestRunListener {
         mTotalTestCount++;
         if(!test.getClassName().equals(mLastTestClass)) {
             mLastTestClass = test.getClassName();
-            System.out.println("  @" + test.getClassName()+": ");
+            mTask.info("  @%s: ", test.getClassName());
         }
         
-        System.out.print("    # " + test.getTestName());
+        mTask.info("    # %s", test.getTestName());
         mTestFailed = false;
         mTestStartTimestamp = System.currentTimeMillis();
     }
@@ -70,8 +70,8 @@ public class DefaultTestRunListener implements ITestRunListener {
         trace = trace.replaceAll("\\n", "\n" + tracePrefix + "  ");
         
         long elapsed = System.currentTimeMillis() - mTestStartTimestamp;
-        System.out.println(String.format(": %s (elapsed %.2fs)", status, elapsed/1000.0));
-        System.out.println(trace);
+        mTask.warn(": %s (elapsed %.2fs)", status, elapsed/1000.0);
+        mTask.warn(trace);
     }
 
     /**
@@ -86,7 +86,7 @@ public class DefaultTestRunListener implements ITestRunListener {
     public void testEnded(TestIdentifier test, Map<String, String> testMetrics) {
         if(!mTestFailed) {
             long elapsed = System.currentTimeMillis() - mTestStartTimestamp;
-            System.out.println(String.format(": SUCCESS (elapsed %.2fs)", elapsed / 1000.0));
+            mTask.info(": SUCCESS (elapsed %.2fs)", elapsed / 1000.0);
         }
     }
 

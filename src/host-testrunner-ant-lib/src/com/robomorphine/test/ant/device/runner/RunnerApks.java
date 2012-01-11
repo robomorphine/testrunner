@@ -41,7 +41,7 @@ public class RunnerApks {
     }
     
     private final BaseTask mTask;
-    private Set<File> mApkFiles = new LinkedHashSet<File>();
+    private final Set<File> mApkFiles = new LinkedHashSet<File>();
     private File mTesterFile;
     
     public RunnerApks(BaseTask task) {

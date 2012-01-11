@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StartLogcatTask extends BaseTask {
+public class StartLogcatTask extends BaseTask { //NOPMD
 
     public enum LogLevel {
         Verbose("V"), 
@@ -84,7 +84,7 @@ public class StartLogcatTask extends BaseTask {
     private boolean mBinary = false;
     private boolean mSilent = false;
     private boolean mDump = false;
-    private List<LogcatTag> mTags = new LinkedList<LogcatTag>();
+    private final List<LogcatTag> mTags = new LinkedList<LogcatTag>();
     
     public void setId(String name) {
         mReferenceName = name;
@@ -121,7 +121,7 @@ public class StartLogcatTask extends BaseTask {
     
      
     @Override
-    public void execute() throws BuildException {
+    public void execute() throws BuildException { //NOPMD
         
         if(mReferenceName != null) {
             mName = String.format("\"%s\"", mReferenceName);

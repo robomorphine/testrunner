@@ -1,6 +1,6 @@
 package com.robomorphine.test.ant.avd;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class AvdHardware {
     
@@ -34,18 +34,19 @@ public class AvdHardware {
     
     public static class Arg extends ArgBase {
         @Override
-        public void setKey(String key) {
+        public void setKey(String key) { // NOPMD 
             super.setKey(key);
         }
         
         @Override
-        public void setValue(String value) {
+        public void setValue(String value) { // NOPMD 
             super.setValue(value);
         }
     }
     
     public static class RamSize extends ArgBase {
         public RamSize() {
+            super();
             setKey("hw.ramSize");
         }
         
@@ -56,6 +57,7 @@ public class AvdHardware {
     
     public static class HeapSize extends ArgBase {
         public HeapSize() {
+            super();
             setKey("vm.heapSize");
         }
         
@@ -65,8 +67,8 @@ public class AvdHardware {
     }
     
     private final AvdConfigTask mAvdTask;
-    private final HashMap<String, String> mHardware;
-    public AvdHardware(AvdConfigTask task, HashMap<String, String> hw) {
+    private final Map<String, String> mHardware;
+    public AvdHardware(AvdConfigTask task, Map<String, String> hw) {
         mAvdTask = task;
         mHardware = hw;
     }

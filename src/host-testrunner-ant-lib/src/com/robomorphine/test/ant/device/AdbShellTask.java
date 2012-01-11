@@ -11,7 +11,7 @@ import org.apache.tools.ant.Task;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AdbShellTask extends BaseTask {
+public class AdbShellTask extends BaseTask { //NOPMD
     
     private final static String EXIT_CODE_FILE = "/tmp/rbm.exit.code";
     
@@ -21,15 +21,10 @@ public class AdbShellTask extends BaseTask {
         private final boolean mLog;
         
         public StringReceiver(Project project, boolean log) {
+            super();
             setTaskName("rbm-adb-shell-output");
             mLog = log;
             setProject(project);
-        }
-        
-        @Override
-        public String getTaskName() {
-            // TODO Auto-generated method stub
-            return super.getTaskName();
         }
         
         @Override
@@ -39,6 +34,7 @@ public class AdbShellTask extends BaseTask {
         
         @Override
         public void flush() {
+            //ignored
         }
         
         @Override
@@ -68,7 +64,7 @@ public class AdbShellTask extends BaseTask {
     }
     
     private String mCmd;
-    private List<String> mArgs = new LinkedList<String>();
+    private final List<String> mArgs = new LinkedList<String>();
     private String mOutputProperty;
     private boolean mLog = true;
     
@@ -108,7 +104,7 @@ public class AdbShellTask extends BaseTask {
     }
     
     @Override
-    public void execute() throws BuildException {
+    public void execute() throws BuildException { //NOPMD
         
         StringBuilder cmd = new StringBuilder();
         if(mCmd != null) {

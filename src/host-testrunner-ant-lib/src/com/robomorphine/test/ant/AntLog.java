@@ -31,9 +31,9 @@ public class AntLog implements ILog, BuildListener {
         if(mVerbose && level > Project.MSG_INFO) {
             level = Project.MSG_INFO;
         }
-        if(mCurrentTask != null) {
+        if(mCurrentTask != null) { // NOPMD 
             mCurrentTask.log(msg, ex, level);
-        } else if(mCurrentTarget != null){
+        } else if(mCurrentTarget != null){ // NOPMD 
             mProject.log(mCurrentTarget, msg, ex, level);
         } else {
             mProject.log(msg, ex, level);
@@ -61,16 +61,20 @@ public class AntLog implements ILog, BuildListener {
     }
     
     /* Build Listener */
+    
     @Override
     public void buildStarted(BuildEvent event) {
+        //ignored
     }
     
     @Override
     public void buildFinished(BuildEvent event) {
+        //ignored
     }
     
     @Override
     public void messageLogged(BuildEvent event) {
+        //ignored
     }
     
     @Override
@@ -80,7 +84,7 @@ public class AntLog implements ILog, BuildListener {
     
     @Override
     public void targetFinished(BuildEvent event) {
-        mCurrentTarget = null;
+        mCurrentTarget = null; // NOPMD 
     }
     
     @Override
@@ -90,6 +94,6 @@ public class AntLog implements ILog, BuildListener {
     
     @Override
     public void taskFinished(BuildEvent event) {
-        mCurrentTask = null;
+        mCurrentTask = null; // NOPMD 
     }
 }

@@ -88,14 +88,17 @@ public class SetupTask extends BaseTask implements BuildListener {
     
     @Override
     public void buildStarted(BuildEvent event) {
+        //ignored
     }
     
     @Override
     public void buildFinished(BuildEvent event) {
+        //ignored
     }
     
     @Override
     public void messageLogged(BuildEvent event) {
+        //ignored
     }
     
     @Override
@@ -107,13 +110,16 @@ public class SetupTask extends BaseTask implements BuildListener {
     
     @Override
     public void targetFinished(BuildEvent event) {
+        //ignored
     }
     
     @Override
     public void taskStarted(BuildEvent event) {
+        //ignored
     }
     
     @Override
-    public void taskFinished(BuildEvent event) {        
+    public void taskFinished(BuildEvent event) {
+        //ignored
     }
 }

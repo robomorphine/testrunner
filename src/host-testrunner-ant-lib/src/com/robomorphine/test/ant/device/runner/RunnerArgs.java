@@ -4,10 +4,10 @@ import com.robomorphine.test.ant.BaseTask;
 
 import org.apache.tools.ant.BuildException;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class RunnerArgs {
@@ -37,7 +37,8 @@ public class RunnerArgs {
             return mValue;
         }
         
-        public void onConfigured(BaseTask task) {
+        public void onConfigured(BaseTask task) {            
+            //ignored
         }
         
         public void verify(BaseTask task) {
@@ -53,12 +54,12 @@ public class RunnerArgs {
     
     public static class Arg extends BaseArg {
         @Override
-        public void setKey(String key) {
+        public void setKey(String key) { // NOPMD 
             super.setKey(key);
         }
         
         @Override
-        public void setValue(String value) {
+        public void setValue(String value) { // NOPMD 
             super.setValue(value);
         }
     }
@@ -67,6 +68,7 @@ public class RunnerArgs {
                 
         private final String mAttributeName;
         public FixedKeyArg(String key, String attributeName) {
+            super();
             setKey(key);
             mAttributeName = attributeName;
         }
@@ -82,7 +84,7 @@ public class RunnerArgs {
      
     public static class EnableArg extends FixedKeyArg {
         public EnableArg(String key) {
-            super("key", "enable");
+            super(key, "enable");
         }
         
         public boolean allowMultiple() {
@@ -124,7 +126,7 @@ public class RunnerArgs {
             }
         }
         
-        private Set<String> mNames = new LinkedHashSet<String>();        
+        private final Set<String> mNames = new LinkedHashSet<String>();        
         public TestClassArg() {
             super("class", "name");
         }
@@ -159,7 +161,7 @@ public class RunnerArgs {
     
     private final BaseTask mTask;
     private final Set<Class<?>> mExistingArgType = new HashSet<Class<?>>();
-    private final LinkedHashMap<String, String> mArgs = new LinkedHashMap<String, String>();
+    private final Map<String, String> mArgs = new LinkedHashMap<String, String>();
     public RunnerArgs(BaseTask task) {
         mTask = task;
     }
@@ -196,7 +198,7 @@ public class RunnerArgs {
         addBaseArg(arg);
     }
     
-    public HashMap<String, String> getArgs() {
+    public Map<String, String> getArgs() {
         return mArgs;
     }
 

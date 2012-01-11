@@ -6,7 +6,7 @@ import com.robomorphine.test.ant.BaseTask;
 
 import org.apache.tools.ant.BuildException;
 
-public class LockDeviceTask extends BaseTask {
+public class LockDeviceTask extends BaseTask { //NOPMD
     
     private String mSerial;
     private boolean mVerify = true;
@@ -45,7 +45,7 @@ public class LockDeviceTask extends BaseTask {
     }
     
     @Override
-    public void execute() throws BuildException {
+    public void execute() throws BuildException { //NOPMD
         if(getContext().getDeviceSerialNumber() != null && !mForce) {
             info("Device is already locked to \"%s\". Skipping lock...", 
                   getContext().getDeviceSerialNumber());

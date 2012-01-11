@@ -44,7 +44,7 @@ public class AvdSdcard {
     }
     
     private long getScale(String modifier) {
-        if(modifier == null || modifier.trim().length() == 0) {
+        if(modifier == null || modifier.trim().isEmpty()) {
             return MB_SCALE;
         }
         if(isModifierFrom(KB_MODIFIERS, modifier)) {

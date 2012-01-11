@@ -101,8 +101,8 @@ public class JUnitTestRunListener implements ITestRunListener {
         private String mTime;
         
         @XmlElement(name="testcase")
-        private List<TestCase> mTests = new LinkedList<TestCase>();
-        private Map<String, TestCase> mTestMap = new HashMap<String, TestCase>();
+        private final List<TestCase> mTests = new LinkedList<TestCase>();
+        private final Map<String, TestCase> mTestMap = new HashMap<String, TestCase>();
         
         private int mFailureCount = 0;
         private int mErrorCount = 0;
@@ -262,8 +262,8 @@ public class JUnitTestRunListener implements ITestRunListener {
     }
     
     private TestRun mTestRun;
-    private File mOutputDir;
-    private boolean mMultiple = true;
+    private final File mOutputDir;
+    private final boolean mMultiple;
     
     public JUnitTestRunListener(File outputDir, boolean multiple) {
         mOutputDir = outputDir;

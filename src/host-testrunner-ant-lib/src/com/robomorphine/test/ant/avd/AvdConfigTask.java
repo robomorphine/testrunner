@@ -11,14 +11,15 @@ import org.apache.tools.ant.BuildException;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
-public class AvdConfigTask extends BaseTask {
+public class AvdConfigTask extends BaseTask { // NOPMD 
     
     private String mReferenceName;
     private String mTarget;
     private IAndroidTarget mResolvedTarget;
-    private boolean mEnableSnapshot = false;
-    private HashMap<String, String> mHardwareConfig = new HashMap<String, String>();
+    private boolean mEnableSnapshot = false; //NOPMD
+    private final Map<String, String> mHardwareConfig = new HashMap<String, String>();
              
     private AvdAbiType mAbiType = null;
     private AvdSnapshot mSnapshot = null;
@@ -103,7 +104,7 @@ public class AvdConfigTask extends BaseTask {
         return mHardware;
     }
     
-    public void create(String avdName, boolean force, boolean failIfExists) throws BuildException {
+    public void create(String avdName, boolean force, boolean failIfExists) throws BuildException { // NOPMD 
     
         AvdManager avdManager = getTestManager().getAvdManager();
         IAndroidTarget target = getResolvedTarget();
