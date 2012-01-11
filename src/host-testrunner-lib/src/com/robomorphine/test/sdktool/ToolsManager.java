@@ -10,7 +10,7 @@ public class ToolsManager {
 
     private final File mSdkPath;
     private final ILog mLogger;
-    private ConcurrentHashMap<Process, Boolean> mRunningProcesses;
+    private final ConcurrentHashMap<Process, Boolean> mRunningProcesses;
     
     public ToolsManager(File sdkPath, ILog log) {
         mSdkPath = sdkPath;
@@ -18,20 +18,21 @@ public class ToolsManager {
         mRunningProcesses = new ConcurrentHashMap<Process, Boolean>();
     }
     
-    ILog getLogger() {
+    protected ILog getLogger() {
         return mLogger;
     }
     
-    void onProcessStarted(Process process) {
+    protected void onProcessStarted(Process process) {
         mRunningProcesses.put(process, true);
     }
     
-    void onProcessCompleted(Process process) {
+    protected void onProcessCompleted(Process process) {
         mRunningProcesses.remove(process);
     }
     
     public void terminate() {
-        for(Process process : new LinkedList<Process>(mRunningProcesses.keySet())) {
+        LinkedList<Process> processes = new LinkedList<Process>(mRunningProcesses.keySet());
+        for(Process process : processes) {  
             process.destroy();
             mRunningProcesses.remove(process);
         }

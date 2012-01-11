@@ -14,7 +14,7 @@ public class AaptTool extends SdkTool {
         super(new File(sdkPath, RELATIVE_PATH), manager);
     }
     
-    static String extractPackageName(Result result) {
+    protected static String extractPackageName(Result result) {
         String out = result.getStdOut();
         if(out == null) {
             return out;
@@ -43,7 +43,7 @@ public class AaptTool extends SdkTool {
             Result result = execute();
             return extractPackageName(result);   
         } catch(InterruptedException ex) {
-            throw new IOException("Failed to wait for execution completion.");
+            throw new IOException("Failed to wait for execution completion.", ex);
         }        
     }
 }

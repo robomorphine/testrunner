@@ -91,7 +91,7 @@ public class TestManager {
         try {
             AndroidDebugBridge.init(false);
             mLog.i("ADB initialized.");
-        } catch(IllegalStateException ex) {
+        } catch(IllegalStateException ex) {  // NOPMD 
             //ignore, thrown if ADB was already initialized            
         }
         File path = AdbTool.getAdbPath(mSdkPath);
@@ -114,15 +114,5 @@ public class TestManager {
     
     public void disconnectAdb() {
         AndroidDebugBridge.disconnectBridge();
-    }
-    
-    public void lockDevice() {
-    }
-    
-    public void installApk(){
-    }
-    
-    public void uninstallApk(){
-    }
-    
+    }    
 }

@@ -41,7 +41,7 @@ public class ProcessCompletionWaiter implements Runnable {
                 
         try {
             exitValue = mProcess.exitValue();
-        } catch(IllegalThreadStateException ex) {
+        } catch(IllegalThreadStateException ex) {  // NOPMD 
             //ignore
         }
         

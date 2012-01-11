@@ -4,7 +4,7 @@ import com.android.sdklib.StdSdkLog;
 
 public class StdLog implements ILog  {
     
-    private StdSdkLog mStdLog = new StdSdkLog();
+    private final StdSdkLog mStdLog = new StdSdkLog();
     private LogLevel mLogLevel = LogLevel.Verbose;
     
     public void setLevel(LogLevel level) {

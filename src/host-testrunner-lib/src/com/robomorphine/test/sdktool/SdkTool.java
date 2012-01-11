@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SdkTool {
     
@@ -48,7 +49,7 @@ public class SdkTool {
         void onStdError(String errLine);
     }
     
-    private HandlerListener mStdOutHandlerListener = new HandlerListener() {
+    private final HandlerListener mStdOutHandlerListener = new HandlerListener() {
         @Override
         public void onLine(String line) {
             if(mToolListener != null) {
@@ -58,11 +59,11 @@ public class SdkTool {
         
         @Override
         public void onCompleted(Throwable ex) {
+            //ignore
         };
     };
     
-    private HandlerListener mStdErrHandlerListener = new HandlerListener() {
-        
+    private final HandlerListener mStdErrHandlerListener = new HandlerListener() {
         @Override        
         public void onLine(String line) {
             if(mToolListener != null) {
@@ -72,10 +73,11 @@ public class SdkTool {
         
         @Override
         public void onCompleted(Throwable ex) {
+            //ignore
         }
     };
     
-    private CompletionListener mCompletionListener = new CompletionListener() {
+    private final CompletionListener mCompletionListener = new CompletionListener() {
         @Override
         public void onCompleted(int exitValue) {
             if(mToolListener != null) {
@@ -93,7 +95,7 @@ public class SdkTool {
     private final ILog mLog;
     private final File mExePath;
     private final List<String> mArguments = new LinkedList<String>();
-    private final HashMap<String, String> mEnv = new HashMap<String, String>();
+    private final Map<String, String> mEnv = new HashMap<String, String>();
     
     private State mState = State.IDLE;
     private Process mProcess;
@@ -104,11 +106,11 @@ public class SdkTool {
     private Thread mProcessCompletionWaiterThread;
     
     private ByteArrayOutputStream mStdOut;
-    private ProcessOutputHandler mStdOutHandler;
+    private ProcessOutputHandler mStdOutHandler;  // NOPMD 
     private Thread mStdOutHandlerThread;
     
     private ByteArrayOutputStream mStdErr;
-    private ProcessOutputHandler mStdErrHandler;
+    private ProcessOutputHandler mStdErrHandler;  // NOPMD 
     private Thread mStdErrHandlerThread;
     
     SdkTool(File exePath, ToolsManager manager) {
@@ -239,9 +241,8 @@ public class SdkTool {
             byte [] data = mStdErr.toByteArray();
             stdErr = new String(data, 0, data.length, Charset.defaultCharset());
         }
-        
-        Result result = new Result(exitCode, stdOut, stdErr);
-        return result;
+         
+        return new Result(exitCode, stdOut, stdErr);
     }
     
     public void terminate() {

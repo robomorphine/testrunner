@@ -1,7 +1,7 @@
 package com.robomorphine.test.emulator;
 
 public class EmulatorStarterException extends Exception {
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
     public EmulatorStarterException(Throwable ex, String msg) {
         super(msg, ex);

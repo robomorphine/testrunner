@@ -190,7 +190,7 @@ public class EmulatorStarter {
         try {
             device.executeShellCommand("cat /proc/stat", new IShellOutputReceiver() {
                 @Override public boolean isCancelled() {return false;}                
-                @Override public void flush() {}                
+                @Override public void flush() { /* ignored */ }                
                 @Override public void addOutput(byte[] buf, int offset, int len) {
                     builder.append(new String(buf, offset, len));
                 }
@@ -244,7 +244,7 @@ public class EmulatorStarter {
             + Long.parseLong(toks[6]) + Long.parseLong(toks[7]) + Long.parseLong(toks[8]);
 
         /* calculate */
-        long result= (cpu2 - cpu1) * 100 / ((cpu2 + idle2) - (cpu1 + idle1) + 1);
+        long result = (cpu2 - cpu1) * 100 / ((cpu2 + idle2) - (cpu1 + idle1) + 1);
         return (int)result;
     }
     

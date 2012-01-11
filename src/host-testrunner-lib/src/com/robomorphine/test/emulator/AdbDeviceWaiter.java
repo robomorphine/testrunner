@@ -13,7 +13,7 @@ import com.robomorphine.test.log.ILog;
 
 import java.io.IOException;
 
-class AdbDeviceWaiter implements IDeviceChangeListener {
+class AdbDeviceWaiter implements IDeviceChangeListener {  // NOPMD 
     
     private final static String SDK_VER_NAME = "ro.build.version.sdk";
     private final static String DEV_BOOT_COMPLETED_PROP_NAME = "dev.bootcomplete";
@@ -106,13 +106,13 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         try {
             mLog.v("Registered for ADB device notifications");
             AndroidDebugBridge.addDeviceChangeListener(this);                
-            return _waitForDeviceToConnect(timeout, uuidPropName, uuidPropValue);
+            return doWaitForDeviceToConnect(timeout, uuidPropName, uuidPropValue);
         } finally {
             AndroidDebugBridge.removeDeviceChangeListener(this);
         }
     }
     
-    private String _waitForDeviceToConnect(long timeout, String uuidPropName, String uuidPropValue) {
+    private String doWaitForDeviceToConnect(long timeout, String uuidPropName, String uuidPropValue) {
         mLog.v("Waiting for device to connect with property: %s=%s (timeout: %s)",
                   uuidPropName, uuidPropValue, formatTime(timeout));
         
@@ -130,7 +130,10 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
             long delta = end - System.currentTimeMillis();            
             mLog.i("Device is still not connected to adb (left: %s)", formatTime(delta));
             
-            if(delta < 0) break;
+            if(delta < 0) { 
+                break;
+            }
+            
             if(delta > CONNECTED_CHECK_INTERVAL) {
                 delta = CONNECTED_CHECK_INTERVAL;
             }
@@ -152,13 +155,13 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         try {
             mLog.v("Registered for ADB device notifications.");
             AndroidDebugBridge.addDeviceChangeListener(this);                
-            return _waitForDeviceToBoot(timeout, serialNo);
+            return doWaitForDeviceToBoot(timeout, serialNo);
         } finally {
             AndroidDebugBridge.removeDeviceChangeListener(this);
         }
     }
     
-    boolean getDevBootedStatus(IDevice device) throws ShellCommandUnresponsiveException,
+    private boolean getDevBootedStatus(IDevice device) throws ShellCommandUnresponsiveException,
             AdbCommandRejectedException, IOException, TimeoutException {
         
         String devBootValue = device.getPropertySync(DEV_BOOT_COMPLETED_PROP_NAME);
@@ -175,7 +178,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         return state != 0;
     }
     
-    boolean getSysBootedStatus(IDevice device) throws ShellCommandUnresponsiveException,
+    private boolean getSysBootedStatus(IDevice device) throws ShellCommandUnresponsiveException,
             AdbCommandRejectedException, IOException, TimeoutException {
         
         String sysBootValue = device.getPropertySync(SYS_BOOT_COMPLETED_PROP_NAME);
@@ -192,7 +195,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         return state != 0;
     }
     
-    int getSdkLevel(IDevice device) throws ShellCommandUnresponsiveException,
+    private int getSdkLevel(IDevice device) throws ShellCommandUnresponsiveException,
             AdbCommandRejectedException, IOException, TimeoutException {
         
         String levelValue = device.getPropertySync(SDK_VER_NAME);
@@ -209,7 +212,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         return level;
     }
     
-    boolean isBootAnimStopped(IDevice device) throws ShellCommandUnresponsiveException,
+    private boolean isBootAnimStopped(IDevice device) throws ShellCommandUnresponsiveException,
             AdbCommandRejectedException, IOException, TimeoutException {
         String stateValue = device.getPropertySync(BOOT_ANIM_SVC_PROP_NAME);
         if(stateValue == null) {
@@ -220,7 +223,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         return expectedState.equals(currentState);
     }
     
-    private boolean isBootCompleted(IDevice device) {
+    private boolean isBootCompleted(IDevice device) {  // NOPMD 
         String serialNo = device.getSerialNumber();
         try {
             if(device.isOffline()) {
@@ -277,6 +280,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
                 
                 @Override
                 public void flush() {
+                    //ignored
                 }
                 
                 @Override
@@ -291,7 +295,7 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
         return result.toString().split("\n").length - 1;
     }
     
-    private boolean _waitForDeviceToBoot(long timeout, String serialNo)
+    private boolean doWaitForDeviceToBoot(long timeout, String serialNo)
             throws DeviceNotConnectedException {
         
         mLog.v("Waiting for device %s to boot (timeout: %s).", serialNo, formatTime(timeout));
@@ -315,7 +319,10 @@ class AdbDeviceWaiter implements IDeviceChangeListener {
             mLog.i("Device %s is still not fully booted (processes: %d, left: %s)", 
                        serialNo, getDeviceProcessCount(device), formatTime(delta));            
             
-            if(delta < 0) break;            
+            if(delta < 0) { 
+                break;
+            }
+            
             if(delta > BOOT_COMPLETED_CHECK_INTERVAL) {
                 delta = BOOT_COMPLETED_CHECK_INTERVAL;
             }

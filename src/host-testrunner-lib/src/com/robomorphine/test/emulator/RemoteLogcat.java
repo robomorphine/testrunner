@@ -21,7 +21,7 @@ public class RemoteLogcat {
     private final ILog mLog;
     private final File mOutputFile;
     
-    private Object mSync = new Object();
+    private final Object mSync = new Object();
     private boolean mRunning = false;
     private ShellOutputThread mOutputThread;
     private ShellOutputReceiver mOutputReceiver;
@@ -86,7 +86,7 @@ public class RemoteLogcat {
         }
         try {
             mOutputStream.flush();
-        } catch(IOException ex) {
+        } catch(IOException ex) {  // NOPMD 
             //ignore
         }
         mOutputThread.interrupt();
@@ -109,6 +109,7 @@ public class RemoteLogcat {
     private class ShellOutputThread extends Thread {                
         private final IDevice mDevice;        
         public ShellOutputThread(IDevice device) {
+            super();
             mDevice = device;
         }
         
@@ -127,7 +128,7 @@ public class RemoteLogcat {
             
             try {
                 mOutputStream.close();
-            } catch(IOException ex) {
+            } catch(IOException ex) {  // NOPMD 
                 //ignore
             }
             

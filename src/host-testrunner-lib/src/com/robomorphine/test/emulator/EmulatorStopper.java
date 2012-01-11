@@ -8,7 +8,7 @@ import com.robomorphine.test.sdktool.AdbTool;
 import com.robomorphine.test.sdktool.SdkTool.Result;
 import com.robomorphine.test.sdktool.ToolsManager;
 
-public class EmulatorStopper {
+public class EmulatorStopper {  // NOPMD 
     
     private final static long DEFAULT_TIMEOUT = 3000;
     
@@ -92,7 +92,7 @@ public class EmulatorStopper {
         return false;
     }    
     
-    public boolean stop(String serialNo) {
+    public boolean stop(String serialNo) {  // NOPMD 
         /* check adb connection */
         if(!mTestManager.isAdbConnected()) {
             throw new IllegalStateException("ADB is not connected");
@@ -116,7 +116,7 @@ public class EmulatorStopper {
             }
         }
         
-        if(!skipAdbStop) {
+        if(!skipAdbStop) {  // NOPMD 
             /* Killing emulator using adb's embedded control over emulator console */        
             mLog.v("Killing emulator \"%s\" using adb.", serialNo); 
             if(adbStop(serialNo)) {
@@ -156,8 +156,8 @@ public class EmulatorStopper {
         boolean ok = true;
         for(int i = firstPort; i <= lastPort; i+=2) {
             String serialNo = String.format("emulator-%d", i); 
-            if(isRunning(serialNo)) {
-                if(!stop(serialNo)) {
+            if(isRunning(serialNo)) { 
+                if(!stop(serialNo)) {  // NOPMD 
                     ok = false;
                 }
             }

@@ -2,9 +2,10 @@ package com.robomorphine.test.exception;
 
 public class DeviceNotConnectedException extends Exception {
     
-    static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
     public DeviceNotConnectedException() {
+        super();
     }
         
     public DeviceNotConnectedException(Throwable ex) {

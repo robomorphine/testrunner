@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +33,7 @@ public class EmulatorConsole {
      * @return port number or -1 if extraction failed
      */
     public int consoleExtractPort(String serialNo) {
-        String serial = serialNo.toLowerCase();
+        String serial = serialNo.toLowerCase(Locale.ENGLISH);
         Pattern pattern = Pattern.compile("emulator-(\\d+)");
         Matcher matcher = pattern.matcher(serial);
         if(!matcher.matches()) {
@@ -60,7 +61,7 @@ public class EmulatorConsole {
         byte [] buffer = new byte[1024];
         
         StringBuilder response = new StringBuilder();
-        while((read = in.read(buffer)) > 0) {
+        while((read = in.read(buffer)) > 0) { 
             String line = new String(buffer, 0, read);
             response.append(line);
             

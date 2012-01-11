@@ -20,7 +20,7 @@ class ProcessOutputHandler implements Runnable {
     
     public ProcessOutputHandler(InputStream processIn, OutputStream out, HandlerListener listener) {
         if(processIn == null || listener == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         }
         mProcessIn = processIn;
         mOutput = out;
@@ -57,7 +57,7 @@ class ProcessOutputHandler implements Runnable {
                 writer.flush();
                 writer.close();
             }
-        } catch(IOException ex) {
+        } catch(IOException ex) {  // NOPMD 
             
         } finally {
             mListener.onCompleted(exception);
