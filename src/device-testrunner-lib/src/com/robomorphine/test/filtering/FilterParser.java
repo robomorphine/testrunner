@@ -9,14 +9,17 @@ import java.util.Map;
 
 public class FilterParser {
     
+    private FilterParser() {
+    }
+    
     public static class FilterEntry {
         public FilterEntry(int action, String value) {
             this.action = action;
             this.value = value;
         }
 
-        final int action;
-        final String value;
+        protected final int action;
+        protected final String value;
         
         @Override
         public String toString() {

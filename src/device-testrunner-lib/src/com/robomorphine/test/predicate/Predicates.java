@@ -119,7 +119,7 @@ public class Predicates {
         
         @Override
         public String toString() {
-            if(mComponents.size() == 0) {
+            if(mComponents.size() == 0) { //NOPMD
                 return "(<empty-and> [true])";
             }
             
@@ -159,7 +159,7 @@ public class Predicates {
         @Override
         public String toString() {
             
-            if(mComponents.size() == 0) {
+            if(mComponents.size() == 0) { //NOPMD
                 return "(<empty-or> [false])";
             }
             
@@ -180,10 +180,10 @@ public class Predicates {
         }
     }
 
-    private static class NotPredicate<T> implements Predicate<T> {
+    public static class NotPredicate<T> implements Predicate<T> {
         private final Predicate<? super T> mPredicate;
 
-        private NotPredicate(Predicate<? super T> predicate) {
+        public NotPredicate(Predicate<? super T> predicate) {
             this.mPredicate = predicate;
         }
 

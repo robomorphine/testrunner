@@ -20,74 +20,34 @@ public class BoolAnnotationTest extends TestCase {
     }
     
     static class NoClassAnnotations extends TestCase {
-        public void testNoMethodAnnotation() {            
-        }
-        
-        @Positive
-        public void testPositive() {            
-        }
-        
-        @Negative
-        public void testNegative() {            
-        }
-        
-        @Positive @Negative
-        public void testPositiveNegative() {            
-        }
+        public void testNoMethodAnnotation() {} // NOPMD 
+        @Positive public void testPositive() {} // NOPMD         
+        @Negative public void testNegative() {} // NOPMD 
+        @Positive @Negative public void testPositiveNegative() {} // NOPMD 
     }
     
     @Positive
     static class PositiveClass extends TestCase {
-        public void testNoMethodAnnotation() {            
-        }
-        
-        @Positive
-        public void testPositive() {            
-        }
-        
-        @Negative
-        public void testNegative() {            
-        }
-        
-        @Positive @Negative
-        public void testPositiveNegative() {            
-        }
+        public void testNoMethodAnnotation() {} // NOPMD 
+        @Positive public void testPositive() {} // NOPMD 
+        @Negative public void testNegative() {} // NOPMD 
+        @Positive @Negative public void testPositiveNegative() {} // NOPMD 
     }
     
     @Negative
     static class NegativeClass extends TestCase {
-        public void testNoMethodAnnotation() {            
-        }
-        
-        @Positive
-        public void testPositive() {            
-        }
-        
-        @Negative
-        public void testNegative() {            
-        }
-        
-        @Positive @Negative
-        public void testPositiveNegative() {            
-        }
+        public void testNoMethodAnnotation() {} // NOPMD
+        @Positive public void testPositive() {} // NOPMD
+        @Negative public void testNegative() {} // NOPMD 
+        @Positive @Negative public void testPositiveNegative() {} // NOPMD 
     }
     
     @Positive @Negative
     static class PositiveNegativeClass extends TestCase {
-        public void testNoMethodAnnotation() {            
-        }
-        
-        @Positive
-        public void testPositive() {            
-        }
-        
-        @Negative
-        public void testNegative() {            
-        }
-        
-        @Positive @Negative
-        public void testPositiveNegative() {            
-        }
+        public void testNoMethodAnnotation() {} // NOPMD 
+        @Positive public void testPositive() {} // NOPMD 
+        @Negative public void testNegative() {} // NOPMD
+        @Positive @Negative public void testPositiveNegative() {} // NOPMD 
     }
     
     static class PostiveNegative extends BoolAnnotation {
@@ -98,7 +58,7 @@ public class BoolAnnotationTest extends TestCase {
     
     static class PositiveNegative_priorityNegative extends PostiveNegative {
         @Override
-        protected boolean negativeHasPriority() {            
+        protected boolean negativeHasPriority() {
             return true;
         }
     }
@@ -110,27 +70,33 @@ public class BoolAnnotationTest extends TestCase {
         }        
     }    
     
+    private final static String testNoMethodAnnotation = "testNoMethodAnnotation";
+    private final static String testPositive = "testPositive";
+    private final static String testNegative = "testNegative";
+    private final static String testPositiveNegative = "testPositiveNegative";
+    
     public void testPositivePriority() {
+        
         HashMap<TestMethod, Boolean> expected = new HashMap<TestMethod, Boolean>();
-        expected.put(new TestMethod("testNoMethodAnnotation", NoClassAnnotations.class), true);        
-        expected.put(new TestMethod("testPositive", NoClassAnnotations.class), true);
-        expected.put(new TestMethod("testNegative", NoClassAnnotations.class), false);
-        expected.put(new TestMethod("testPositiveNegative", NoClassAnnotations.class), true);
+        expected.put(new TestMethod(testNoMethodAnnotation, NoClassAnnotations.class), true);          
+        expected.put(new TestMethod(testPositive, NoClassAnnotations.class), true);  
+        expected.put(new TestMethod(testNegative, NoClassAnnotations.class), false); 
+        expected.put(new TestMethod(testPositiveNegative, NoClassAnnotations.class), true);  
         
-        expected.put(new TestMethod("testNoMethodAnnotation", PositiveClass.class), true);        
-        expected.put(new TestMethod("testPositive", PositiveClass.class), true);
-        expected.put(new TestMethod("testNegative", PositiveClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", PositiveClass.class), true);
+        expected.put(new TestMethod(testNoMethodAnnotation, PositiveClass.class), true);         
+        expected.put(new TestMethod(testPositive, PositiveClass.class), true);  
+        expected.put(new TestMethod(testNegative, PositiveClass.class), false); 
+        expected.put(new TestMethod(testPositiveNegative, PositiveClass.class), true);  
         
-        expected.put(new TestMethod("testNoMethodAnnotation", NegativeClass.class), false);        
-        expected.put(new TestMethod("testPositive", NegativeClass.class), true);
-        expected.put(new TestMethod("testNegative", NegativeClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", NegativeClass.class), true);
+        expected.put(new TestMethod(testNoMethodAnnotation, NegativeClass.class), false);         
+        expected.put(new TestMethod(testPositive, NegativeClass.class), true);  
+        expected.put(new TestMethod(testNegative, NegativeClass.class), false); 
+        expected.put(new TestMethod(testPositiveNegative, NegativeClass.class), true);  
         
-        expected.put(new TestMethod("testNoMethodAnnotation", PositiveNegativeClass.class), true);        
-        expected.put(new TestMethod("testPositive", PositiveNegativeClass.class), true);
-        expected.put(new TestMethod("testNegative", PositiveNegativeClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", PositiveNegativeClass.class), true);
+        expected.put(new TestMethod(testNoMethodAnnotation, PositiveNegativeClass.class), true);          
+        expected.put(new TestMethod(testPositive, PositiveNegativeClass.class), true);  
+        expected.put(new TestMethod(testNegative, PositiveNegativeClass.class), false); 
+        expected.put(new TestMethod(testPositiveNegative, PositiveNegativeClass.class), true);  
                 
         PositiveNegative_priorityPositive predicate = new PositiveNegative_priorityPositive();
         for(Map.Entry<TestMethod, Boolean> entry : expected.entrySet()) {
@@ -146,25 +112,25 @@ public class BoolAnnotationTest extends TestCase {
     
     public void testNegativePriority() {
         HashMap<TestMethod, Boolean> expected = new HashMap<TestMethod, Boolean>();
-        expected.put(new TestMethod("testNoMethodAnnotation", NoClassAnnotations.class), false);        
-        expected.put(new TestMethod("testPositive", NoClassAnnotations.class), true);
-        expected.put(new TestMethod("testNegative", NoClassAnnotations.class), false);
-        expected.put(new TestMethod("testPositiveNegative", NoClassAnnotations.class), false);
+        expected.put(new TestMethod(testNoMethodAnnotation, NoClassAnnotations.class), false);        
+        expected.put(new TestMethod(testPositive, NoClassAnnotations.class), true);
+        expected.put(new TestMethod(testNegative, NoClassAnnotations.class), false);
+        expected.put(new TestMethod(testPositiveNegative, NoClassAnnotations.class), false);
         
-        expected.put(new TestMethod("testNoMethodAnnotation", PositiveClass.class), true);        
-        expected.put(new TestMethod("testPositive", PositiveClass.class), true);
-        expected.put(new TestMethod("testNegative", PositiveClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", PositiveClass.class), false);
+        expected.put(new TestMethod(testNoMethodAnnotation, PositiveClass.class), true);        
+        expected.put(new TestMethod(testPositive, PositiveClass.class), true);
+        expected.put(new TestMethod(testNegative, PositiveClass.class), false);
+        expected.put(new TestMethod(testPositiveNegative, PositiveClass.class), false);
         
-        expected.put(new TestMethod("testNoMethodAnnotation", NegativeClass.class), false);        
-        expected.put(new TestMethod("testPositive", NegativeClass.class), true);
-        expected.put(new TestMethod("testNegative", NegativeClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", NegativeClass.class), false);
+        expected.put(new TestMethod(testNoMethodAnnotation, NegativeClass.class), false);        
+        expected.put(new TestMethod(testPositive, NegativeClass.class), true);
+        expected.put(new TestMethod(testNegative, NegativeClass.class), false);
+        expected.put(new TestMethod(testPositiveNegative, NegativeClass.class), false);
         
-        expected.put(new TestMethod("testNoMethodAnnotation", PositiveNegativeClass.class), false);        
-        expected.put(new TestMethod("testPositive", PositiveNegativeClass.class), true);
-        expected.put(new TestMethod("testNegative", PositiveNegativeClass.class), false);
-        expected.put(new TestMethod("testPositiveNegative", PositiveNegativeClass.class), false);
+        expected.put(new TestMethod(testNoMethodAnnotation, PositiveNegativeClass.class), false);        
+        expected.put(new TestMethod(testPositive, PositiveNegativeClass.class), true);
+        expected.put(new TestMethod(testNegative, PositiveNegativeClass.class), false);
+        expected.put(new TestMethod(testPositiveNegative, PositiveNegativeClass.class), false);
                 
         PositiveNegative_priorityNegative predicate = new PositiveNegative_priorityNegative();
         for(Map.Entry<TestMethod, Boolean> entry : expected.entrySet()) {

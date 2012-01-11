@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -185,34 +186,38 @@ import java.util.Map;
  *      }  
  *
  */
-public class FilterPredicate implements Predicate<TestMethod> {
+public class FilterPredicate implements Predicate<TestMethod> { //NOPMD
     private static final String TAG = FilterPredicate.class.getSimpleName();
+    
+    private static String toLowerCase(String val) {
+        return val.toLowerCase(Locale.ENGLISH);
+    }
 
     private final static Map<String, String> KNOWN_ALIASES;
     static {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("s".toLowerCase(), SmallTest.class.getName());
-        map.put("small".toLowerCase(), SmallTest.class.getName());
-        map.put("short".toLowerCase(), ShortTest.class.getName());
-        map.put("m".toLowerCase(), MediumTest.class.getName());
-        map.put("medium".toLowerCase(), MediumTest.class.getName());
-        map.put("l".toLowerCase(), LargeTest.class.getName());
-        map.put("large".toLowerCase(), LargeTest.class.getName());
-        map.put("long".toLowerCase(), LongTest.class.getName());
-        map.put("p".toLowerCase(), PerformanceTest.class.getName());
-        map.put("perf".toLowerCase(), PerformanceTest.class.getName());
-        map.put("performance".toLowerCase(), PerformanceTest.class.getName());
-        map.put("st".toLowerCase(), StabilityTest.class.getName());
-        map.put("stable".toLowerCase(), StabilityTest.class.getName());
-        map.put("stability".toLowerCase(), StabilityTest.class.getName());
-        map.put("ui".toLowerCase(), UiTest.class.getName());
-        map.put("mn".toLowerCase(), ManualTest.class.getName());
-        map.put("manual".toLowerCase(), ManualTest.class.getName());
+        map.put(toLowerCase("s"), SmallTest.class.getName());
+        map.put(toLowerCase("small"), SmallTest.class.getName());
+        map.put(toLowerCase("short"), ShortTest.class.getName());
+        map.put(toLowerCase("m"), MediumTest.class.getName());
+        map.put(toLowerCase("medium"), MediumTest.class.getName());
+        map.put(toLowerCase("l"), LargeTest.class.getName());
+        map.put(toLowerCase("large"), LargeTest.class.getName());
+        map.put(toLowerCase("long"), LongTest.class.getName());
+        map.put(toLowerCase("p"), PerformanceTest.class.getName());
+        map.put(toLowerCase("perf"), PerformanceTest.class.getName());
+        map.put(toLowerCase("performance"), PerformanceTest.class.getName());
+        map.put(toLowerCase("st"), StabilityTest.class.getName());
+        map.put(toLowerCase("stable"), StabilityTest.class.getName());
+        map.put(toLowerCase("stability"), StabilityTest.class.getName());
+        map.put(toLowerCase("ui"), UiTest.class.getName());
+        map.put(toLowerCase("mn"), ManualTest.class.getName());
+        map.put(toLowerCase("manual"), ManualTest.class.getName());
         KNOWN_ALIASES = Collections.unmodifiableMap(map);
     }
 
     public String getByAlias(String val) {
-        val = val.toLowerCase();
+        val = toLowerCase(val);
         if (KNOWN_ALIASES.containsKey(val)) {
             return KNOWN_ALIASES.get(val);
         }
@@ -221,11 +226,11 @@ public class FilterPredicate implements Predicate<TestMethod> {
 
     private final static Predicate<TestMethod> TRUE_PREDICATE = Predicates.<TestMethod>alwaysTrue();
 
-    private final Predicate<TestMethod> m_predicate;
+    private final Predicate<TestMethod> mPredicate;
 
     public FilterPredicate(String filter) {
         Log.w(TAG, "Filtering tests with: \"" + filter + "\"");
-        m_predicate = createPredicate(FilterParser.parse(filter));
+        mPredicate = createPredicate(FilterParser.parse(filter)); //NOPMD
     }
 
     @SuppressWarnings("unchecked")
@@ -281,11 +286,11 @@ public class FilterPredicate implements Predicate<TestMethod> {
         return Predicates.and(Predicates.or(orPredicates), Predicates.and(andPredicates));
     }
 
-    private void addPredicate(int action, Class<? extends Annotation> annotation,
-            List<Predicate<TestMethod>> orPredicates, List<Predicate<TestMethod>> andPredicates) {
+    private void addPredicate(int action, Class<? extends Annotation> annotation,   //NOPMD
+            List<Predicate<TestMethod>> orPredicates, List<Predicate<TestMethod>> andPredicates) { 
         /* Special handling for annotations that indicate test type */
         if (TestTypeEqualsTo.isTestTypeAnnotation(annotation)) {
-            switch (action) {
+            switch (action) { // NOPMD 
                 case FilterParser.INCLUDE_ACTION:
                     orPredicates.add(new TestTypeEqualsTo(annotation));
                     break;
@@ -295,7 +300,7 @@ public class FilterPredicate implements Predicate<TestMethod> {
                     break;
             }
         } else if(annotation == UiTest.class) {
-            switch(action) {
+            switch(action) { // NOPMD 
                 case FilterParser.INCLUDE_ACTION:
                     andPredicates.add(new IsUiTest());
                     break;
@@ -304,7 +309,7 @@ public class FilterPredicate implements Predicate<TestMethod> {
                     break;
             }
         } else if(annotation == NonUiTest.class) {        
-            switch(action) {
+            switch(action) { // NOPMD 
                 case FilterParser.INCLUDE_ACTION:
                     andPredicates.add(Predicates.<TestMethod>not(new IsUiTest()));
                     break;
@@ -314,7 +319,7 @@ public class FilterPredicate implements Predicate<TestMethod> {
             }
         } else {
             /* All other annotation are handled using standard rules */
-            switch (action) {
+            switch (action) { // NOPMD 
                 case FilterParser.INCLUDE_ACTION:
                     orPredicates.add(new HasAnnotation(annotation));
                     break;
@@ -327,11 +332,11 @@ public class FilterPredicate implements Predicate<TestMethod> {
 
     @Override
     public boolean apply(TestMethod t) {
-        return m_predicate.apply(t);
+        return mPredicate.apply(t);
     }
     
     @Override
     public String toString() {
-        return "[filter " + m_predicate.toString() + "]";
+        return "[filter " + mPredicate.toString() + "]";
     }
 }

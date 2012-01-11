@@ -8,8 +8,8 @@ import android.test.suitebuilder.TestMethod;
 
 import java.lang.annotation.Annotation;
 
-public class IsUiTest extends BoolAnnotation {
-    private static final IsUiTest sIsUiTest = new IsUiTest();
+public class IsUiTest extends BoolAnnotation { //NOPMD
+    private static final IsUiTest sIsUiTest = new IsUiTest(); // NOPMD 
     
     private final IsSubclassOf mIsActivityInstrumentationTestCase;
     private final IsSubclassOf mIsActivityInstrumentationTestCase2;

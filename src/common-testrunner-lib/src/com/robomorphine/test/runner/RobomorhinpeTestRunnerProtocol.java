@@ -1,5 +1,4 @@
 package com.robomorphine.test.runner;
 
-public class RobomorhinpeTestRunnerProtocol {
-
+public class RobomorhinpeTestRunnerProtocol { //NOPMD
 }

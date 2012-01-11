@@ -24,92 +24,76 @@ public class IsUiTestPredicateTest extends TestCase {
     
     static class NoClassAnnotations extends TestCase {
         @ExpectedResult(false)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     @UiTest
     static class UiClass extends TestCase {
         
         @ExpectedResult(true)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     @NonUiTest
     static class NonUiClass extends TestCase {
         
         @ExpectedResult(false)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi(){} //NOPMD
     }
     
     @UiTest @NonUiTest
     static class UiAndNonUiClass extends TestCase {
         
         @ExpectedResult(false)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi(){} //NOPMD
     }
     
     static class TestActivity extends Activity {        
@@ -124,23 +108,19 @@ public class IsUiTestPredicateTest extends TestCase {
         }
         
         @ExpectedResult(true)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     static class ActivityInstrumentationTestCase2 
@@ -151,23 +131,19 @@ public class IsUiTestPredicateTest extends TestCase {
         }
         
         @ExpectedResult(true)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     @NonUiTest
@@ -180,23 +156,19 @@ public class IsUiTestPredicateTest extends TestCase {
         }
         
         @ExpectedResult(false)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     @NonUiTest
@@ -208,23 +180,19 @@ public class IsUiTestPredicateTest extends TestCase {
         }
         
         @ExpectedResult(false)
-        public void testNoMethodAnnotations() {
-        }
+        public void testNoMethodAnnotations() {} //NOPMD
         
         @ExpectedResult(true)
         @UiTest
-        public void testUi() {
-        }
+        public void testUi() {} //NOPMD
         
         @ExpectedResult(false)
         @NonUiTest
-        public void  testNonUi() {            
-        }
+        public void  testNonUi() {} //NOPMD
         
         @ExpectedResult(false)
         @UiTest @NonUiTest
-        public void testUiAndNonUi(){            
-        }
+        public void testUiAndNonUi() {} //NOPMD
     }
     
     

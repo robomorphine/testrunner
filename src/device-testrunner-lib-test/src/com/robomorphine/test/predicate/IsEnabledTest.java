@@ -15,6 +15,8 @@ import junit.framework.TestCase;
 
 public class IsEnabledTest extends TestCase {
     
+    private static final String DISABLED_REASON = "test"; 
+    
     @Retention(RetentionPolicy.RUNTIME)
     static @interface ExpectedResult {
         boolean value();
@@ -22,22 +24,23 @@ public class IsEnabledTest extends TestCase {
     
     static class NoClassAnnotations extends TestCase {
         @ExpectedResult(true)
-        public void testNoMethodAnnotations() {
-        }
-        
+        public void testNoMethodAnnotations() { // NOPMD
+        } 
+
         @ExpectedResult(true)
         @EnabledTest
-        public void testEnabled() {            
-        }
-        
+        public void testEnabled() { // NOPMD
+        } 
+
         @ExpectedResult(false)
-        @DisabledTest("test")
-        public void  testDisabled() {            
-        }
-        
+        @DisabledTest(DISABLED_REASON)
+        public void testDisabled() {  // NOPMD
+        }        
+
         @ExpectedResult(false)
-        @EnabledTest @DisabledTest("test")
-        public void testEnabledAndDisabled(){            
+        @EnabledTest
+        @DisabledTest(DISABLED_REASON)
+        public void testEnabledAndDisabled() { //NOPMD
         }
     }
     
@@ -53,17 +56,17 @@ public class IsEnabledTest extends TestCase {
         }
         
         @ExpectedResult(false)
-        @DisabledTest("test")
+        @DisabledTest(DISABLED_REASON)
         public void  disabled() {            
         }
         
         @ExpectedResult(false)
-        @EnabledTest @DisabledTest("test")
+        @EnabledTest @DisabledTest(DISABLED_REASON)
         public void enabledAndDisabled(){            
         }
     }
     
-    @DisabledTest("test")
+    @DisabledTest(DISABLED_REASON)
     static class DisabledClass extends TestCase {
         @ExpectedResult(false)
         public void noMethodAnnotations() {
@@ -75,18 +78,18 @@ public class IsEnabledTest extends TestCase {
         }
         
         @ExpectedResult(false)
-        @DisabledTest("test")
+        @DisabledTest(DISABLED_REASON)
         public void  disabled() {            
         }
         
         
         @ExpectedResult(false)
-        @EnabledTest @DisabledTest("test")
+        @EnabledTest @DisabledTest(DISABLED_REASON)
         public void enabledAndDisabled(){            
         }
     }
     
-    @EnabledTest @DisabledTest("test")
+    @EnabledTest @DisabledTest(DISABLED_REASON)
     static class EnabledDisabledClass extends TestCase {
         @ExpectedResult(false)
         public void noMethodAnnotations() {
@@ -98,12 +101,12 @@ public class IsEnabledTest extends TestCase {
         }
         
         @ExpectedResult(false)
-        @DisabledTest("test")
+        @DisabledTest(DISABLED_REASON)
         public void  disabled() {            
         }
         
         @ExpectedResult(false)
-        @EnabledTest @DisabledTest("test")
+        @EnabledTest @DisabledTest(DISABLED_REASON)
         public void enabledAndDisabled(){            
         }
     }
@@ -138,43 +141,40 @@ public class IsEnabledTest extends TestCase {
     private final static String METHOD_REASON = "method-reason";
     
     static class ReasonEnabledClass extends TestCase {
-        public void testMethod() {            
-        }
+        public void testMethod() {} //NOPMD
     }
     
     @DisabledTest(IGNORED_REASON)
     static class ReasonEnabledMethod extends TestCase {
-        @EnabledTest
-        public void testMethod() {            
-        }
+        @EnabledTest public void testMethod() {} //NOPMD
     }
     
     @DisabledTest(CLASS_REASON)
     static class ReasonDisabledClass extends TestCase {        
-        public void testMethod() {            
-        }
+        public void testMethod() {} //NOPMD
     }   
     
     static class ReasonDisabledMethod extends TestCase {
         @DisabledTest(METHOD_REASON)
-        public void testMethod() {            
-        }
+        public void testMethod() {} //NOPMD
     }
     
     public void testDisabledReason() {
-        TestMethod method = new TestMethod("testMethod", ReasonEnabledClass.class);        
+        String testMethod = "testMethod";
+        
+        TestMethod method = new TestMethod(testMethod, ReasonEnabledClass.class);        
         String reason = IsEnabled.getDisabledReason(method);
         assertNull(reason);
         
-        method = new TestMethod("testMethod", ReasonEnabledMethod.class);
+        method = new TestMethod(testMethod, ReasonEnabledMethod.class);
         reason = IsEnabled.getDisabledReason(method);
         assertNull(reason);
         
-        method = new TestMethod("testMethod", ReasonDisabledClass.class);
+        method = new TestMethod(testMethod, ReasonDisabledClass.class);
         reason = IsEnabled.getDisabledReason(method);
         assertEquals(CLASS_REASON, reason);
         
-        method = new TestMethod("testMethod", ReasonDisabledMethod.class);
+        method = new TestMethod(testMethod, ReasonDisabledMethod.class);
         reason = IsEnabled.getDisabledReason(method);
         assertEquals(METHOD_REASON, reason);
     }

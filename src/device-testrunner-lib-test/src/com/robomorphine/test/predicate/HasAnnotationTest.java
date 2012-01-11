@@ -15,29 +15,29 @@ public class HasAnnotationTest extends TestCase {
     
     @SimpleAnnotation
     static class ClassAnnotations extends TestCase {
-        public void testMethod(){}
+        public void testMethod(){} // NOPMD 
     }
     
     static class MethodAnnotations extends TestCase {
         @SimpleAnnotation
-        public void testMethod(){}
+        public void testMethod(){} // NOPMD 
     }
     
     @SimpleAnnotation
     static class ClassAndMethodAnnotations extends TestCase {
-        @SimpleAnnotation
-        public void testMethod(){}
+        @SimpleAnnotation public void testMethod(){} // NOPMD 
     }
     
     static class NoAnnotations extends TestCase {
-        public void testMethod(){}
+        public void testMethod(){} // NOPMD 
     }    
     
     public void testAnnotations() {
-        TestMethod classAnnotations = new TestMethod("testMethod", ClassAnnotations.class);
-        TestMethod methodAnnotations = new TestMethod("testMethod", MethodAnnotations.class);
-        TestMethod classAndMethodAnnotations = new TestMethod("testMethod", ClassAndMethodAnnotations.class);
-        TestMethod noAnnotations = new TestMethod("testMethod", NoAnnotations.class);
+        String testMethod = "testMethod";
+        TestMethod classAnnotations = new TestMethod(testMethod, ClassAnnotations.class); 
+        TestMethod methodAnnotations = new TestMethod(testMethod, MethodAnnotations.class);
+        TestMethod classAndMethodAnnotations = new TestMethod(testMethod, ClassAndMethodAnnotations.class);
+        TestMethod noAnnotations = new TestMethod(testMethod, NoAnnotations.class);
         
         HasAnnotation predicate = new HasAnnotation(SimpleAnnotation.class);
         assertTrue(predicate.apply(classAnnotations));

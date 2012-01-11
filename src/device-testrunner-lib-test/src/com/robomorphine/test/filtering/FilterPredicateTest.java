@@ -78,10 +78,10 @@ public class FilterPredicateTest extends TestCase
 	@a
 	static class ExampleTestCase extends TestCase
 	{	
-		public void testA() {}
-		public @b void testAB() {}
-		public @b @c void testABC() {}
-		public @b @c @d void testABCD() {}
+		public void testA() {} //NOPMD
+		public @b void testAB() {} //NOPMD
+		public @b @c void testABC() {} //NOPMD
+		public @b @c @d void testABCD() {} //NOPMD
 	}
 	
 	private final static TestMethod TM_A = new TestMethod("testA", ExampleTestCase.class);
@@ -173,21 +173,21 @@ public class FilterPredicateTest extends TestCase
 		
 	static class AliasExampleTestCase extends TestCase
 	{
-		public void testNoAnnotationsTestMethod(){}
+		public void testNoAnnotationsTestMethod(){} //NOPMD
 		
-		@android.test.suitebuilder.annotation.SmallTest public void testAndroidSmallTestMethod(){}
-		@SmallTest 	public void testSmallTestMethod(){}
-		@ShortTest    public void testShortTestMethod(){}
-		@android.test.suitebuilder.annotation.MediumTest public void testAndroidMediumTestMethod(){}
-		@MediumTest public void testMediumTestMethod(){}
-		@android.test.suitebuilder.annotation.LargeTest public void testAndroidLargeTestMethod(){}
-		@LargeTest 	public void testLargeTestMethod(){}
-		@LongTest    public void testLongTestMethod(){}
-		@PerformanceTest public void testPerformanceTestMethod(){}		
-		@StabilityTest public void testStabilityTestMethod(){}
-		@ManualTest	public void testManualTestMethod(){}
-		@UiTest   public void testUiTestMethod(){}
-		@NonUiTest   public void testNonUiTestMethod(){}
+		@android.test.suitebuilder.annotation.SmallTest public void testAndroidSmallTestMethod(){} //NOPMD
+		@SmallTest 	public void testSmallTestMethod(){} //NOPMD
+		@ShortTest    public void testShortTestMethod(){} //NOPMD
+		@android.test.suitebuilder.annotation.MediumTest public void testAndroidMediumTestMethod(){} //NOPMD
+		@MediumTest public void testMediumTestMethod(){} //NOPMD
+		@android.test.suitebuilder.annotation.LargeTest public void testAndroidLargeTestMethod(){} //NOPMD
+		@LargeTest 	public void testLargeTestMethod(){} //NOPMD
+		@LongTest    public void testLongTestMethod(){} //NOPMD
+		@PerformanceTest public void testPerformanceTestMethod(){} //NOPMD		
+		@StabilityTest public void testStabilityTestMethod(){} //NOPMD
+		@ManualTest	public void testManualTestMethod(){} //NOPMD
+		@UiTest   public void testUiTestMethod(){} //NOPMD
+		@NonUiTest   public void testNonUiTestMethod(){} //NOPMD
 	}
 	
 	private final static TestMethod TM_androidSmall = new TestMethod("testAndroidSmallTestMethod", AliasExampleTestCase.class);
@@ -209,7 +209,7 @@ public class FilterPredicateTest extends TestCase
 	{
 	    String [] smallFilters = new String [] { "+s", "+S", "+small", "+short" };
 	    for(String filter : smallFilters) {	    
-	        Log.i(TAG, "Testing filter: " + filter);
+	        Log.i(TAG, "Testing filter: " + filter); //NOPMD
     		FilterPredicate predicate = new FilterPredicate(filter);
     		assertTrue(predicate.apply(TM_androidSmall));
     		assertTrue(predicate.apply(TM_small));
@@ -423,17 +423,17 @@ public class FilterPredicateTest extends TestCase
 	
 	static class MethodDisabledTestCase extends TestCase
     {   
-        @DisabledTest("For test reasons") public void testDisabledTestMethod(){}
-        @EnabledTest public void testEnabledTestMethod(){}
-        public void testMethod(){}      
+        @DisabledTest("For test reasons") public void testDisabledTestMethod(){} //NOPMD
+        @EnabledTest public void testEnabledTestMethod(){} //NOPMD
+        public void testMethod(){} //NOPMD
     }
     
     @DisabledTest("For test reasons") 
     static class ClassDisabledTestCase extends TestCase
     {   
-        @DisabledTest("For test reasons") public void testDisabledTestMethod(){}
-        @EnabledTest public void testEnabledTestMethod(){}
-        public void testMethod(){}        
+        @DisabledTest("For test reasons") public void testDisabledTestMethod(){} //NOPMD
+        @EnabledTest public void testEnabledTestMethod(){} //NOPMD
+        public void testMethod(){} //NOPMD
     }
 	
 	public void testFilter_disabled_method()

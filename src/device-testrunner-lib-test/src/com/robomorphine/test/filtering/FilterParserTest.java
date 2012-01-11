@@ -4,7 +4,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import com.robomorphine.test.filtering.FilterParser;
 import com.robomorphine.test.filtering.FilterParser.FilterEntry;
 
 public class FilterParserTest extends TestCase

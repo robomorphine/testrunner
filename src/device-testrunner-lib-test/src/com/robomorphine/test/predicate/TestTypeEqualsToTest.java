@@ -1,11 +1,10 @@
-package com.robomorphine.test.predicate;
+package com.robomorphine.test.predicate; // NOPMD 
 
 import com.robomorphine.test.annotation.LongTest;
 import com.robomorphine.test.annotation.ManualTest;
 import com.robomorphine.test.annotation.PerformanceTest;
 import com.robomorphine.test.annotation.ShortTest;
 import com.robomorphine.test.annotation.StabilityTest;
-import com.robomorphine.test.predicate.TestTypeEqualsTo;
 import com.robomorphine.test.predicate.TestTypeEqualsTo.TestType;
 
 import android.test.suitebuilder.TestMethod;
@@ -17,102 +16,93 @@ import java.lang.annotation.Annotation;
 
 import junit.framework.TestCase;
 
-public class TestTypeEqualsToTest extends TestCase
-{
-	static class NoAnnotationsTestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}
+public class TestTypeEqualsToTest extends TestCase {
+    
+	static class NoAnnotationsTestCase extends TestCase {
+	    
+		public void testNoAnnotationsTestMethod(){} //NOPMD
 		
-		@ShortTest  public void testShortTestMethod(){}
-		@SmallTest 	public void testSmallTestMethod(){}
-		@android.test.suitebuilder.annotation.SmallTest public void testAndroidSmallTestMethod(){}
+		@ShortTest  public void testShortTestMethod(){} //NOPMD
+		@SmallTest 	public void testSmallTestMethod(){} //NOPMD
+		@android.test.suitebuilder.annotation.SmallTest public void testAndroidSmallTestMethod(){} //NOPMD
 		
-		@MediumTest public void testMediumTestMethod(){}		
-		@android.test.suitebuilder.annotation.MediumTest public void testAndroidMediumTestMethod(){}
+		@MediumTest public void testMediumTestMethod(){} //NOPMD		
+		@android.test.suitebuilder.annotation.MediumTest public void testAndroidMediumTestMethod(){} //NOPMD
 				
-		@LongTest   public void testLongTestMethod(){}
-		@LargeTest 	public void testLargeTestMethod(){}
-		@android.test.suitebuilder.annotation.LargeTest public void testAndroidLargeTestMethod(){}
+		@LongTest   public void testLongTestMethod(){} //NOPMD
+		@LargeTest 	public void testLargeTestMethod(){} //NOPMD
+		@android.test.suitebuilder.annotation.LargeTest public void testAndroidLargeTestMethod(){} //NOPMD
 		
-		@PerformanceTest public void testPerformanceTestMethod(){}		
-		@StabilityTest public void testStabilityTestMethod(){}
-		@ManualTest	public void testManualTestMethod(){}
+		@PerformanceTest public void testPerformanceTestMethod(){} //NOPMD
+		@StabilityTest public void testStabilityTestMethod(){} //NOPMD
+		@ManualTest	public void testManualTestMethod(){} //NOPMD
 		
-		@SmallTest @MediumTest @LargeTest @PerformanceTest @ManualTest
-		public void test5AnnotationsTestMethod(){}
+		@SmallTest @MediumTest @LargeTest @PerformanceTest @ManualTest 
+		public void test5AnnotationsTestMethod(){} //NOPMD
 		
 		@SmallTest @MediumTest @LargeTest @PerformanceTest		
-		public void test4AnnotationsTestMethod(){}
+		public void test4AnnotationsTestMethod(){} //NOPMD
 		
-		@SmallTest @MediumTest @LargeTest public void test3AnnotationsTestMethod(){}
+		@SmallTest @MediumTest @LargeTest public void test3AnnotationsTestMethod(){} //NOPMD
 		
-		@SmallTest @MediumTest public void test2AnnotationsTestMethod() {}
+		@SmallTest @MediumTest public void test2AnnotationsTestMethod() {} //NOPMD
 	}
 	
 	@LargeTest
-	static class LargeTestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}
+	static class LargeTestCase extends TestCase {
+	    
+		public void testNoAnnotationsTestMethod(){} //NOPMD
 		
-		@SmallTest 	public void testSmallTestMethod(){}		
-		@MediumTest public void testMediumTestMethod(){}		
-		@LargeTest 	public void testLargeTestMethod(){}
-		@PerformanceTest public void testPerformanceTestMethod(){}		
-		@StabilityTest public void testStabilityTestMethod(){}
-		@ManualTest	public void testManualTestMethod(){}
+		@SmallTest 	public void testSmallTestMethod(){} //NOPMD		
+		@MediumTest public void testMediumTestMethod(){} //NOPMD		
+		@LargeTest 	public void testLargeTestMethod(){} //NOPMD
+		@PerformanceTest public void testPerformanceTestMethod(){} //NOPMD		
+		@StabilityTest public void testStabilityTestMethod(){} //NOPMD
+		@ManualTest	public void testManualTestMethod(){} //NOPMD
 	}
 	
 	@SmallTest @MediumTest @LargeTest @PerformanceTest @StabilityTest @ManualTest
-    static class Annotations6TestCase extends TestCase
-    {
-        public void testNoAnnotationsTestMethod(){} 
+    static class Annotations6TestCase extends TestCase {
+        public void testNoAnnotationsTestMethod(){} //NOPMD
     }
 	
 	@SmallTest @MediumTest @LargeTest @PerformanceTest @StabilityTest
-	static class Annotations5TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations5TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	@SmallTest @MediumTest @LargeTest @PerformanceTest 
-	static class Annotations4TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations4TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	@SmallTest @MediumTest @LargeTest 
-	static class Annotations3TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations3TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	@SmallTest @MediumTest 
-	static class Annotations2TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations2TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	@SmallTest 
-	static class Annotations1TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations1TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	@SmallTest 
-	static class Annotations0TestCase extends TestCase
-	{
-		public void testNoAnnotationsTestMethod(){}	
+	static class Annotations0TestCase extends TestCase {
+		public void testNoAnnotationsTestMethod(){}	//NOPMD
 	}
 	
 	
-	static boolean typeEquals(TestMethod method, Class<? extends Annotation> testType)
-	{
+	private static boolean typeEquals(TestMethod method, Class<? extends Annotation> testType) {
 		TestTypeEqualsTo predicate = new TestTypeEqualsTo(testType);
 		return predicate.apply(method);
 	}
 	
-	public void testTestTypeEqualsTo_alias_small()
-    {   
+	public void testTestTypeEqualsTo_alias_small() {   
         String [] smallTestMethods = new String [] {
                 "testNoAnnotationsTestMethod",
                 "testSmallTestMethod",
@@ -136,8 +126,7 @@ public class TestTypeEqualsToTest extends TestCase
         }
     }
 	
-	public void testTestTypeEqualsTo_alias_medium()
-    {   
+	public void testTestTypeEqualsTo_alias_medium() {   
         String [] smallTestMethods = new String [] {
                 "testMediumTestMethod",
                 "testAndroidMediumTestMethod"
@@ -159,8 +148,7 @@ public class TestTypeEqualsToTest extends TestCase
         }
     }
 	
-	public void testTestTypeEqualsTo_alias_large()
-    {   
+	public void testTestTypeEqualsTo_alias_large() {   
         String [] smallTestMethods = new String [] {
                 "testLargeTestMethod",
                 "testAndroidLargeTestMethod",
@@ -183,8 +171,7 @@ public class TestTypeEqualsToTest extends TestCase
         }
     }
 	
-	public void testTestTypeEqualsTo_noAnnotationsClass()
-    {
+	public void testTestTypeEqualsTo_noAnnotationsClass() {
         TestMethod method;
         
         method = new TestMethod("testNoAnnotationsTestMethod", NoAnnotationsTestCase.class);
@@ -221,8 +208,7 @@ public class TestTypeEqualsToTest extends TestCase
         assertTrue(typeEquals(method, MediumTest.class));
     }
 	
-	public void testTestTypeEqualsTo_oneAnnotationsClass()
-	{
+	public void testTestTypeEqualsTo_oneAnnotationsClass() {
 		TestMethod method;
 		
 		method = new TestMethod("testNoAnnotationsTestMethod", LargeTestCase.class);
@@ -247,8 +233,7 @@ public class TestTypeEqualsToTest extends TestCase
 		assertTrue(typeEquals(method, ManualTest.class));		
 	}
 	
-	public void testTestTypeEqualsTo_multiAnnotationsClasses()
-	{
+	public void testTestTypeEqualsTo_multiAnnotationsClasses() {
 		TestMethod method;
 		
 		method = new TestMethod("testNoAnnotationsTestMethod", Annotations6TestCase.class);

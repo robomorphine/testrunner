@@ -15,11 +15,11 @@ public class HasClassAnnotationTest extends TestCase {
     
     @SimpleAnnotation
     static class TestClassWithAnnotation extends TestCase {
-        public void testMethod(){}
+        public void testMethod(){} // NOPMD 
     }
         
     static class TestClassNoAnnotation extends TestCase {
-        public void testMethod(){}
+        public void testMethod(){} // NOPMD 
     }
     
     public void testMethodHasAnnotation() {

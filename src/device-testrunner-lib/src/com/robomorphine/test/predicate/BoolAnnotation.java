@@ -4,7 +4,7 @@ import android.test.suitebuilder.TestMethod;
 
 import java.lang.annotation.Annotation;
 
-public class BoolAnnotation implements Predicate<TestMethod>{
+public class BoolAnnotation implements Predicate<TestMethod>{ // NOPMD 
     
     private final Class<? extends Annotation> mPositive;
     private final Class<? extends Annotation> mNegative;
@@ -32,28 +32,28 @@ public class BoolAnnotation implements Predicate<TestMethod>{
     }
     
     protected boolean isPositive(Class<? extends Annotation> annotation) {
-        return mPositive == annotation;
+        return mPositive.equals(annotation);
     }
     
     protected boolean isNegative(Class<? extends Annotation> annotation) {
-        return mNegative == annotation;
+        return mNegative.equals(annotation);
     }
     
     protected boolean negativeHasPriority() {
         return true;
     }
     
-    protected Class<? extends Annotation> calculateEffectiveAnnotation(TestMethod method) {        
+    protected Class<? extends Annotation> calculateEffectiveAnnotation(TestMethod method) { //NOPMD       
         if(negativeHasPriority()) {
-            if(mMethodHasNegativeAnnotation.apply(method)) return mNegative;            
-            if(mMethodHasPositiveAnnotation.apply(method)) return mPositive;
-            if(mClassHasNegativeAnnotation.apply(method)) return mNegative;
-            if(mClassHasPositiveAnnotation.apply(method)) return mPositive;
+            if(mMethodHasNegativeAnnotation.apply(method)) return mNegative; //NOPMD            
+            if(mMethodHasPositiveAnnotation.apply(method)) return mPositive; //NOPMD
+            if(mClassHasNegativeAnnotation.apply(method)) return mNegative;  //NOPMD
+            if(mClassHasPositiveAnnotation.apply(method)) return mPositive;  //NOPMD
         } else {            
-            if(mMethodHasPositiveAnnotation.apply(method)) return mPositive;            
-            if(mMethodHasNegativeAnnotation.apply(method)) return mNegative;            
-            if(mClassHasPositiveAnnotation.apply(method)) return mPositive;            
-            if(mClassHasNegativeAnnotation.apply(method)) return mNegative;
+            if(mMethodHasPositiveAnnotation.apply(method)) return mPositive; //NOPMD           
+            if(mMethodHasNegativeAnnotation.apply(method)) return mNegative; //NOPMD            
+            if(mClassHasPositiveAnnotation.apply(method)) return mPositive;  //NOPMD          
+            if(mClassHasNegativeAnnotation.apply(method)) return mNegative;  //NOPMD
         }
         return null;
     }
@@ -72,7 +72,7 @@ public class BoolAnnotation implements Predicate<TestMethod>{
         if(annotation == null) {
             annotation = calculateDefaultAnnotation(t);
         }        
-        return annotation == mPositive;
+        return annotation.equals(mPositive);
     };
     
     @Override

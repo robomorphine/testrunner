@@ -27,6 +27,5 @@ package com.android.internal.util;
  * strongly encouraged to state this fact clearly in their API documentation.
  */
 public interface Predicate<T> {
-
     boolean apply(T t);
 }

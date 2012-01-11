@@ -1,8 +1,5 @@
 package com.robomorphine.test.predicate;
 
-import com.robomorphine.test.predicate.Predicate;
-import com.robomorphine.test.predicate.Predicates;
-
 import junit.framework.TestCase;
 
 public class PredicatesTest extends TestCase {
@@ -36,13 +33,13 @@ public class PredicatesTest extends TestCase {
     }
     
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //NOPMD
     public void testAndPredicate_empty() {         
         Predicate<Object> predicate = Predicates.and();
         assertTrue(predicate.apply(null));
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //NOPMD
     public void testAndPredicate_truthTable() {
         Predicate<Object> predicate;
         Predicate<Object> ptrue = Predicates.alwaysTrue();
@@ -61,13 +58,13 @@ public class PredicatesTest extends TestCase {
         assertFalse(predicate.apply(null));
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //NOPMD
     public void testEmptyOrPredicate() {         
         Predicate<Object> predicate = Predicates.or();
         assertFalse(predicate.apply(null));
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //NOPMD
     public void testOrPredicate_truthTable() {
         Predicate<Object> predicate;
         Predicate<Object> ptrue = Predicates.alwaysTrue();

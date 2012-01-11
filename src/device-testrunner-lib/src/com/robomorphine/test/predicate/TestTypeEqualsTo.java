@@ -91,19 +91,21 @@ public class TestTypeEqualsTo implements Predicate<TestMethod> {
         m_testType = dealias(testTypeAnnotation);
     }
 
-    static Class<? extends Annotation> getTestTypeAnnotation(TestMethod t) {
+    private static Class<? extends Annotation> getTestTypeAnnotation(TestMethod t) {
         // Determine test type
 
         // 1. Use test method annotations.
         for (Class<? extends Annotation> annotation : TEST_TYPE_ANNOTATIONS) {
-            if (t.getAnnotation(annotation) != null)
+            if (t.getAnnotation(annotation) != null) {
                 return dealias(annotation);
+            }
         }
 
         // 2. Use enclosing test class annotations.
         for (Class<? extends Annotation> annotation : TEST_TYPE_ANNOTATIONS) {
-            if (t.getEnclosingClass().getAnnotation(annotation) != null)
+            if (t.getEnclosingClass().getAnnotation(annotation) != null) {
                 return dealias(annotation);
+            }
         }
 
         // 3. So no test type annotations on method or class? Default to
