@@ -84,7 +84,7 @@ public class ApkManager {
         AaptTool aapt = mTestManager.getToolsManager().createAaptTool();
         mLog.v("Extracting package from %s...", apkFile.getName());
         String pkgName = aapt.getPacakgeName(apkFile);
-        mLog.v("Package %s: %s", apkFile.getName(), pkgName, attempts);
+        mLog.v("Package %s: %s (attempts : %d)", apkFile.getName(), pkgName, attempts);
         uninstall(device, pkgName);
     }
     
