@@ -290,42 +290,29 @@ public class FilterPredicate implements Predicate<TestMethod> { //NOPMD
             List<Predicate<TestMethod>> orPredicates, List<Predicate<TestMethod>> andPredicates) { 
         /* Special handling for annotations that indicate test type */
         if (TestTypeEqualsTo.isTestTypeAnnotation(annotation)) {
-            switch (action) { // NOPMD 
-                case FilterParser.INCLUDE_ACTION:
-                    orPredicates.add(new TestTypeEqualsTo(annotation));
-                    break;
-                case FilterParser.EXCLUDE_ACTION:
-                    andPredicates
-                            .add(Predicates.<TestMethod> not(new TestTypeEqualsTo(annotation)));
-                    break;
+            if (action == FilterParser.INCLUDE_ACTION) {
+                orPredicates.add(new TestTypeEqualsTo(annotation));
+            } else if (action == FilterParser.EXCLUDE_ACTION) {
+                andPredicates.add(Predicates.<TestMethod> not(new TestTypeEqualsTo(annotation)));
             }
         } else if(annotation == UiTest.class) {
-            switch(action) { // NOPMD 
-                case FilterParser.INCLUDE_ACTION:
-                    andPredicates.add(new IsUiTest());
-                    break;
-                case FilterParser.EXCLUDE_ACTION:
-                    andPredicates.add(Predicates.<TestMethod>not(new IsUiTest()));
-                    break;
+            if(action == FilterParser.INCLUDE_ACTION) {
+                andPredicates.add(new IsUiTest());
+            } else if(action == FilterParser.EXCLUDE_ACTION) {
+                andPredicates.add(Predicates.<TestMethod>not(new IsUiTest()));
             }
         } else if(annotation == NonUiTest.class) {        
-            switch(action) { // NOPMD 
-                case FilterParser.INCLUDE_ACTION:
-                    andPredicates.add(Predicates.<TestMethod>not(new IsUiTest()));
-                    break;
-                case FilterParser.EXCLUDE_ACTION:
-                    andPredicates.add(new IsUiTest());
-                    break;
+            if (action == FilterParser.INCLUDE_ACTION) {
+                andPredicates.add(Predicates.<TestMethod>not(new IsUiTest()));
+            } else if(action == FilterParser.EXCLUDE_ACTION) {
+                andPredicates.add(new IsUiTest());
             }
         } else {
             /* All other annotation are handled using standard rules */
-            switch (action) { // NOPMD 
-                case FilterParser.INCLUDE_ACTION:
-                    orPredicates.add(new HasAnnotation(annotation));
-                    break;
-                case FilterParser.EXCLUDE_ACTION:
-                    andPredicates.add(Predicates.<TestMethod> not(new HasAnnotation(annotation)));
-                    break;
+            if(action == FilterParser.INCLUDE_ACTION) {
+                orPredicates.add(new HasAnnotation(annotation));
+            } else if(action == FilterParser.EXCLUDE_ACTION) {
+                andPredicates.add(Predicates.<TestMethod> not(new HasAnnotation(annotation)));
             }
         }
     }

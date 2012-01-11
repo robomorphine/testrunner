@@ -12,9 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AdbShellTask extends BaseTask { //NOPMD
-    
-    private final static String EXIT_CODE_FILE = "/tmp/rbm.exit.code";
-    
+        
     private static class StringReceiver extends Task implements IShellOutputReceiver {
         
         private final StringBuilder mStream = new StringBuilder();        
@@ -121,7 +119,7 @@ public class AdbShellTask extends BaseTask { //NOPMD
         String output = "";
         try {
             info("executing: %s", cmd);
-            String actualCmd = String.format("(%s); echo $?", cmd, EXIT_CODE_FILE);
+            String actualCmd = String.format("(%s); echo $?", cmd);
              
             IDevice device = getDevice();
             dbg("executing: %s", actualCmd);

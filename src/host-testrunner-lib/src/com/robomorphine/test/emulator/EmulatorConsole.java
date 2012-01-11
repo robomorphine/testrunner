@@ -129,7 +129,7 @@ public class EmulatorConsole {
                         
             /* workaround: first command always fails on windows */
             consoleWriteMessage(out, "help");
-            msg = consoleReadMessage(in);
+            consoleReadMessage(in);
             
             mLog.v("Sending \"%s\" to emulator console...", cmd);
             consoleWriteMessage(out, cmd);
