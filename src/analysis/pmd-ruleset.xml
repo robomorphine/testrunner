@@ -165,7 +165,6 @@
    <rule ref="rulesets/controversial.xml/CallSuperInConstructor"/>
    <rule ref="rulesets/controversial.xml/UnnecessaryParentheses"/>
    <rule ref="rulesets/controversial.xml/DefaultPackage"/>
-   <rule ref="rulesets/controversial.xml/BooleanInversion"/>
    <rule ref="rulesets/controversial.xml/DataflowAnomalyAnalysis"/>
    <rule ref="rulesets/controversial.xml/AvoidFinalLocalVariable"/>
    <rule ref="rulesets/controversial.xml/AvoidUsingShortType"/>
