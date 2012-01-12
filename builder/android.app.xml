@@ -263,5 +263,6 @@
     </target>
 	
 	<target name="pmd" depends="-set-defaults-debug, android.quality.pmd" />
+	<target name="cpd" depends="-set-defaults-debug, android.quality.cpd" />
 	
 </project>

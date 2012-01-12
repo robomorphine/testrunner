@@ -25,6 +25,12 @@
 		</classpath>
 	</taskdef>
 	
+	<taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" >
+        <classpath>
+            <fileset dir="${root.dir}/libs/pmd" includes="*.jar"/>
+        </classpath>
+    </taskdef>
+	
     <!-- Override ant-contrib if task with android's if task.
          Android's if task requires <condition> element, while 
          ant-contrib's if task does not support it. 

@@ -64,10 +64,16 @@
     <delete dir="${drop.dir}" />
   </target>
 	
-  <target name="pmd" depends="buildlist">    
+  <target name="pmd" depends="buildlist, debug">    
   	<subant target="pmd" buildpathref="all-projects" >
   		<property name="build.mode" value="${build.mode}" />
   	</subant>
+  </target>
+	
+  <target name="cpd" depends="buildlist, debug">    
+    <subant target="cpd" buildpathref="all-projects" >
+        <property name="build.mode" value="${build.mode}" />
+    </subant>
   </target>
 	
   <!-- package & deploy -->

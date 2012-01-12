@@ -3,13 +3,17 @@
 	<fail unless="builder.imported" 
 	          message="Import build.xml in order to use ${ant.file.build.android.app} build file." />
 		
-	<target name="pmd-defaults" >
+	<target name="-quality-dirs" >
+		<property name="quality.dir" location="${drop.dir}/${build.mode}/quality-reports" />
+		<mkdir dir="${quality.dir}" />
+	</target>
+	
+	<target name="-pmd-defaults" >
 		<property name="project.pmd" value="true" />
 	</target>
-	<target name="pmd" depends="pmd-defaults" if="${project.pmd}" >
-		<property name="quality.dir" location="${drop.dir}/${build.mode}/quality-reports" />
+	
+	<target name="pmd" depends="-quality-dirs, -pmd-defaults" if="${project.pmd}" >
 		<property name="pmd.out.dir" location="${quality.dir}/pmd" />
-		<mkdir dir="${quality.dir}" />		
 		<mkdir dir="${pmd.out.dir}" />
 		
         <pmd targetjdk="1.6" rulesetfiles="${builder.dir}/quality/pmd.xml" minimumPriority="4" >
@@ -19,5 +23,20 @@
            </fileset>
        </pmd>
 	</target>
+	
+	<target name="-cpd-defaults" >
+        <property name="project.cpd" value="true" />
+    </target>
+	
+	<target name="cpd" depends="-quality-dirs, -cpd-defaults" if="${project.cpd}" >
+        <property name="cpd.out.dir" location="${quality.dir}/cpd" />
+        <mkdir dir="${cpd.out.dir}" />
+		
+	    <cpd minimumTokenCount="25" outputFile="${cpd.out.dir}/${project.name}.xml" format="xml" >
+	    	<fileset dir="${project.dir}/src">
+                <include name="**/*.java"/>
+            </fileset>
+	    </cpd>
+    </target>
 
 </project>

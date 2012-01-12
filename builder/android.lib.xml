@@ -74,5 +74,6 @@
     </target>
 	
 	<target name="pmd" depends="-pre-build-debug, android.quality.pmd" />
+	<target name="cpd" depends="-pre-build-debug, android.quality.cpd" />
 
 </project>
