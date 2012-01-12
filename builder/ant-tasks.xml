@@ -31,6 +31,13 @@
         </classpath>
     </taskdef>
 	
+	<!-- findbugs -->
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask">
+		<classpath>
+            <fileset dir="${root.dir}/libs/findbugs/lib" includes="findbugs-ant.jar"/>
+        </classpath>
+	</taskdef>
+	
     <!-- Override ant-contrib if task with android's if task.
          Android's if task requires <condition> element, while 
          ant-contrib's if task does not support it. 
