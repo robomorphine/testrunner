@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="android.quality" >	
+	<fail unless="builder.imported" 
+	          message="Import build.xml in order to use ${ant.file.build.android.app} build file." />
+		
+	<target name="pmd-defaults" >
+		<property name="project.pmd" value="true" />
+	</target>
+	<target name="pmd" depends="pmd-defaults" if="${project.pmd}" >
+		<property name="quality.dir" location="${drop.dir}/${build.mode}/quality-reports" />
+		<property name="pmd.out.dir" location="${quality.dir}/pmd" />
+		<mkdir dir="${quality.dir}" />		
+		<mkdir dir="${pmd.out.dir}" />
+		
+        <pmd targetjdk="1.6" rulesetfiles="${builder.dir}/quality/pmd.xml" minimumPriority="4" >
+           <formatter type="xml" toFile="${pmd.out.dir}/${project.name}.xml" />
+           <fileset dir="${project.dir}/src">
+              <include name="**/*.java"/>
+           </fileset>
+       </pmd>
+	</target>
+
+</project>

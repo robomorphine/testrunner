@@ -10,6 +10,7 @@
     ############################################
     -->    
     <import file="common.xml" />
+	<import file="android.quality.xml" />
     
     <!-- 
     ############################################ 
@@ -131,5 +132,7 @@
         <delete dir="${common.bin.dir}" />
         <delete dir="${libs.dir}" />
     </target>
+	
+	<target name="pmd" depends="-pre-debug, android.quality.pmd" />
     
 </project>
