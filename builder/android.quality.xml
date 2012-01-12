@@ -32,7 +32,7 @@
         <property name="cpd.out.dir" location="${quality.dir}/cpd" />
         <mkdir dir="${cpd.out.dir}" />
 		
-	    <cpd minimumTokenCount="25" outputFile="${cpd.out.dir}/${project.name}.xml" format="xml" >
+	    <cpd minimumTokenCount="75" outputFile="${cpd.out.dir}/${project.name}.xml" format="xml" >
 	    	<fileset dir="${project.dir}/src">
                 <include name="**/*.java"/>
             </fileset>
