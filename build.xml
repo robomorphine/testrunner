@@ -41,7 +41,10 @@
 	  
   <target name="buildlist" > 
     <ivy:buildlist reference="all-projects">
-      <fileset dir="src" includes="**/build.xml" />
+      <fileset dir="src" >
+		<include name="**/build.xml" />
+		<exclude name="**/ant/**/build.xml" />
+	  </fileset>
     </ivy:buildlist>
     <propertyregex property="formatted-projects" 
                    input="${toString:all-projects}" 
