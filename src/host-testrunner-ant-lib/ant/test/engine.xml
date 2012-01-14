@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="engine" >
+    
+	<!-- set root dir by default -->
+	<property name="root.dir" location="../../../.." />	
+	<!-- set build.mode by default -->
+	<property name="build.mode" value="debug" />
+		
+	<property name="bin.dir" location="${root.dir}/bin/${build.mode}" />
+	<property name="src.dir" location="${root.dir}/src" />
+	<property name="project.dir" location="${src.dir}/host-testrunner-ant-lib" />
+	<property name="project.bin.dir" location="${project.dir}/bin" />
+	<property name="project.ant.dir" location="${project.dir}/ant" />
+	<property name="project.engine.bin.dir" location="${project.dir}/bin/${build.mode}/ant-test-engine" />
+	<property name="project.ant.test.dir" location="${project.ant.dir}/test" />
+	
+	<property file="${root.dir}/local.properties" />
+	<import file="${project.ant.dir}/rbm-testrunner.xml" />
+	
+	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
+	
+	<!-- ant-contrib -->
+	<echo>Defining ant-contrib tasks (build.mode=${build.mode})</echo>
+    <typedef resource="net/sf/antcontrib/antlib.xml" format="xml">
+      <classpath>
+        <pathelement location="${root.dir}/libs/ant-contrib.jar"/>
+      </classpath>
+    </typedef>
+	
+	<if>		
+		<isfalse value="${eclipse}"/>
+		<then>
+			<echo>Defining rbm tasks (build.mode=${build.mode})</echo>
+		    <path id="rbm.classpath">
+		        <pathelement path="${bin.dir}/com.robomorphine.testrunner.common.jar" />
+		        <pathelement path="${bin.dir}/com.robomorphine.testrunner.host.jar" />
+		        <pathelement path="${bin.dir}/com.robomorphine.testrunner.host.ant.jar" />
+		    </path>
+        </then>
+		<else>
+			<echo>Defining rbm tasks from eclipse bin folders</echo>
+			<path id="rbm.classpath">
+				<pathelement path="${src.dir}/common-testrunner-lib/bin/eclipse" />
+		        <pathelement path="${src.dir}/host-testrunner-lib/bin/eclipse" />
+		        <pathelement path="${project.bin.dir}/eclipse" />
+		    </path>
+		</else>
+	</if>
+	
+	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
+		<classpath>
+			 <path refid="rbm.classpath" />
+		</classpath>
+    </rbm-define-tasks>
+	
+	<target name="clean" >
+		<delete dir="${project.engine.bin.dir}" />
+	</target>
+		
+	<target name="run" >
+		<mkdir dir="${project.engine.bin.dir}"/>
+		<javac srcdir="${project.ant.test.dir}" 
+			   destdir="${project.engine.bin.dir}" 
+			   includeantruntime="true">
+			
+			 <include name="engine.java"/>
+			
+	    </javac>
+			
+		<taskdef name="engine"
+			     classpath="${project.engine.bin.dir}" 
+                 classname="engine" />
+		
+		<engine />
+	</target>
+
+</project>
