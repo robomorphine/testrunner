@@ -56,13 +56,14 @@ public class SetupTask extends BaseTask implements BuildListener {
         log.setVerbose(mVerbose);
         
         context = new Context();
+        context.setVerbose(mVerbose);
         
         try {
             TestManager manager = new TestManager(mSdkDir, log);
             if(!mLazy) {
                 manager.connectAdb();
             } else {
-                dbg("Skipping adb connection. Lazy setup is enabled.");
+                info("Skipping adb connection. Lazy setup is enabled.");
             }
             context.setTestManager(manager);
         } catch(AndroidLocationException ex) {
@@ -79,7 +80,7 @@ public class SetupTask extends BaseTask implements BuildListener {
         
         if(getOwningTarget().getName().length() == 0) {
             getProject().addBuildListener(this);
-            dbg("Detected the call from outside target. " + 
+            dbg("Detected the call from top-level target. " + 
                 "Deferring setup unitl first target is called.");
             return;
         }   

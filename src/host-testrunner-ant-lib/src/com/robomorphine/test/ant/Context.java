@@ -6,6 +6,7 @@ public class Context {
     
     private TestManager mTestManager;
     private String mSerialNo;
+    private boolean mVerbose = false;
     
     public void setTestManager(TestManager manager) {
         mTestManager = manager;
@@ -21,5 +22,13 @@ public class Context {
     
     public String getDeviceSerialNumber() {
         return mSerialNo;
+    }
+    
+    public void setVerbose(boolean verbose) {
+        mVerbose = verbose;
+    }
+    
+    public boolean isVerbose() {
+        return mVerbose;
     }
 }

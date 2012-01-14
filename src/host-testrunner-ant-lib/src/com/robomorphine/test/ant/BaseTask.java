@@ -20,6 +20,10 @@ public class BaseTask extends Task {
     private String mDeviceSerialNumber;
     private Context mContext;
     
+    protected boolean isVerbose() {
+        return mContext != null && mContext.isVerbose();
+    }
+    
     public void error(String format, Object...args) {
         error(null, format, args);        
     }
@@ -38,11 +42,13 @@ public class BaseTask extends Task {
     }
     
     public void dbg(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_DEBUG);        
+        int level = isVerbose() ? Project.MSG_INFO : Project.MSG_DEBUG;
+        log(String.format(format, args), level);        
     }
     
     public void verbose(String format, Object...args) {
-        log(String.format(format, args), Project.MSG_VERBOSE);        
+        int level = isVerbose() ? Project.MSG_INFO : Project.MSG_VERBOSE;
+        log(String.format(format, args), level);        
     }
     
     public void setContextRef(String ref) {
@@ -53,12 +59,27 @@ public class BaseTask extends Task {
         mDeviceSerialNumber = deviceSerial;
     }
     
+    private void maybeConnectAdb(Context context) {
+        if(context != null) {
+            TestManager testManager = context.getTestManager();
+            if(testManager != null && !testManager.isAdbConnected()) {            
+                dbg("Connecting to adb (lazy setup is in effect).");
+                try {
+                    context.getTestManager().connectAdb();
+                } catch(AdbConnectionException ex) {
+                    error(ex, "Deferred ADB connect: failed to connect to adb.");
+                }
+            }
+        }
+    }
+    
     private Context getContextUnchecked() {
         if(mContext != null) return mContext; //NOPMD
         String refName = DEFAULT_CONTEXT_REF_NAME;
         if(mContextRefName != null) {
             refName = mContextRefName;
         }
+        verbose("Context is taken from reference: %s", refName);
         return (Context)getProject().getReference(refName);
     }
     
@@ -68,6 +89,7 @@ public class BaseTask extends Task {
         if(mContext == null) {
            error("Context reference is not set. Make sure you've called setup task.");
         }
+        maybeConnectAdb(mContext);
         return mContext;
     }
     
@@ -122,21 +144,5 @@ public class BaseTask extends Task {
         return null;
     }
     
-    @Override
-    public void maybeConfigure() throws BuildException {
-        Context context = getContextUnchecked();
-        if(context != null) {
-            TestManager testManager = context.getTestManager();
-            if(testManager != null && !testManager.isAdbConnected()) {            
-                dbg("Connecting to adb (lazy setup is in effect).");
-                try {
-                    context.getTestManager().connectAdb();
-                } catch(AdbConnectionException ex) {
-                    error(ex, "Deferred ADB connect: failed to connect to adb.");
-                }
-            }
-        }
-        super.maybeConfigure();
-    }
-    
+       
 }
