@@ -1,8 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="test" default="run" >
     <import file="engine.xml" />
-    <target name="test1" />
-    <target name="test2" />
-    <target name="test3" />
-    <target name="test4" />
+	
+	<target name="before" >
+        <rbm-setup sdkdir="${sdk.dir}" verbose="true" />
+		<var name="emulator-serial" />
+    </target> 
+        
+    <target name="-test-start-emulator-min" description="Test simple emulator startup" >
+    	<var name="emulator-serial" unset="true"/>
+    	<rbm-create-avd name="avd.name" target="android-8" force="true" />
+    	<rbm-start-emulator avd="avd.name" serialProperty="emulator-serial" />
+    	<rbm-stop-emulator serial="${emulator-serial}" />
+        <rbm-delete-avd name="avd.name" />
+    </target>
+	
+	<target name="test-start-emulator-max" description="Test emulator startup with all arguments" >
+		<var name="emulator-serial" unset="true"/>
+        <rbm-create-avd name="avd.name" target="android-8" force="true" />
+        <rbm-start-emulator avd="avd.name" 
+	                        serialProperty="emulator-serial" 
+                            connectTimeout="120000" 
+                            bootTimeout="600000"
+                            lowCpuTimeout="6000" 
+        	                lowCpuThreshold="50" 
+        	                attempts="3" >
+        	
+        </rbm-start-emulator>
+        <rbm-stop-emulator serial="${emulator-serial}" />
+        <rbm-delete-avd name="avd.name" />
+    </target>
+	
+	<target name="test-stop-all-emulators" description="Test all emulators stop." >
+		<var name="emulator-serial" unset="true"/>
+        <rbm-create-avd name="avd.name1" target="android-8" force="true" />
+		<rbm-create-avd name="avd.name2" target="android-8" force="true" />
+        <rbm-start-emulator avd="avd.name1" serialProperty="emulator-serial" />
+	    <rbm-start-emulator avd="avd.name2" serialProperty="emulator-serial" />
+        <rbm-stop-all-emulators />
+    </target>
+	
+	<target name="-test-start-all-supported-targets" description="Starts emulators for all supported targets" >		
+		<rbm-create-avd name="avd8" target="android-8" force="true" />
+		<rbm-create-avd name="avd10" target="android-10" force="true" />
+		<rbm-create-avd name="avd11" target="android-11" force="true" />
+		<rbm-create-avd name="avd12" target="android-12" force="true" />
+		<rbm-create-avd name="avd13" target="android-13" force="true" />
+		<rbm-create-avd name="avd15" target="android-15" force="true" />
+		
+		<var name="emulator-serial" unset="true"/>		
+		<rbm-start-emulator avd="avd8"  serialProperty="emulator-serial" />
+		<rbm-stop-emulator serial="${emulator-serial}" />
+		
+		<var name="emulator-serial" unset="true"/>
+		<rbm-start-emulator avd="avd10"  serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+			
+		<var name="emulator-serial" unset="true"/>
+		<rbm-start-emulator avd="avd11"  serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+		
+		<var name="emulator-serial" unset="true"/>
+		<rbm-start-emulator avd="avd12"  serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+		
+        <var name="emulator-serial" unset="true"/>
+		<rbm-start-emulator avd="avd13"  serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+		
+		<var name="emulator-serial" unset="true"/>
+		<rbm-start-emulator avd="avd15"  serialProperty="emulator-serial" />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+		
+	</target>
+	
 </project>

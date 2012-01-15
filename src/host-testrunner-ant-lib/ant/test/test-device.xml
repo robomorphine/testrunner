@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="test" default="run" >
     <import file="engine.xml" />
-    <target name="test1" />
-    <target name="test2" />
-    <target name="test3" />
-    <target name="test4" />
+	
+	
+    
 </project>
