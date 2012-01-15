@@ -13,5 +13,11 @@
     <target name="test-setup-min" description="Uses only required attributes of setup task." >
         <rbm-setup sdkdir="${sdk.dir}" />
         <rbm-restart-adb />
-    </target>    
+    </target>
+    
+    <target name="test-restart-adb" description="Restart adb test." >
+        <rbm-setup sdkdir="${sdk.dir}" />
+        <rbm-restart-adb />
+    </target>
+    
 </project>

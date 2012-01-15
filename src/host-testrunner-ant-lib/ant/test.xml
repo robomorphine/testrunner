@@ -64,98 +64,98 @@
 			<include name="*.apk"/>
 		</fileset>
 		
-		<rbm-run-tests package="${tester.package}" uninstall="false">
-			<junit dir="bin" multiple="true" />
-			<apks>
-				<tester file="${tester.apk}" />
-				<apk file="${tested.apk}" />
-				<apk file="${tested.apk}" />
-			    <apk file="${tested.apk}" />
-				<fileset refid="apks" />
-			</apks>
-			<args>
-			  <coverage enable="false" />
-			  <logonly enable="true" />
-			  <debug enable="false" />
-			  <class name="com.robomorphine.tester.ExampleTestA">
-			  	<name name="com.robomorphine.tester.MainActivityTest" />
-			  </class>
-			</args>
-		</rbm-run-tests>
-		
-		<!--rbm-uninstall-apk package="${tested.package}" />
-		<rbm-uninstall-apk file="${tester.apk}" /-->
-		
-		<rbm-unlock-device />
-		<rbm-get-locked-device property="device.serial" />
-	</target>
-	
-	<target name="default-create-and-start" depends="define">
-		<rbm-setup sdkdir="${sdk.dir}" />
-	    
-		<rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
+    <rbm-run-tests package="${tester.package}" uninstall="false">
+        <junit dir="bin" multiple="true" />
+        <apks>
+            <tester file="${tester.apk}" />
+            <apk file="${tested.apk}" />
+            <apk file="${tested.apk}" />
+            <apk file="${tested.apk}" />
+            <fileset refid="apks" />
+        </apks>
+        <args>
+          <coverage enable="false" />
+          <logonly enable="true" />
+          <debug enable="false" />
+          <class name="com.robomorphine.tester.ExampleTestA">
+            <name name="com.robomorphine.tester.MainActivityTest" />
+          </class>
+        </args>
+    </rbm-run-tests>
+        
+        <!--rbm-uninstall-apk package="${tested.package}" />
+        <rbm-uninstall-apk file="${tester.apk}" /-->
+        
+        <rbm-unlock-device />
+        <rbm-get-locked-device property="device.serial" />
+    </target>
+    
+    <target name="default-create-and-start" depends="define">
+        <rbm-setup sdkdir="${sdk.dir}" />
+        
+        <rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
             <abi type="armeabi-v7a" />
             <snapshot enable="true" />
             <sdcard size="10" />            
-	        <screen resolution="QVGA" density="hdpi" />
+            <screen resolution="QVGA" density="hdpi" />
             <hardware>
                 <ram size="1024" />
                 <heap size="32" />
                 <arg key="a" value="c" />
             </hardware>
-	    </rbm-avd-config>
-		
-    	<rbm-create-avd name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
-    		<abi type="armeabi-v7a" />
-    		<snapshot enable="true" />
-    		<sdcard size="10" />    		
-    		<screen resolution="xlarge" density="hdpi" />
-    		<hardware>
-    			<ram size="1024" />
-    			<heap size="64" />
-    			<arg key="a" value="b" />
-    		</hardware>
-    	</rbm-create-avd>				
-		<rbm-create-avd name="test-avd15" avdconfig="avd15" force="true"/>
-		
-		<rbm-stop-all-emulators />
-		<rbm-start-emulator avd="test-avd15" serialProperty="emulator-serial" >
-			<arg value="-no-audio" />
-		</rbm-start-emulator>
-		
-		<rbm-stop-emulator serial="${emulator-serial}" />
-		<rbm-delete-avd name="test-avd15" />
+        </rbm-avd-config>
+        
+        <rbm-create-avd name="test-avd-name" target="Google Inc.:Google APIs:15" force="true">
+            <abi type="armeabi-v7a" />
+            <snapshot enable="true" />
+            <sdcard size="10" />            
+            <screen resolution="xlarge" density="hdpi" />
+            <hardware>
+                <ram size="1024" />
+                <heap size="64" />
+                <arg key="a" value="b" />
+            </hardware>
+        </rbm-create-avd>                
+        <rbm-create-avd name="test-avd15" avdconfig="avd15" force="true"/>
+        
+        <rbm-stop-all-emulators />
+        <rbm-start-emulator avd="test-avd15" serialProperty="emulator-serial" >
+            <arg value="-no-audio" />
+        </rbm-start-emulator>
+        
+        <rbm-stop-emulator serial="${emulator-serial}" />
+        <rbm-delete-avd name="test-avd15" />
     </target>
-	
-	<target name="test-inheritance" depends="define" >
-		<rbm-lock-device force="false"/>
-		<rbm-lock-device force="false"/>
+    
+    <target name="test-inheritance" depends="define" >
+        <rbm-lock-device force="false"/>
+        <rbm-lock-device force="false"/>
         <ant antfile="ant/test.xml" target="print" inheritrefs="true" />
-	</target>
-	
-	<target name="logcat" depends="define" >
-		<rbm-setup sdkdir="${sdk.dir}" />
+    </target>
+    
+    <target name="logcat" depends="define" >
+        <rbm-setup sdkdir="${sdk.dir}" />
         <rbm-lock-device />
-		<rbm-start-logcat file="bin/logcat.txt" dump="false" format="long" reference="logcat" >
-			<tag name="*" level="error" />
-			<tag name="CONTEXT" level="verbose" />
-		</rbm-start-logcat>
-		<sleep seconds="1"/>
-		<rbm-stop-logcat logcatref="logcat" />
-	</target>
-	
-	<target name="restart-adb" depends="define">
+        <rbm-start-logcat file="bin/logcat.txt" dump="false" format="long" reference="logcat" >
+            <tag name="*" level="error" />
+            <tag name="CONTEXT" level="verbose" />
+        </rbm-start-logcat>
+        <sleep seconds="1"/>
+        <rbm-stop-logcat logcatref="logcat" />
+    </target>
+    
+    <target name="restart-adb" depends="define">
         <rbm-restart-adb />
     </target>
-	
-	<target name="hanged-devices" depends="define">
-		<rbm-start-emulator avd="test-avd" serialProperty="emulator-serial" />
+    
+    <target name="hanged-devices" depends="define">
+        <rbm-start-emulator avd="test-avd" serialProperty="emulator-serial" />
         <rbm-stop-emulator serial="${emulator-serial}" />
-		<sleep minutes="5"/>
-	</target>
-	    
-    <target name="print" depends="define" >
-    	<rbm-lock-device force="false" />
+        <sleep minutes="5"/>
     </target>
-	   
+        
+    <target name="print" depends="define" >
+        <rbm-lock-device force="false" />
+    </target>
+       
 </project>

@@ -1,8 +1,268 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="test" default="run" >
     <import file="engine.xml" />
-    <target name="test1" />
-    <target name="test2" />
-    <target name="test3" />
-    <target name="test4" />
+    
+	<target name="before" >
+		<rbm-setup sdkdir="${sdk.dir}" verbose="true" />
+		<var name="failed" />
+	</target> 
+	
+	<target name="test-avd-config-min" description="Minimum args for avd config" >
+		<rbm-avd-config id="avd.name" target="android-15" />
+	</target>
+	
+	<target name="test-avd-config-abi" description="Avd config with abi" >
+        <rbm-avd-config id="avd.name" target="android-15" >
+        	<abi type="armeabi-v7a" />
+		</rbm-avd-config>
+    </target>
+	
+	<target name="test-avd-config-snapshot" description="Avd config with snapshot" >
+        <rbm-avd-config id="avd.name" target="android-15" >
+        	<snapshot enable="true" />
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <snapshot enable="false" />
+        </rbm-avd-config>
+    </target>
+	
+	<target name="test-avd-config-sdcard" description="Avd config with sdcard" >
+        <rbm-avd-config id="avd.name" target="android-15" >
+        	<sdcard size="100" /> 
+        </rbm-avd-config>
+        
+		<rbm-avd-config id="avd.name" target="android-14" >
+            <sdcard size="100k" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-13" >
+            <sdcard size="100kb" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <sdcard size="100m" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <sdcard size="100mb" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <sdcard size="1g" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <sdcard size="1gb" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <sdcard location="/some/path" /> 
+        </rbm-avd-config>
+		
+		<trycatch>
+			<try>
+        		<rbm-avd-config id="avd.name" target="android-15" >
+                    <sdcard size="1zz" /> 
+                </rbm-avd-config>
+				<fail message="Expected failure, sdcard specified was incorrect." />
+		    </try>
+			<catch />
+		</trycatch>
+		
+    </target>
+	
+	<target name="test-avd-config-screen-density" description="Avd config with screen density" >
+		
+		<!-- valid density  -->
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen density="100" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen density="160" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen density="200" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen density="400" /> 
+        </rbm-avd-config>
+		
+		
+        <!-- valid density aliases -->
+        <rbm-avd-config id="avd.name" target="android-8" >
+            <screen density="ldpi" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-11" >
+            <screen density="mdpi" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <screen density="hdpi" /> 
+        </rbm-avd-config>
+        
+		<rbm-avd-config id="avd.name" target="android-14" >
+            <screen density="xhdpi" /> 
+        </rbm-avd-config>
+        
+        
+        <!-- invalid skin name -->
+        <trycatch>
+            <try>
+                <rbm-avd-config id="avd.name" target="android-15" >
+                	<screen density="xxxxhdpi" />
+                </rbm-avd-config>
+                <fail message="Expected failure, invalid density alias." />
+            </try>
+            <catch />
+        </trycatch>
+    </target>
+	
+	<target name="test-avd-config-screen-skin" description="Avd config with screen skin" >
+		<!-- valid skin name -->
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="HVGA" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-13" >
+            <screen resolution="WXGA" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <screen resolution="WXGA" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-15" >
+            <screen resolution="WVGA800" /> 
+        </rbm-avd-config>
+		
+		<!-- invalid skin name -->
+		<trycatch>
+            <try>
+                <rbm-avd-config id="avd.name" target="android-15" >
+                	<screen resolution="INVALID-SKIN" />
+                </rbm-avd-config>
+                <fail message="Expected failure, invalid skin." />
+            </try>
+            <catch />
+        </trycatch>
+	</target>
+	
+	<target name="test-avd-config-screen-resolution" description="Avd config with screen skin" >
+		
+        <rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100x100" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100\100" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100/100" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100*100" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100px*100px" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100dp*100dp" density="mdpi" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100px*100dp" density="mdpi" /> 
+        </rbm-avd-config>
+		
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <screen resolution="100*100dp" density="mdpi" /> 
+        </rbm-avd-config>
+        
+        <trycatch>
+            <try>
+                <rbm-avd-config id="avd.name" target="android-15" >
+                    <screen resolution="100dp*100" />
+                </rbm-avd-config>
+                <fail message="Expected failure, density is not specified." />
+            </try>
+            <catch />
+        </trycatch>
+    </target>
+	
+	<target name="test-avd-config-hardware" description="Avd config with custom hardware" >
+		<rbm-avd-config id="avd.name" target="android-8" >
+	        <hardware>
+	        	<arg key="name1" value="value" />
+	        	<arg key="name2" value="value" />
+	        </hardware>
+		</rbm-avd-config>
+		
+		<!-- helper args -->
+		<rbm-avd-config id="avd.name" target="android-8" >
+            <hardware>
+            	<ram size="1024" />
+                <heap size="32" />
+            </hardware>
+        </rbm-avd-config>		
+	</target>
+	
+	<target name="test-avd-config-all" description="Avd config with all args" >
+		<rbm-avd-config id="avd.name" target="android-8" >
+			<abi type="armeabi" />
+			<snapshot enable="true" />
+			<sdcard size="100m" />
+			<screen resolution="100*100dp" density="mdpi" />
+            <hardware>
+                <ram size="1024" />
+                <heap size="32" />
+            	<arg key="name1" value="value" />
+                <arg key="name2" value="value" />
+            </hardware>
+        </rbm-avd-config>
+    </target>
+	
+	<target name="test-avd-create-from-config" description="Create AVD from existing config" >
+        <rbm-avd-config id="avd.name" target="android-8" >
+            <abi type="armeabi" />
+            <snapshot enable="true" />
+            <sdcard size="100m" />
+            <screen resolution="100*100dp" density="mdpi" />
+            <hardware>
+                <ram size="1024" />
+                <heap size="32" />
+                <arg key="name1" value="value" />
+                <arg key="name2" value="value" />
+            </hardware>
+        </rbm-avd-config>
+		<rbm-create-avd name="test-avd15" avdconfig="avd.name" force="true"/>
+    </target>
+	
+	<target name="test-avd-create-embedded-config" description="Create AVD config from embedded config" >
+        <rbm-create-avd name="avd.name" target="android-8" force="true">
+            <abi type="armeabi" />
+            <snapshot enable="true" />
+            <sdcard size="100m" />
+            <screen resolution="100*100dp" density="mdpi" />
+            <hardware>
+                <ram size="1024" />
+                <heap size="32" />
+                <arg key="name1" value="value" />
+                <arg key="name2" value="value" />
+            </hardware>
+        </rbm-create-avd>
+    </target>
+	
+	<target name="test-avd-delete" description="Delete AVD config" >
+        <rbm-create-avd name="avd.name" target="android-8" force="true" />
+        <rbm-delete-avd name="avd.name" />
+    </target>
+	
 </project>
