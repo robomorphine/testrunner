@@ -10,7 +10,7 @@ import java.io.File;
 public class InstallApkTask extends BaseTask {
 
     private File mApkFile;
-    private boolean mReinstall;
+    private boolean mReinstall = true;
     private int mAttempts = ApkManager.DEFAULT_ATTEMPTS_COUNT;
     
     public void setFile(File file) {
