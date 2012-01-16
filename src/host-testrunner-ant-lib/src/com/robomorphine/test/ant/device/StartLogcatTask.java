@@ -16,7 +16,7 @@ public class StartLogcatTask extends BaseTask { //NOPMD
         Verbose("V"), 
         Debug("D"), 
         Info("I"), 
-        Warn("W"), 
+        Warn("W"),
         Error("E"), 
         Fatal("F"), 
         Silent("S"); 
@@ -44,11 +44,16 @@ public class StartLogcatTask extends BaseTask { //NOPMD
         }
         
         public void setLevel(String levelName) {
+            if("warning".equalsIgnoreCase(levelName)) {
+                levelName = LogLevel.Warn.name();
+            }
+            
             for(LogLevel level : LogLevel.values()) {
                 if(level.name().equalsIgnoreCase(levelName)) {
                     mLevel = level;
                 }
             }
+            
             if(mLevel == null) {
                 throw new IllegalArgumentException("Invalid level name: " + levelName);
             }
