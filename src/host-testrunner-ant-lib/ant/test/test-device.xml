@@ -1,7 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="test" default="run" >
-    <import file="engine.xml" />
+    <import file="engine.xml" />	
 	
+	<target name="before" >
+        <rbm-setup sdkdir="${sdk.dir}" verbose="true" />
+		<rbm-avd-config id="avd.name" target="android-8" >
+			<sdcard size="100M" />
+		</rbm-avd-config>
+		<rbm-create-avd name="avd.name" target="android-8" force="true" />
+		<trycatch>
+			<try>
+			   <!--rbm-start-emulator avd="avd.name" serialProperty="emulator-serial" /-->
+			   <!-- rbm-lock-device serial="${emulator-serial}" /-->
+			</try>
+			<catch>
+			    <!-- rbm-stop-all-emulators /-->				
+			</catch>
+		</trycatch>
+		
+		<property name="tester.apk" location="${bin.dir}/tester.app.apk" />
+		<property name="tested.apk" location="${bin.dir}/tested.app.apk" />
+    </target>
 	
-    
+	<target name="before-helper" >
+		<rbm-lock-device />
+	</target>
+	
+    <target name="after">
+        <rbm-unlock-device />
+        <rbm-stop-emulator serial="${emulator-serial}" />
+        <rbm-delete-avd name="avd.name" />
+    </target>
+	
+	<target name="-test-lock-unlock-device" description="Verifies that device can locked/unlocked to context">
+		<rbm-unlock-device />
+		<rbm-lock-device />		
+		<rbm-unlock-device />
+		<rbm-lock-device serial="${emulator-serial}" verify="true" />
+		<rbm-unlock-device />
+		<rbm-lock-device verify="true" emulator="true" useFirst="true" />        
+		<rbm-get-locked-device property="test.serial.number" />
+		<echo>locked device: ${test.serial.number}</echo>
+		<rbm-unlock-device />
+	</target>
+	
+	<target name="test-get-device-property" description="Verifes that device property can be extracted.">
+		<rbm-get-device-property remote="ro.product.manufacturer" local="device.product" />
+		<echo>device.product=${device.product}</echo>
+	</target>
+	
+	<target name="test-start-stop-logcat" description="Verifies that logcat can be started and stopped.">
+		<rbm-start-logcat id="logcat" file="${project.bin.dir}/logcat.txt" />
+		<rbm-stop-logcat refid="logcat" />
+		
+		<rbm-start-logcat id="logcat" file="${project.bin.dir}/logcat.txt" dump="true" />
+		
+		<rbm-start-logcat id="logcat" 
+			              file="${project.bin.dir}/logcat.txt"  
+		                  buffer="main" 
+		                  format="brief" 
+	                      binary="false" 
+	                      silent="false" >
+			<tag name="test.tag1" level="error" />
+			<tag name="test.tag2" level="warning" />
+			<tag name="test.tag2" level="warn" />
+		</rbm-start-logcat>
+		<rbm-stop-logcat refid="logcat" />
+		
+	</target>
+	
+	<target name="test-get-apk-package" description="Tests that package name can be extracted from apk">
+		<property name="tester.apk.package.expected.name" value="com.robomorphine.tester.app" />
+		<property name="tested.apk.package.expected.name" value="com.robomorphine.tested.app" />
+			
+		<rbm-get-apk-package file="${tester.apk}" property="tester.apk.package.name" />
+		<rbm-get-apk-package file="${tested.apk}" property="tested.apk.package.name" />
+		<if>
+		  <equals arg1="${tester.apk.package.name}" arg2="${tester.apk.package.expected.name}" />
+		  <else>
+		  	<fail message="Extracted invalid package name from tester.apk. 
+		                   Was ${tester.apk.package.name}, expected ${tester.apk.package.expected.name}" /> 
+		  </else>
+		</if>
+		
+		<if>
+          <equals arg1="${tested.apk.package.name}" arg2="${tested.apk.package.expected.name}" />
+          <else>
+            <fail message="Extracted invalid package name from tested.apk. 
+                           Was ${tested.apk.package.name}, expected ${tested.apk.package.expected.name}" /> 
+          </else>
+        </if>
+	</target>
+		
+	<target name="test-install-uninstall-apk" description="Tests apk installation and uninstallation">
+		<rbm-install-apk file="${tested.apk}" reinstall="true" />
+		<rbm-uninstall-apk file="${tested.apk}"  />
+		
+		<rbm-install-apk file="${tester.apk}" reinstall="true" attempts="5" />
+		<rbm-uninstall-apk package="tester.apk.package.name" attempts="5" />
+		<!-- shouldn't fail if application does not exist -->
+		<rbm-uninstall-apk package="tester.apk.package.name" attempts="5" />
+	</target>
+	
+	<target name="test-push-pull" description="Tests push/pull works">
+        <rbm-adb-push local="${tester.apk}" remote="/sdcard/test.file" />
+		<rbm-adb-pull remote="/sdcard/test.file" local="${project.bin.dir}/test.file" />
+    </target>
+	
 </project>

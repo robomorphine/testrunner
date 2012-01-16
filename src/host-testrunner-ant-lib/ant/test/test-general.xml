@@ -9,7 +9,7 @@
                    verbose="true" />
         <rbm-restart-adb contextref="setup.context" />
     </target>
-    
+	
     <target name="test-setup-min" description="Uses only required attributes of setup task." >
         <rbm-setup sdkdir="${sdk.dir}" />
         <rbm-restart-adb />
