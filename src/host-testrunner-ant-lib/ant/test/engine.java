@@ -80,15 +80,25 @@ public class engine extends Task implements BuildListener {
         
         
         getProject().executeTargets(beforeTargets);
+        
         getProject().addBuildListener(this);
-        for(String targetName : testTargets) { 
-            long before = System.currentTimeMillis();
-            getProject().executeTarget(targetName);   
-            long elapsed = System.currentTimeMillis() - before;
-            log("SUCCESS: elapsed " + elapsed + " ms");
+        try {
+            for(String targetName : testTargets) { 
+                long before = System.currentTimeMillis();
+                getProject().executeTarget(targetName);   
+                long elapsed = System.currentTimeMillis() - before;
+                log("SUCCESS: elapsed " + elapsed + " ms");
+            }
+        } catch(Exception ex) {
+            log("---------------------", Project.MSG_ERR);
+            log(ex.getMessage(), Project.MSG_ERR);
+            log("FAILED", Project.MSG_ERR);
+            log("---------------------", Project.MSG_ERR);
+            throw new BuildException(ex);
+        } finally {
+            getProject().removeBuildListener(this);
+            getProject().executeTargets(afterTargets);
         }
-        getProject().removeBuildListener(this);
-        getProject().executeTargets(afterTargets);
     }
     
     @Override
