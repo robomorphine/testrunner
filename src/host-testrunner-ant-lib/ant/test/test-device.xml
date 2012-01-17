@@ -107,4 +107,238 @@
 		<rbm-adb-pull remote="/sdcard/test.file" local="${project.bin.dir}/test.file" />
     </target>
 	
+	<target name="test-shell" description="Tests adb shell task" >
+		<rbm-adb-shell >
+			<arg value="echo" />
+			<arg value="$(pwd)" />
+		</rbm-adb-shell>
+		
+		<!-- cmd/log -->
+		<rbm-adb-shell cmd="echo $(pwd)" />
+		<rbm-adb-shell cmd="echo $(pwd)" log="true" />
+		<rbm-adb-shell cmd="echo $(pwd)" log="false" />
+		
+		<rbm-adb-shell cmd="echo 111" outputProperty="output.value" />
+		<fail unless="output.value" message="Output value is not set." />
+		
+		<!-- exit code that is set to property -->
+		<rbm-adb-shell cmd="echo 1" exitCodeProperty="exit.code" />
+		<if>
+			<equals arg1="${exit.code}" arg2="0" />
+			<else>
+				<fail message="Expected exit code: 0, was: ${exit.code}" />
+			</else>
+		</if>
+		
+		
+		<!-- expected exit code / fail build based on exit code -->
+		<rbm-adb-shell cmd="invalid cmd" exitCodeFail="false" />
+		<trycatch>
+			<try>
+			  <rbm-adb-shell cmd="invalid cmd" exitCodeFail="true" />
+			  <fail message="should have failed due to return code" />
+			</try>
+		    <catch />
+		</trycatch>
+		<rbm-adb-shell cmd="invalid cmd" exitCodeFail="true" exitCodeExpected="127" />
+		
+		<!-- all args --> 
+		<rbm-adb-shell cmd="echo" log="true" 
+			           outputProperty="output.value" 
+			           exitCodeProperty="exit.code" 
+		               exitCodeFail="true" 
+		               exitCodeExpected="0" >
+            <arg value="$(pwd)" />
+			<arg value=">" />
+			<arg value="/dev/null" />
+        </rbm-adb-shell>
+	</target>
+	
+	<target name="test-run-tests-attrs" description="Tests tests are run fine" >
+		
+		<!-- simplest test run -->
+		<rbm-run-tests>
+	        <apks>
+	        	<apk file="${tested.apk}" />
+	            <tester file="${tester.apk}" />
+	        </apks>
+	    </rbm-run-tests>
+		
+		<!-- simplest test run with explicitly specified tester package name-->
+        <rbm-run-tests package="com.robomorphine.tester.app" >
+            <apks>
+                <apk file="${tested.apk}" />
+                <apk file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- simplest test run with custom test runner -->
+        <rbm-run-tests runner="android.test.InstrumentationTestRunner" >
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- Simplest test run without uninstalling apk before and after tests. 
+		     Two times in a row, build shouldn't fail -->
+		<rbm-run-tests uninstall="false" >
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<rbm-run-tests uninstall="false" >
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- failing build on test failure -->
+		<trycatch>
+			<try>
+    	        <rbm-run-tests failOnError="true">
+    	            <apks>
+    	                <apk file="${tested.apk}" />
+    	                <tester file="${tester.apk}" />
+    	            </apks>
+    	        </rbm-run-tests>
+				<fail message="expected failed build on failed test" />
+			</try>
+			<catch />
+		</trycatch>
+		
+	</target>
+	
+	<target name="test-run-tests-apks" description="Verifies \apks\ elements works fine in rbm-run-tests" >
+		<!-- explicit tester apk -->
+		<rbm-run-tests>
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- no tester apk & no package-->
+		<trycatch>
+			<try>
+                <rbm-run-tests>
+                    <apks>
+                        <apk file="${tested.apk}" />
+                        <apk file="${tester.apk}" />
+                    </apks>
+                </rbm-run-tests>
+				<fail message="Expected task to fail, as no tester package is available" />
+			</try>
+			<catch />
+		</trycatch>
+		
+		<!-- using embedded fileset -->
+		<rbm-run-tests package="com.robomorphine.tester.app" >
+            <apks>
+            	<fileset dir="${bin.dir}" >
+            		 <include name="tester.app.apk"/>
+            		 <include name="tested.app.apk"/>
+            	</fileset>                
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- using fileset as refid-->
+		<fileset dir="${bin.dir}" id="apk.files" >
+             <include name="tester.app.apk"/>
+             <include name="tested.app.apk"/>
+        </fileset>
+		<rbm-run-tests package="com.robomorphine.tester.app" >
+            <apks>
+                <fileset refid="apk.files" />
+            </apks>
+        </rbm-run-tests>
+	</target>
+	
+	<target name="test-run-tests-junit" description="Verifies \junit\ elements works fine in rbm-run-tests" >
+        <!-- no junit element -->
+		<rbm-run-tests>
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- single report file -->
+		<rbm-run-tests>
+			<junit dir="${project.bin.dir}/junit" multiple="false" />
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- multiple report files -->
+        <rbm-run-tests>
+            <junit dir="${project.bin.dir}/junit/multiple" multiple="true" />
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+        </rbm-run-tests>
+		
+		<!-- fail on multiple junit elements -->
+		<trycatch>
+			<try>
+                <rbm-run-tests>
+                    <junit dir="${project.bin.dir}/junit/multiple" multiple="true" />
+                	<junit dir="${project.bin.dir}/junit/multiple" multiple="false" />
+                    <apks>
+                        <apk file="${tested.apk}" />
+                        <tester file="${tester.apk}" />
+                    </apks>
+                </rbm-run-tests>
+				<fail message="Should haveve failed, because multiple junit elements are used" />
+        	</try>
+			<catch />
+		</trycatch>
+    </target>
+	
+	<target name="test-run-tests-args" description="Verifies \args\ elements works fine in rbm-run-tests" >
+		<!-- no args to testrunner -->
+		<rbm-run-tests>
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+		 
+        </rbm-run-tests>
+		
+		<!-- simple arg -->
+		<rbm-run-tests>
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+			<args>
+				 <arg key="log" value="true" />
+			</args>
+        </rbm-run-tests>
+		
+		<!-- special args -->
+        <rbm-run-tests>
+            <apks>
+                <apk file="${tested.apk}" />
+                <tester file="${tester.apk}" />
+            </apks>
+            <args>
+                 <arg key="log" value="true" />
+            	 <coverage enable="false" />
+    	         <logonly enable="true" />
+    	         <debug enable="false" />
+            	 <class name="com.robomorphine.tester.ExampleTestA" >
+    	             <name name="com.robomorphine.tester.MainActivityTest" />
+    	         </class>
+            </args>
+        </rbm-run-tests>
+	</target>
+	    
+	
 </project>
