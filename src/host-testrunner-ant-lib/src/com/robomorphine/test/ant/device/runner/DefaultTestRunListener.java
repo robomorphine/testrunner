@@ -70,7 +70,7 @@ public class DefaultTestRunListener implements ITestRunListener {
         trace = trace.replaceAll("\\n", "\n" + tracePrefix + "  ");
         
         long elapsed = System.currentTimeMillis() - mTestStartTimestamp;
-        mTask.warn(": %s (elapsed %.2fs)", status, elapsed/1000.0);
+        mTask.warn("      %s (elapsed %.2fs)", status, elapsed/1000.0);
         mTask.warn(trace);
     }
 
@@ -86,7 +86,7 @@ public class DefaultTestRunListener implements ITestRunListener {
     public void testEnded(TestIdentifier test, Map<String, String> testMetrics) {
         if(!mTestFailed) {
             long elapsed = System.currentTimeMillis() - mTestStartTimestamp;
-            mTask.info(": SUCCESS (elapsed %.2fs)", elapsed / 1000.0);
+            mTask.info("      SUCCESS (elapsed %.2fs)", elapsed / 1000.0);
         }
     }
 

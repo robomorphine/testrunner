@@ -83,12 +83,6 @@ public class AdbShellTask extends BaseTask { //NOPMD
         mOutputProperty = name;
     }
     
-    public void addConfiguredArg(Arg arg) {
-        if(arg.getValue() != null) {
-            mArgs.add(arg.getValue());
-        }
-    }
-    
     public void setExitCodeProperty(String name) {
         mExitCodeProperty = name;
     }
@@ -99,6 +93,12 @@ public class AdbShellTask extends BaseTask { //NOPMD
     
     public void setExitCodeFail(boolean fail) {
         mExitCodeFail = fail;
+    }
+    
+    public void addConfiguredArg(Arg arg) {
+        if(arg.getValue() != null) {
+            mArgs.add(arg.getValue());
+        }
     }
     
     @Override

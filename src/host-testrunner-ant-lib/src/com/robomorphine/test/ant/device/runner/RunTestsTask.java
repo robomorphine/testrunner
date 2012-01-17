@@ -64,7 +64,7 @@ public class RunTestsTask extends BaseTask { //NOPMD
         mUninstall = uninstall;
     }
     
-    public RunnerArgs createArgs() {
+    public RunnerArgs createArgs() {              
         return mArgs;
     }
     
@@ -73,9 +73,13 @@ public class RunTestsTask extends BaseTask { //NOPMD
     }
     
     public void addConfiguredJunit(JUnit junit) {
+        if(mJUnitListener != null) {
+            error("Only one junit element can be specified.");
+        }
+              
         if(junit.getDir() == null) {
             error("Missing junit attribute: \"dir\".");
-        }
+         }
         
         mJUnitListener = new JUnitTestRunListener(junit.getDir(), junit.isMultiple());
     }
