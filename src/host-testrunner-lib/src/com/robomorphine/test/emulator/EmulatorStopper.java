@@ -156,10 +156,16 @@ public class EmulatorStopper {  // NOPMD
         boolean ok = true;
         for(int i = firstPort; i <= lastPort; i+=2) {
             String serialNo = String.format("emulator-%d", i); 
-            if(isRunning(serialNo)) { 
-                if(!stop(serialNo)) {  // NOPMD 
+            if(isRunning(serialNo)) {
+                mLog.i("Port %d: emulator detected, stopping...", i);
+                if(stop(serialNo)) {  // NOPMD 
+                    mLog.i("Port %d: emulator stopped.", i);
+                } else {
                     ok = false;
+                    mLog.w("Port %d: failed to stop emulator.", i);
                 }
+            } else {
+                mLog.i("Port %d: no emulator detected.", i);
             }
         }
         

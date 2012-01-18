@@ -109,7 +109,7 @@ public class EmulatorConsole {
         }
     }
     
-    public boolean consoleRunCommand(int port, String cmd) {
+    public boolean consoleRunCommand(int port, String cmd, boolean logAsError) {
         try {
             InetSocketAddress addr = new InetSocketAddress("127.0.0.1", port);
             
@@ -143,7 +143,11 @@ public class EmulatorConsole {
             mLog.v("Emulator console response:\n%s", msg);
             return true;
         } catch(IOException ex) {
-            mLog.e(ex, "Failed to run \"%s\" on emulator console.", cmd);
+            if(logAsError) {
+                mLog.e(ex, "Failed to run \"%s\" on emulator console.", cmd);
+            } else {
+                mLog.v("Failed to run \"%s\" on emulator console.", cmd);
+            }
             return false;
         }       
     }
@@ -166,7 +170,7 @@ public class EmulatorConsole {
     
     public boolean consoleIsRunning(int port) {
         mLog.v("Sending command to console on %d port to detect if its alive...", port);        
-        boolean res = consoleRunCommand(port, "power display");
+        boolean res = consoleRunCommand(port, "power display", false);
         mLog.v("Conclusion: emulator on port %d is %s.", port, res ? "alive" : "dead");
         return res;
     }
@@ -181,6 +185,6 @@ public class EmulatorConsole {
     }
     
     public boolean consoleStop(int port) {
-        return consoleRunCommand(port, "kill");
+        return consoleRunCommand(port, "kill", false);
     }
 }
