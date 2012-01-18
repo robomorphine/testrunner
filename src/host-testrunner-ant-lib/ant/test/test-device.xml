@@ -4,10 +4,10 @@
 	
 	<target name="before" >
         <rbm-setup sdkdir="${sdk.dir}" verbose="true" />
-		<rbm-avd-config id="avd.name" target="android-8" >
+		<rbm-avd-config id="avd.config" target="android-8" >
 			<sdcard size="100M" />
 		</rbm-avd-config>
-		<rbm-create-avd name="avd.name" target="android-8" force="true" />
+		<rbm-create-avd name="avd.name" avdconfig="avd.config" force="true" />
 		<trycatch>
 			<try>
 			   <rbm-start-emulator avd="avd.name" serialProperty="emulator-serial" />
