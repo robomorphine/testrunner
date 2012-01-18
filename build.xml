@@ -44,6 +44,7 @@
       <fileset dir="src" >
 		<include name="**/build.xml" />
 		<exclude name="**/ant/**/build.xml" />
+      	<exclude name="**/original-build/**/build.xml" />
 	  </fileset>
     </ivy:buildlist>
     <propertyregex property="formatted-projects" 
