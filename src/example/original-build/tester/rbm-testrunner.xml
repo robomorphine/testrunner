@@ -155,7 +155,7 @@ Helper tasks to define robormophine tasks.
 				<sdcard size="100" />
                 <screen resolution="WXGA" />
                 <hardware>
-                    <ram size="1024" />
+                    <ram size="800" />
                     <heap size="48" />
                 </hardware>
 			</rbm-avd-config>
