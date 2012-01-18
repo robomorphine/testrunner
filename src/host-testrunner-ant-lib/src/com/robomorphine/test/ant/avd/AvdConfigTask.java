@@ -113,7 +113,7 @@ public class AvdConfigTask extends BaseTask { // NOPMD
             for(AvdInfo info : avdManager.getAllAvds()) {
                 if(info.getName().equals(avdName)) {                
                     if(failIfExists) {
-                        error("Avd %s already exsits.");
+                        error("Avd %s already exsits.", avdName);
                     } else {
                         /* avd already exists, we're done here */
                         return;
