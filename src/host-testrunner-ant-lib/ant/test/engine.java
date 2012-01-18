@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-public class engine extends Task implements BuildListener {
+public class engine extends Task implements BuildListener { //NOPMD
     
     @Override
     public void log(String msg) {
@@ -47,7 +47,7 @@ public class engine extends Task implements BuildListener {
                         
         log("Enumerating targets.", Project.MSG_INFO);
         
-        Vector<String> beforeTargets = new Vector<String>();
+        Vector<String> beforeTargets = new Vector<String>(); //NOPMD
         for(String target: targets) {
             if(target.startsWith("before")) {
                 log("before: " + target, Project.MSG_VERBOSE);
@@ -56,7 +56,7 @@ public class engine extends Task implements BuildListener {
         }
         log("\"Before\" targets: " + beforeTargets.size(), Project.MSG_INFO);
         
-        Vector<String> testTargets = new Vector<String>();
+        Vector<String> testTargets = new Vector<String>(); //NOPMD
         for(String target: targets) {
             if(target.startsWith("test")) {
                 log("test: " + target, Project.MSG_VERBOSE);
@@ -65,7 +65,7 @@ public class engine extends Task implements BuildListener {
         }
         log("\"Test\" targets: " + testTargets.size(), Project.MSG_INFO);
         
-        Vector<String> afterTargets = new Vector<String>();
+        Vector<String> afterTargets = new Vector<String>(); //NOPMD
         for(String target: targets) {
             if(target.startsWith("after")) {
                 log("after: " + target, Project.MSG_VERBOSE);
