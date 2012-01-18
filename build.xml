@@ -175,6 +175,12 @@
   	<copy file="${package.dir}/robomorphine-testrunner.xml" todir="builder" />
   </target>
 	
+  <target name="deploy-quickstart" depends="set-build-mode, package" >
+	  <copy todir="src/examples/quickstart/tester" >
+	  	<fileset dir="${android.build.pkg.dir}" includes="*" />
+  	  </copy>
+  </target>	
+	
   <!-- test -->
   <target name="kill-all" >
     <rbm-stop-all-emulators />	
