@@ -43,8 +43,8 @@
     <ivy:buildlist reference="all-projects">
       <fileset dir="src" >
 		<include name="**/build.xml" />
-		<exclude name="**/ant/**/build.xml" />
-      	<exclude name="**/examples/quickstart/build.xml" />
+		<exclude name="**/ant/test/**/build.xml" />
+      	<exclude name="**/examples/quickstart/**/build.xml" />
 	  </fileset>
     </ivy:buildlist>
     <propertyregex property="formatted-projects" 
