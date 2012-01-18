@@ -40,7 +40,7 @@
         <rbm-stop-all-emulators />
     </target>
 	
-	<target name="-test-start-all-supported-targets" description="Starts emulators for all supported targets" >		
+	<target name="test-start-all-supported-targets" description="Starts emulators for all supported targets" >		
 		<rbm-create-avd name="avd8" target="android-8" force="true" />
 		<rbm-create-avd name="avd10" target="android-10" force="true" />
 		<rbm-create-avd name="avd11" target="android-11" force="true" />
