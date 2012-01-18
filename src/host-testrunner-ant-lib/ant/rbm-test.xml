@@ -95,5 +95,55 @@ Extends standard android build system to add targets:
     <target name="rbm-stop-emulators" depends="-init" >
          <rbm-stop-all-emulators />
     </target>
+	
+	<target name="rbm-help" >
+		 <!-- displays starts at col 13
+              |13                                                              80| -->
+        <echo level="info">Robomorphine Testrunner extensions. Available targets:</echo>
+		<echo></echo>
+        <echo>   rbm-lock-device:   Used with rbm-test. Run tests on real device</echo>
+        <echo>                      and ignore emulators. If several devices are</echo>
+        <echo>                      available, first one from the list is used. </echo>
+		<echo></echo>
+        <echo>   rbm-lock-emulator: Used with rbm-test. Run tests on emulators  </echo>
+        <echo>                      and ignore real devices. If several emulators</echo>
+        <echo>                      are available, first one is used. </echo>
+		<echo></echo>
+		<echo>   rbm-lock-serial:   Used with rmb-test. Run test on device with </echo>
+		<echo>                      specified serial number. To specify serial  </echo>
+		<echo>                      use -Dserial=? argument.</echo>
+		<echo></echo>
+		<echo>   rbm-test:          Run tests.</echo>
+		<echo></echo>
+		<echo>   rbm-test-on-emulator: Start emulator and runt tests on them. </echo>
+		<echo>                         You can specify emulator target using  </echo>
+		<echo>                         -Dtarget=? or you can specify custom </echo>
+		<echo>                         AVD config using -Davdconfig=? argument</echo>
+		<echo>   rbm-stop-emulators:   Stops all running emulators. </echo>
+		<echo />
+		<echo level="info">Examples:     </echo>
+		<echo></echo>
+		<echo>Run tests: </echo>
+        <echo></echo>
+        <echo>   > ant rbm-test</echo>
+		<echo></echo>
+		<echo>Run tests on already running emulator: </echo>
+		<echo></echo>
+		<echo>   > ant rbm-lock-emulator rbm-test</echo>
+		<echo></echo>
+	    <echo>Run tests on real device: </echo>
+		<echo></echo>
+	    <echo>   > ant rbm-lock-device rbm-test</echo>
+		<echo></echo>
+		<echo>Run tests on device with sepcific serial:</echo>
+		<echo></echo>
+		<echo>   > ant rbm-lock-serial rbm-test -Dserial=emualtor-5558</echo>
+		<echo></echo>
+		<echo>Start emulator and run tests on it:</echo>
+		<echo></echo>
+		<echo>   > ant rbm-test-on-emulator -Dtarget=android-8</echo>
+		<echo>   > ant rbm-test-on-emulator -Dtarget=android-15</echo>
+		<echo>   > ant rbm-test-on-emulator -Davdconfig=rbm-avd-10</echo>		
+	</target>
     
 </project>
