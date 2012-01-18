@@ -44,7 +44,7 @@
       <fileset dir="src" >
 		<include name="**/build.xml" />
 		<exclude name="**/ant/**/build.xml" />
-      	<exclude name="**/original-build/**/build.xml" />
+      	<exclude name="**/examples/quickstart/build.xml" />
 	  </fileset>
     </ivy:buildlist>
     <propertyregex property="formatted-projects" 
@@ -147,6 +147,27 @@
         <fileset dir="${android.build.pkg.dir}" includes="*" />
     </zip>
   	
+  	<!-- package quickstart example -->
+  	<property name="android.build.example.dir" location="${package.dir}/android-build-example" />
+  	<mkdir dir="${android.build.example.dir}" />
+  	
+  	<copy todir="${android.build.example.dir}" >
+  		<fileset dir="src/examples/quickstart">
+	        <include name="**/*"/>
+  	        <exclude name="**/bin/**"/>
+  			<exclude name="**/gen/**"/>
+  		    <exclude name="**/libs/**"/>
+  			<exclude name="**/.classpath"/>
+  			<exclude name="**/.project"/>
+  			<exclude name="**/local.properties"/>
+	    </fileset>
+  	</copy>  	
+  	<copy todir="${android.build.example.dir}/tester" overwrite="true" >
+  		<fileset dir="${android.build.pkg.dir}"  includes="*" />
+  	</copy>
+  	<zip destfile="${package.dir}/android-build-example.zip" duplicate="fail" >
+  	    <fileset dir="${android.build.example.dir}" includes="**" />
+    </zip>
   </target>
 	
   <target name="deploy" depends="set-build-mode, package" >
