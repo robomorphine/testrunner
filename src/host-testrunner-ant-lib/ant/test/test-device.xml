@@ -10,21 +10,17 @@
 		<rbm-create-avd name="avd.name" target="android-8" force="true" />
 		<trycatch>
 			<try>
-			   <!--rbm-start-emulator avd="avd.name" serialProperty="emulator-serial" /-->
-			   <!-- rbm-lock-device serial="${emulator-serial}" /-->
+			   <rbm-start-emulator avd="avd.name" serialProperty="emulator-serial" />
+			   <rbm-lock-device serial="${emulator-serial}" />
 			</try>
 			<catch>
-			    <!-- rbm-stop-all-emulators /-->				
+			    <rbm-stop-all-emulators />				
 			</catch>
 		</trycatch>
 		
 		<property name="tester.apk" location="${bin.dir}/tester.app.apk" />
 		<property name="tested.apk" location="${bin.dir}/tested.app.apk" />
-    </target>
-	
-	<target name="before-helper" >
-		<rbm-lock-device />
-	</target>
+    </target>	
 	
     <target name="after">
         <rbm-unlock-device />
