@@ -14,7 +14,7 @@ Extends standard android build system to add targets:
     <property name="rbm.testrunner.ant.file" location="${rbm.project.dir}/rbm-testrunner.xml" />
     <property name="rbm.testrunner.jar.file" location="${rbm.project.dir}/rbm-testrunner.jar" />
     <property name="rbm.test.out"            location="${out.absolute.dir}/test" />
-    <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.txt" />
+    <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.log" />
     <property name="rbm.test.junit.dir"      location="${rbm.test.out}/junit" />
 	
     
