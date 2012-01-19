@@ -90,6 +90,7 @@
   
   <target name="package" depends="set-build-mode" >
     <property file="version.properties" />
+  	<property name="version.file.suffix" value="v${jar.version}" />
   	
   	<delete dir="${package.dir}" />
     <mkdir dir="${package.dir}" />
@@ -129,6 +130,8 @@
       	<include name="robomorphine-test.xml"/>
       </fileset>
     </zip>
+  	<copy file="${package.dir}/robomorphine-testrunner.zip" 
+  	      tofile="${package.dir}/robomorphine-testrunner-${version.file.suffix}.zip"/>
   	
   	<!-- special package for quickstart -->
   	<property name="android.build.pkg.dir" location="${package.dir}/android-build" />
@@ -146,6 +149,8 @@
 	<zip destfile="${package.dir}/android-build.zip" duplicate="fail" >
         <fileset dir="${android.build.pkg.dir}" includes="*" />
     </zip>
+  	<copy file="${package.dir}/android-build.zip"
+  	      tofile="${package.dir}/android-build-${version.file.suffix}.zip"/>
   	
   	<!-- package quickstart example -->
   	<property name="android.build.example.dir" location="${package.dir}/android-build-example" />
@@ -168,6 +173,8 @@
   	<zip destfile="${package.dir}/android-build-example.zip" duplicate="fail" >
   	    <fileset dir="${android.build.example.dir}" includes="**" />
     </zip>
+  	<copy file="${package.dir}/android-build-example.zip"
+          tofile="${package.dir}/android-build-example-${version.file.suffix}.zip"/>
   </target>
 	
   <target name="deploy" depends="set-build-mode, package" >
