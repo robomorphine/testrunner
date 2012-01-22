@@ -2,7 +2,7 @@
 <!-- This file is used to manually smoke test some functionality. 
      It may (and will) be outdated and is not meant to be treated as example or reference.
 -->
-<project name="tester" default="restart-adb" basedir="..">
+<project name="tester" default="lock-device" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
@@ -10,23 +10,13 @@
 	<import file="rbm-testrunner.xml" />
 	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
         <classpath>
-            <pathelement path="bin" />
-            <pathelement path="../host-testrunner-lib/bin" />
+            <pathelement path="bin/debug/classes" />
+            <pathelement path="../host-testrunner-lib/bin/debug/classes" />
         </classpath>
     </rbm-define-tasks>
 	<rbm-setup sdkdir="${sdk.dir}" lazy="false" force="false" />
 	
-	
-	<target name="define" if="false">
-    	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
-            <classpath>
-                <pathelement path="bin" />
-                <pathelement path="../host-testrunner-lib/bin" />
-            </classpath>
-        </rbm-define-tasks>
-	</target>
-	
-	<target name="default" depends="define" >
+	<target name="default" >
 		<rbm-setup sdkdir="${sdk.dir}" />
 		<rbm-lock-device device="true" />
 		<rbm-get-device-property local="local.prop" remote="ro.runtime.firstboot" />
@@ -46,7 +36,7 @@
 		<rbm-adb-shell cmd="cat /sdcard/file" />
 	</target>
 	
-	<target name="default-device" depends="define">
+	<target name="default-device" >
 	    <rbm-setup sdkdir="${sdk.dir}" />
 	    
 		<property name="tester.apk" location="../../bin/debug/tester.app.apk" />
@@ -93,7 +83,7 @@
         <rbm-get-locked-device property="device.serial" />
     </target>
     
-    <target name="default-create-and-start" depends="define">
+    <target name="default-create-and-start" >
         <rbm-setup sdkdir="${sdk.dir}" />
         
         <rbm-avd-config id="avd15" target="Google Inc.:Google APIs:15">
@@ -130,13 +120,13 @@
         <rbm-delete-avd name="test-avd15" />
     </target>
     
-    <target name="test-inheritance" depends="define" >
+    <target name="test-inheritance"  >
         <rbm-lock-device force="false"/>
         <rbm-lock-device force="false"/>
         <ant antfile="ant/test.xml" target="print" inheritrefs="true" />
     </target>
     
-    <target name="logcat" depends="define" >
+    <target name="logcat"  >
         <rbm-setup sdkdir="${sdk.dir}" />
         <rbm-lock-device />
         <rbm-start-logcat file="bin/logcat.txt" dump="false" format="long" reference="logcat" >
@@ -147,18 +137,24 @@
         <rbm-stop-logcat logcatref="logcat" />
     </target>
     
-    <target name="restart-adb" depends="define">
+    <target name="restart-adb" >
         <rbm-restart-adb />
     </target>
     
-    <target name="hanged-devices" depends="define">
+    <target name="hanged-devices" >
         <rbm-start-emulator avd="test-avd" serialProperty="emulator-serial" />
         <rbm-stop-emulator serial="${emulator-serial}" />
         <sleep minutes="5"/>
     </target>
         
-    <target name="print" depends="define" >
+    <target name="print"  >
         <rbm-lock-device force="false" />
     </target>
+	
+	<target name="lock-device"  >
+		<rbm-lock-device emulator="false" device="true" />
+		<rbm-get-locked-device property="serial" />
+		<echo>${serial}</echo>
+	</target>
        
 </project>

@@ -10,9 +10,11 @@ public class LockDeviceTask extends BaseTask { //NOPMD
     
     private String mSerial;
     private boolean mVerify = true;
-    private Boolean mIsEmulator = null;
     private boolean mUseFirst = false;
     private boolean mForce = false;
+    
+    private boolean mUseEmulators = true;
+    private boolean mUseRealDevices = true;
     
     public void setSerial(String serial) {
         mSerial = serial;
@@ -23,17 +25,11 @@ public class LockDeviceTask extends BaseTask { //NOPMD
     }
     
     public void setEmulator(boolean emulator) {
-        if(mIsEmulator != null) {
-            error("Cannot use both \"emulator\" and \"device\" attributes.");
-        }
-        mIsEmulator = emulator;
+        mUseEmulators = emulator;
     }
     
     public void setDevice(boolean device) {
-        if(mIsEmulator != null) {
-            error("Cannot use both \"emulator\" and \"device\" attributes.");
-        }
-        mIsEmulator = !device;
+        mUseRealDevices = device;
     }
     
     public void setUseFirst(boolean lockFirst) {
@@ -46,6 +42,10 @@ public class LockDeviceTask extends BaseTask { //NOPMD
     
     @Override
     public void execute() throws BuildException { //NOPMD
+        if(!mUseEmulators && !mUseRealDevices) {
+            error("Invalid configuration: useEmulators = false, useRealdevices = false");
+        }
+        
         if(getContext().getDeviceSerialNumber() != null && !mForce) {
             info("Device is already locked to \"%s\". Skipping lock...", 
                   getContext().getDeviceSerialNumber());
@@ -54,6 +54,7 @@ public class LockDeviceTask extends BaseTask { //NOPMD
        
         if(mSerial == null) {
             info("Serial is not specified. Autolock is started... ");
+            
             AndroidDebugBridge adb = getAdb();
             IDevice [] devices = adb.getDevices();
             if(devices.length == 0) {
@@ -69,9 +70,9 @@ public class LockDeviceTask extends BaseTask { //NOPMD
                 }
                 
                 boolean passed = false;
-                if(mIsEmulator != null && mIsEmulator == curDevice.isEmulator()) {
+                if(mUseEmulators && curDevice.isEmulator()) {
                     passed = true;                            
-                } else if(mIsEmulator == null) {
+                } else if(mUseRealDevices && !curDevice.isEmulator()) {
                     passed = true;
                 }
                 
@@ -86,7 +87,8 @@ public class LockDeviceTask extends BaseTask { //NOPMD
             }
             
             if(device == null) {
-                error("No devices satisified filter: isEmulator = %b", mIsEmulator);
+                error("No devices satisified filter: useEmulators = %b, useRealDevices = %b",
+                      mUseEmulators, mUseRealDevices);
             }
             
             if(multiple) {
