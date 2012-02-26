@@ -94,8 +94,8 @@ Extends standard android build system to add targets:
                    </report>
                 </emma>
             	<echo>Cleaning up temporary files...</echo>
-                <!-- delete file="coverage.ec" / -->
-                <!-- delete file="coverage.em" / -->            	                
+                <delete file="coverage.ec" />
+                <delete file="coverage.em" />            	                
             </then>
 		</if>
     </target>
