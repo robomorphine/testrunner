@@ -14,8 +14,9 @@ Extends standard android build system to add targets:
     <property name="rbm.testrunner.ant.file" location="${rbm.project.dir}/rbm-testrunner.xml" />
     <property name="rbm.testrunner.jar.file" location="${rbm.project.dir}/rbm-testrunner.jar" />
     <property name="rbm.test.out"            location="${out.absolute.dir}/test" />
-    <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.log" />
+    <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.txt" />
     <property name="rbm.test.junit.dir"      location="${rbm.test.out}/junit" />
+	<property name="rbm.test.emma.dir"      location="${rbm.test.out}/emma" />
 	
     
     <import file="${rbm.testrunner.ant.file}" />	
@@ -45,14 +46,58 @@ Extends standard android build system to add targets:
     
     <target name="rbm-test" depends="-init, -rbm-lock-default" >        
         <mkdir dir="${rbm.test.out}" />
-        <rbm-start-logcat id="rbm.test.logcat" file="${rbm.test.logcat.file}" />
+        
+    	<property name="tested.project.absolute.dir" location="${tested.project.dir}" />
+    	<xpath input="AndroidManifest.xml" 
+    		   expression="/manifest/@package" 
+    		   output="tester.package" />
     	
-    	<xpath input="AndroidManifest.xml" expression="/manifest/@package" output="tester.package" />
+    	<xpath input="${tested.project.absolute.dir}/AndroidManifest.xml" 
+    		   expression="/manifest/@package" 
+    		   output="tested.package" />
+    	
+    	<property name="emma.enabled" value="false" />
+    	<property name="emma.dump.file" value="/data/data/${tested.package}/coverage.ec" />
+    	
+    	<if condition="${emma.enabled}">
+	        <then>
+	        	<echo>Removing previous coverage report (if any)...</echo>
+    	    	<rbm-adb-shell cmd="rm ${emma.dump.file}" exitCodeFail="false" />
+	        </then>
+		</if>
+	        	
+    	<rbm-start-logcat id="rbm.test.logcat" file="${rbm.test.logcat.file}" />        	    
         <rbm-run-tests package="${tester.package}" >
             <junit dir="${rbm.test.junit.dir}" />
-        </rbm-run-tests>
-    	
-        <rbm-stop-logcat refid="rbm.test.logcat" />
+        	<args>
+        		<arg key="coverage" value="${emma.enabled}" />
+        		<arg key="coverageFile" value="${emma.dump.file}" />
+        	</args>
+        </rbm-run-tests>        	
+    	<rbm-stop-logcat refid="rbm.test.logcat" />
+    		
+    	<if condition="${emma.enabled}">
+            <then>
+            	<echo>Extracting coverage report from device...</echo>
+		    	<rbm-adb-pull remote="${emma.dump.file}" local="coverage.ec" />
+	    		
+	    		<echo>Generating coverage reports...</echo>
+                <emma>
+                    <report sourcepath="${tested.project.absolute.dir}/${source.dir}" 
+                    		verbosity="${verbosity}">
+                        <infileset dir=".">
+                            <include name="coverage.ec" />
+                            <include name="coverage.em" />
+                        </infileset>
+                        <html outfile="${rbm.test.emma.dir}/coverage.html" />
+                    	<xml outfile="${rbm.test.emma.dir}/coverage.xml" />
+                   </report>
+                </emma>
+            	<echo>Cleaning up temporary files...</echo>
+                <!-- delete file="coverage.ec" / -->
+                <!-- delete file="coverage.em" / -->            	                
+            </then>
+		</if>
     </target>
 	
 	<target name="rbm-test-on-emulator" depends="-init" >
@@ -77,8 +122,10 @@ Extends standard android build system to add targets:
 		
 		<rbm-lock-device serial="${emulator.serial}" />
 		
+		<property name="emma.enabled" value="false" />
 		<ant antfile="${rbm.project.dir}/build.xml" inheritall="false" inheritrefs="false">
 			<property name="adb.device.arg" value="-s ${emulator.serial}" />
+			<property name="emma.enabled" value="${emma.enabled}" />
             <target name="installt" />
 		</ant>
 		
@@ -127,9 +174,17 @@ Extends standard android build system to add targets:
         <echo></echo>
         <echo>   > ant rbm-test</echo>
 		<echo></echo>
+		<echo>Run tests with code coverage: </echo>
+        <echo></echo>
+        <echo>   > ant emma instrument install rbm-test</echo>
+		<echo></echo>
 		<echo>Run tests on already running emulator: </echo>
 		<echo></echo>
 		<echo>   > ant rbm-lock-emulator rbm-test</echo>
+		<echo></echo>
+		<echo>Run tests on already running emulator with code coverage: </echo>
+		<echo></echo>
+		<echo>   > ant emma rbm-lock-emulator</echo>
 		<echo></echo>
 	    <echo>Run tests on real device: </echo>
 		<echo></echo>
