@@ -176,7 +176,7 @@ Extends standard android build system to add targets:
 		<echo></echo>
 		<echo>Run tests with code coverage: </echo>
         <echo></echo>
-        <echo>   > ant emma instrument install rbm-test</echo>
+        <echo>   > ant emma debug install rbm-test</echo>
 		<echo></echo>
 		<echo>Run tests on already running emulator: </echo>
 		<echo></echo>
