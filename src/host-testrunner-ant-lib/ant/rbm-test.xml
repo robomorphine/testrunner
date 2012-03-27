@@ -9,196 +9,221 @@ Extends standard android build system to add targets:
     
     <fail unless="sdk.dir" message="Property sdk.dir is not defined!" />
     
-	<property name="rbm.verbose"             value="false" />
-	<property name="rbm.project.dir"         location="." />
-    <property name="rbm.testrunner.ant.file" location="${rbm.project.dir}/rbm-testrunner.xml" />
-    <property name="rbm.testrunner.jar.file" location="${rbm.project.dir}/rbm-testrunner.jar" />
-    <property name="rbm.test.out"            location="${out.absolute.dir}/test" />
-    <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.txt" />
-    <property name="rbm.test.junit.dir"      location="${rbm.test.out}/junit" />
-	<property name="rbm.test.emma.dir"      location="${rbm.test.out}/emma" />
-	
+  <property name="rbm.verbose"             value="false" />
+  <property name="rbm.project.dir"         location="." />
+  <property name="rbm.testrunner.ant.file" location="${rbm.project.dir}/rbm-testrunner.xml" />
+  <property name="rbm.testrunner.jar.file" location="${rbm.project.dir}/rbm-testrunner.jar" />
+  <property name="rbm.test.out"            location="${out.absolute.dir}/test" />
+  <property name="rbm.test.logcat.file"    location="${rbm.test.out}/logcat.txt" />
+  <property name="rbm.test.junit.dir"      location="${rbm.test.out}/junit" />
+  <property name="rbm.test.emma.dir"       location="${rbm.test.out}/emma" />
+  
     
-    <import file="${rbm.testrunner.ant.file}" />	
-	
-    <target name="-init" >
-        <rbm-define-tasks sdkdir="${sdk.dir}" jar="${rbm.testrunner.jar.file}" />
-    	<rbm-define-avd-configs />
-        <rbm-setup sdkdir="${sdk.dir}" lazy="true" force="false" verbose="${rbm.verbose}"/>
-    </target>
+  <import file="${rbm.testrunner.ant.file}" />  
+  
+  <target name="-init" >
+    <rbm-define-tasks sdkdir="${sdk.dir}" jar="${rbm.testrunner.jar.file}" />
+    <rbm-define-avd-configs />
+    <rbm-setup sdkdir="${sdk.dir}" lazy="true" force="false" verbose="${rbm.verbose}"/>
+  </target>
+  
+  <target name="-rbm-lock-default" depends="-init">
+    <rbm-lock-device useFirst="true" force="false" />
+  </target>
+  
+  <target name="rbm-lock-device" depends="-init">
+    <rbm-lock-device useFirst="true" device="true" force="false" />
+  </target>
+  
+  <target name="rbm-lock-emulator" depends="-init">
+    <rbm-lock-device useFirst="true" emulator="true" force="false" />
+  </target>
+  
+  <target name="rbm-lock-serial" depends="-init" >
+    <fail unless="serial" message="You must specify device/emulator serial number: -Dserial=..." />
+    <rbm-lock-device serial="${serial}" force="false" />
+  </target>
     
-    <target name="-rbm-lock-default" depends="-init">
-        <rbm-lock-device useFirst="true" force="false" />
-    </target>
+  <target name="rbm-test" depends="-init, -rbm-lock-default" >        
+    <mkdir dir="${rbm.test.out}" />
+      
+    <property name="tested.project.absolute.dir" location="${tested.project.dir}" />
+    <xpath input="AndroidManifest.xml" 
+         expression="/manifest/@package" 
+         output="tester.package" />
     
-    <target name="rbm-lock-device" depends="-init">
-        <rbm-lock-device useFirst="true" device="true" force="false" />
-    </target>
+    <xpath input="${tested.project.absolute.dir}/AndroidManifest.xml" 
+         expression="/manifest/@package" 
+         output="tested.package" />
     
-    <target name="rbm-lock-emulator" depends="-init">
-        <rbm-lock-device useFirst="true" emulator="true" force="false" />
-    </target>
+    <property name="emma.enabled" value="false" />
+    <property name="emma.dump.file" value="/data/data/${tested.package}/coverage.ec" />
     
-    <target name="rbm-lock-serial" depends="-init" >
-        <fail unless="serial" message="You must specify device/emulator serial number: -Dserial=..." />
-        <rbm-lock-device serial="${serial}" force="false" />
-    </target>
+    <if condition="${emma.enabled}">
+        <then>
+          <echo>Removing previous coverage report (if any)...</echo>
+          <rbm-adb-shell cmd="rm ${emma.dump.file}" exitCodeFail="false" />
+        </then>
+    </if>
+          
+    <rbm-start-logcat id="rbm.test.logcat" 
+                      file="${rbm.test.logcat.file}"
+                      buffer="main"
+                      format="threadtime"/>
     
-    <target name="rbm-test" depends="-init, -rbm-lock-default" >        
-        <mkdir dir="${rbm.test.out}" />
-        
-    	<property name="tested.project.absolute.dir" location="${tested.project.dir}" />
-    	<xpath input="AndroidManifest.xml" 
-    		   expression="/manifest/@package" 
-    		   output="tester.package" />
-    	
-    	<xpath input="${tested.project.absolute.dir}/AndroidManifest.xml" 
-    		   expression="/manifest/@package" 
-    		   output="tested.package" />
-    	
-    	<property name="emma.enabled" value="false" />
-    	<property name="emma.dump.file" value="/data/data/${tested.package}/coverage.ec" />
-    	
-    	<if condition="${emma.enabled}">
-	        <then>
-	        	<echo>Removing previous coverage report (if any)...</echo>
-    	    	<rbm-adb-shell cmd="rm ${emma.dump.file}" exitCodeFail="false" />
-	        </then>
-		</if>
-	        	
-    	<rbm-start-logcat id="rbm.test.logcat" file="${rbm.test.logcat.file}" />        	    
-        <rbm-run-tests package="${tester.package}" >
-            <junit dir="${rbm.test.junit.dir}" />
-        	<args>
-        		<arg key="coverage" value="${emma.enabled}" />
-        		<arg key="coverageFile" value="${emma.dump.file}" />
-        	</args>
-        </rbm-run-tests>        	
-    	<rbm-stop-logcat refid="rbm.test.logcat" />
-    		
-    	<if condition="${emma.enabled}">
-            <then>
-            	<echo>Extracting coverage report from device...</echo>
-		    	<rbm-adb-pull remote="${emma.dump.file}" local="coverage.ec" />
-	    		
-	    		<echo>Generating coverage reports...</echo>
-                <emma>
-                    <report sourcepath="${tested.project.absolute.dir}/${source.dir}" 
-                    		verbosity="${verbosity}">
-                        <infileset dir=".">
-                            <include name="coverage.ec" />
-                            <include name="coverage.em" />
-                        </infileset>
-                        <html outfile="${rbm.test.emma.dir}/coverage.html" />
-                    	<xml outfile="${rbm.test.emma.dir}/coverage.xml" />
-                   </report>
-                </emma>
-            	<echo>Cleaning up temporary files...</echo>
-                <delete file="coverage.ec" />
-                <delete file="coverage.em" />            	                
-            </then>
-		</if>
-    </target>
-	
-	<target name="rbm-test-on-emulator" depends="-init" >
-		<property name="target" value="android-10" />
-		<property name="sdcard.size" value="500M" />
-		
-		<if>
-		  <condition>
-		     <isset property="avdconfig" />
-     	  </condition>
-		  <then>
-		  	<rbm-create-avd name="rbm-test-avd" avdconfig="${avdconfig}" force="true" />
-  		  </then>
-		  <else> 	
-    		<rbm-create-avd name="rbm-test-avd" target="${target}" force="true" >
-    			<sdcard size="${sdcard.size}" />
-    		</rbm-create-avd>
-		  </else>
-		</if>
-		
-		<rbm-start-emulator avd="rbm-test-avd" serialProperty="emulator.serial" />
-		
-		<rbm-lock-device serial="${emulator.serial}" />
-		
-		<property name="emma.enabled" value="false" />
-		<ant antfile="${rbm.project.dir}/build.xml" inheritall="false" inheritrefs="false">
-			<property name="adb.device.arg" value="-s ${emulator.serial}" />
-			<property name="emma.enabled" value="${emma.enabled}" />
+    <rbm-run-tests package="${tester.package}" >
+        <junit dir="${rbm.test.junit.dir}" />
+        <args>
+            <arg key="coverage" value="${emma.enabled}" />
+            <arg key="coverageFile" value="${emma.dump.file}" />
+        </args>
+    </rbm-run-tests>
+    
+    <rbm-stop-logcat refid="rbm.test.logcat" />
+      
+    <if condition="${emma.enabled}">
+      <then>
+        <echo>Extracting coverage report from device...</echo>
+        <rbm-adb-pull remote="${emma.dump.file}" local="coverage.ec" />
+        <echo>Generating coverage reports...</echo>
+        <emma>
+            <report sourcepath="${tested.project.absolute.dir}/${source.dir}" 
+                verbosity="${verbosity}">
+                <infileset dir=".">
+                    <include name="coverage.ec" />
+                    <include name="coverage.em" />
+                </infileset>
+                <html outfile="${rbm.test.emma.dir}/coverage.html" />
+              <xml outfile="${rbm.test.emma.dir}/coverage.xml" />
+           </report>
+        </emma>
+        <echo>Cleaning up temporary files...</echo>
+        <delete file="coverage.ec" />
+        <!-- DO NOT DELETE this file, it's not being regenarated by default.
+             Only after "ant all clean" -->
+        <!--delete file="coverage.em" /-->
+      </then>
+    </if>
+  </target>
+  
+  <target name="rbm-test-on-emulator" depends="-init" >
+    <property name="emulator-target" value="android-10" />
+    <property name="sdcard.size" value="500M" />
+    
+    <if>
+      <condition>
+         <isset property="avdconfig" />
+         </condition>
+      <then>
+        <rbm-create-avd name="rbm-test-avd" avdconfig="${avdconfig}" force="true" />
+        </then>
+      <else>   
+        <rbm-create-avd name="rbm-test-avd" target="${emulator-target}" force="true" >
+          <sdcard size="${sdcard.size}" />
+        </rbm-create-avd>
+      </else>
+    </if>
+    
+    <rbm-start-emulator avd="rbm-test-avd" serialProperty="emulator.serial" />
+    
+    <rbm-lock-device serial="${emulator.serial}" />
+    
+    <presetdef name="ant-install">
+      <ant antfile="${rbm.project.dir}/build.xml" inheritall="false" inheritrefs="false">            
+         <property name="adb.device.arg" value="-s ${emulator.serial}" />
+      </ant>
+    </presetdef>
+    
+    <property name="emma.enabled" value="false" />    
+    <if condition="${emma.enabled}">
+        <then>
+          <ant-install>
+            <target name="emma" />
             <target name="installt" />
-		</ant>
-		
-		<rbm-adb-shell cmd="input keyevent 82" />
-		<antcall inheritall="true" inheritrefs="true" >
-		    <target name="rbm-test" />
-		</antcall>
-		
-		<rbm-stop-emulator serial="${emulator.serial}" />
-		
-		<rbm-delete-avd name="rbm-test-avd" />
-	</target>
+          </ant-install>
+        </then>
+        <else>
+          <ant-install>
+            <target name="installt" />
+          </ant-install>
+        </else>
+    </if>
     
-    <target name="rbm-stop-emulators" depends="-init" >
-         <rbm-stop-all-emulators />
-    </target>
-	
-	<target name="rbm-help" >
-		 <!-- displays starts at col 13
+    <rbm-adb-shell cmd="input keyevent 82" />
+    <antcall inheritall="true" inheritrefs="true" >
+        <target name="rbm-test" />
+    </antcall>
+    
+    <rbm-stop-emulator serial="${emulator.serial}" />
+    
+    <rbm-delete-avd name="rbm-test-avd" />
+  </target>
+    
+  <target name="rbm-stop-emulators" depends="-init" >
+    <rbm-stop-all-emulators />
+  </target>
+  
+  <target name="rbm-help" >
+     <!-- displays starts at col 13
               |13                                                              80| -->
-        <echo level="info">Robomorphine Testrunner extensions. Available targets:</echo>
-		<echo></echo>
-        <echo>   rbm-lock-device:   Used with rbm-test. Run tests on real device</echo>
-        <echo>                      and ignore emulators. If several devices are</echo>
-        <echo>                      available, first one from the list is used. </echo>
-		<echo></echo>
-        <echo>   rbm-lock-emulator: Used with rbm-test. Run tests on emulators  </echo>
-        <echo>                      and ignore real devices. If several emulators</echo>
-        <echo>                      are available, first one is used. </echo>
-		<echo></echo>
-		<echo>   rbm-lock-serial:   Used with rmb-test. Run test on device with </echo>
-		<echo>                      specified serial number. To specify serial  </echo>
-		<echo>                      use -Dserial=? argument.</echo>
-		<echo></echo>
-		<echo>   rbm-test:          Run tests.</echo>
-		<echo></echo>
-		<echo>   rbm-test-on-emulator: Start emulator and runt tests on them. </echo>
-		<echo>                         You can specify emulator target using  </echo>
-		<echo>                         -Dtarget=? or you can specify custom </echo>
-		<echo>                         AVD config using -Davdconfig=? argument</echo>
-		<echo>   rbm-stop-emulators:   Stops all running emulators. </echo>
-		<echo />
-		<echo level="info">Examples:     </echo>
-		<echo></echo>
-		<echo>Run tests: </echo>
-        <echo></echo>
-        <echo>   > ant rbm-test</echo>
-		<echo></echo>
-		<echo>Run tests with code coverage: </echo>
-        <echo></echo>
-        <echo>   > ant emma instrument install rbm-test</echo>
-		<echo></echo>
-		<echo>Run tests on already running emulator: </echo>
-		<echo></echo>
-		<echo>   > ant rbm-lock-emulator rbm-test</echo>
-		<echo></echo>
-		<echo>Run tests on already running emulator with code coverage: </echo>
-		<echo></echo>
-		<echo>   > ant emma rbm-lock-emulator</echo>
-		<echo></echo>
-	    <echo>Run tests on real device: </echo>
-		<echo></echo>
-	    <echo>   > ant rbm-lock-device rbm-test</echo>
-		<echo></echo>
-		<echo>Run tests on device with sepcific serial:</echo>
-		<echo></echo>
-		<echo>   > ant rbm-lock-serial rbm-test -Dserial=emualtor-5558</echo>
-		<echo></echo>
-		<echo>Start emulator and run tests on it:</echo>
-		<echo></echo>
-		<echo>   > ant rbm-test-on-emulator -Dtarget=android-8</echo>
-		<echo>   > ant rbm-test-on-emulator -Dtarget=android-15</echo>
-		<echo>   > ant rbm-test-on-emulator -Davdconfig=rbm-avd-10</echo>		
-	</target>
+    <echo level="info">Robomorphine Testrunner extensions. Available targets:</echo>
+    <echo></echo>
+    <echo>   rbm-lock-device:   Used with rbm-test. Run tests on real device</echo>
+    <echo>                      and ignore emulators. If several devices are</echo>
+    <echo>                      available, first one from the list is used. </echo>
+    <echo></echo>
+    <echo>   rbm-lock-emulator: Used with rbm-test. Run tests on emulators  </echo>
+    <echo>                      and ignore real devices. If several emulators</echo>
+    <echo>                      are available, first one is used. </echo>
+    <echo></echo>
+    <echo>   rbm-lock-serial:   Used with rmb-test. Run test on device with </echo>
+    <echo>                      specified serial number. To specify serial  </echo>
+    <echo>                      use -Dserial=? argument.</echo>
+    <echo></echo>
+    <echo>   rbm-test:          Run tests.</echo>
+    <echo></echo>
+    <echo>   rbm-test-on-emulator: Start emulator and runt tests on them. </echo>
+    <echo>                         You can specify emulator target using  </echo>
+    <echo>                         -Dtarget=? or you can specify custom </echo>
+    <echo>                         AVD config using -Davdconfig=? argument</echo>
+    <echo>   rbm-stop-emulators:   Stops all running emulators. </echo>
+    <echo />
+    <echo level="info">Examples:     </echo>
+    <echo></echo>
+    <echo>Run tests: </echo>
+    <echo></echo>
+    <echo>   > ant rbm-test</echo>
+    <echo></echo>
+    <echo>Run tests with code coverage: </echo>
+    <echo></echo>
+    <echo>   > ant emma debug install rbm-test</echo>
+    <echo></echo>
+    <echo>Start emulator and run tests with code coverage: </echo>
+    <echo></echo>
+    <echo>   > ant all clean </echo>
+    <echo>   > ant emma debug rbm-test-on-emulator -Dtarget=android-10</echo>
+    <echo></echo>
+    <echo>Run tests on already running emulator: </echo>
+    <echo></echo>
+    <echo>   > ant rbm-lock-emulator rbm-test</echo>
+    <echo></echo>
+    <echo>Run tests on already running emulator with code coverage: </echo>
+    <echo></echo>
+    <echo>   > ant emma rbm-lock-emulator</echo>
+    <echo></echo>
+    <echo>Run tests on real device: </echo>
+    <echo></echo>
+    <echo>   > ant rbm-lock-device rbm-test</echo>
+    <echo></echo>
+    <echo>Run tests on device with sepcific serial:</echo>
+    <echo></echo>
+    <echo>   > ant rbm-lock-serial rbm-test -Dserial=emualtor-5558</echo>
+    <echo></echo>
+    <echo>Start emulator and run tests on it:</echo>
+    <echo></echo>
+    <echo>   > ant rbm-test-on-emulator -Dtarget=android-8</echo>
+    <echo>   > ant rbm-test-on-emulator -Dtarget=android-15</echo>
+    <echo>   > ant rbm-test-on-emulator -Davdconfig=rbm-avd-10</echo>    
+  </target>
     
 </project>
