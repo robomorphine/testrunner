@@ -119,9 +119,9 @@ public class RemoteLogcat {
         }
         
         public void run(boolean async) {
-            mLog.v("Logcat started.");
             try {
-                mDevice.executeShellCommand(getCmd(), mOutputReceiver);
+                mLog.v(null, "Logcat started: %s", getCmd());
+                mDevice.executeShellCommand(getCmd(), mOutputReceiver, 0);
             } catch(Exception ex) {
                 mLog.e(ex, "Failed to start logcat.");
             }
