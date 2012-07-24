@@ -3,7 +3,9 @@ package com.robomorphine.test.ant.device.runner;
 import com.android.ddmlib.testrunner.ITestRunListener;
 import com.android.ddmlib.testrunner.RemoteAndroidTestRunner;
 import com.robomorphine.test.ApkManager;
+import com.robomorphine.test.ApkManager.ReasonInstallException;
 import com.robomorphine.test.ant.BaseTask;
+import com.robomorphine.test.log.ILog;
 import com.robomorphine.test.sdktool.AaptTool;
 
 import org.apache.tools.ant.BuildException;
@@ -46,7 +48,7 @@ public class RunTestsTask extends BaseTask { //NOPMD
     private JUnitTestRunListener mJUnitListener;
     private boolean mUninstall = true;
     private boolean mFailOnError = false;
-    
+    private boolean mSuccessOnOlderSdk = true;
     
     public void setPackage(String name) {
         mPackageName = name;
@@ -62,6 +64,10 @@ public class RunTestsTask extends BaseTask { //NOPMD
     
     public void setUninstall(boolean uninstall) {
         mUninstall = uninstall;
+    }
+    
+    public void setSuccessOnOlderSdk(boolean successOnOlderSdk) {
+        mSuccessOnOlderSdk = successOnOlderSdk;
     }
     
     public RunnerArgs createArgs() {              
@@ -84,15 +90,28 @@ public class RunTestsTask extends BaseTask { //NOPMD
         mJUnitListener = new JUnitTestRunListener(junit.getDir(), junit.isMultiple());
     }
     
-    private void installApks(List<File> apks, boolean reinstall) {
+    private boolean installApks(List<File> apks, boolean reinstall) {
         ApkManager apkManager = getTestManager().getApkManager();
         for(File apk : apks) {
             try {
                 apkManager.install(getDevice(), apk, reinstall);
-            } catch(Exception ex) {
+            } catch(ReasonInstallException ex) {
+                String reason = ex.getReason();
+                if (mSuccessOnOlderSdk && ApkManager.INSTALL_FAILED_OLDER_SDK.equals(reason)) {
+                    //so we tried to install apks, but detected that current emulator or 
+                    //device has SDK version that is too old for one of the apks. 
+                    //We're done.
+                    ILog log = getTestManager().getLogger();
+                    log.w("Wasn't able to install apk because current device has too old API level.");
+                    log.w("(If you want to fail build in such cases use successOnOlderSdk=\"false\".)");
+                    return false;                    
+                } 
                 error(ex, "Failed to install apk: %s", apk.getAbsolutePath());
-            }
+            }  catch(Exception ex) {
+                error(ex, "Failed to install apk: %s", apk.getAbsolutePath());
+            } 
         }       
+        return true;
     }
     
     private void uninstallApks(List<File> apks, boolean failOnError) {
@@ -133,7 +152,17 @@ public class RunTestsTask extends BaseTask { //NOPMD
         if(mUninstall) {
             uninstallApks(apks, false);
         }
-        installApks(apks, !mUninstall);/* if not uninstalled, use reinstall */        
+        
+        boolean installed = installApks(apks, !mUninstall);/* if not uninstalled, use reinstall */ 
+        if (!installed) {
+            ILog log = getTestManager().getLogger();
+            log.w("Test run is marked successful without running tests.");
+            /* Failed to install apks, but this was non-critical failure. 
+             * So we assume success. This is more of a hackaround. 
+             * See more details inside installApks(). */ 
+            uninstallApks(apks, false);
+            return;
+        }
         
         DefaultTestRunListener listener = new DefaultTestRunListener(this);
         List<ITestRunListener> listeners = new LinkedList<ITestRunListener>();

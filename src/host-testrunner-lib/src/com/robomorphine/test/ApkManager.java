@@ -15,10 +15,31 @@ import java.io.IOException;
  */
 public class ApkManager {
     
+    public class ReasonInstallException extends InstallException {
+        private static final long serialVersionUID = 1L;
+        
+        private final String mReason;
+        public ReasonInstallException(String reason) {
+            super(reason, null);
+            mReason = reason;
+        }
+        
+        public String getReason() {
+            return mReason;
+        }
+    }
+    
     public static final int DEFAULT_ATTEMPTS_COUNT = 3;
-
+    
+    public static final String INSTALL_FAILED_ALREADY_EXISTS = "INSTALL_FAILED_ALREADY_EXISTS";
+    public static final String INSTALL_FAILED_INVALID_APK = "INSTALL_FAILED_INVALID_APK";
+    public static final String INSTALL_FAILED_DUPLICATE_PACKAGE = "INSTALL_FAILED_DUPLICATE_PACKAGE";
+    public static final String INSTALL_FAILED_OLDER_SDK = "INSTALL_FAILED_OLDER_SDK";
+    public static final String INSTALL_FAILED_NEWER_SDK = "INSTALL_FAILED_NEWER_SDK";
+    public static final String INSTALL_FAILED_MISSING_FEATURE = "INSTALL_FAILED_MISSING_FEATURE";
+    
     private final TestManager mTestManager;
-    private final ILog mLog;
+    private final ILog mLog; 
     
     public ApkManager(TestManager testManager) {
         mTestManager = testManager;
@@ -53,10 +74,16 @@ public class ApkManager {
         String path = apkFile.getAbsolutePath();
         mLog.i("Installing %s to %s...", apkFile.getName(), device.getSerialNumber());
         try {
-            device.installPackage(path, reinstall);
-        } catch(InstallException ex) {
+            String result = device.installPackage(path, reinstall);
+            if (result != null) {
+                mLog.e(null, "Failed to install package %s to %s: %s", 
+                              apkFile.getName(), device.getSerialNumber(), result);
+                throw new ReasonInstallException(result);
+            }
+            
+        } catch (InstallException ex) {
             boolean unresponsive = ex.getCause() instanceof ShellCommandUnresponsiveException;
-            if(unresponsive ){
+            if(unresponsive){
                 mLog.w("Failed to install apk due to unresponsive shell: %s", path);
                 if(attempts > 1) {
                     mLog.w("Attempts left: %d", attempts);
@@ -64,6 +91,8 @@ public class ApkManager {
                 } else {
                     throw ex;
                 }
+            } else {
+                throw ex;
             }
         }        
         long delta = System.currentTimeMillis() - time;

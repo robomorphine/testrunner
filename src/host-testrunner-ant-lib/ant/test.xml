@@ -2,7 +2,7 @@
 <!-- This file is used to manually smoke test some functionality. 
      It may (and will) be outdated and is not meant to be treated as example or reference.
 -->
-<project name="tester" default="lock-device" basedir="..">
+<project name="tester" default="restart-adb" basedir="..">
     
 	<property file="../../local.properties" />
 	<fail unless="sdk.dir" message="Property sdk.dir is not specified." />
@@ -10,14 +10,14 @@
 	<import file="rbm-testrunner.xml" />
 	<rbm-define-tasks sdkdir="${sdk.dir}" jar="." >
         <classpath>
-            <pathelement path="bin/debug/classes" />
-            <pathelement path="../host-testrunner-lib/bin/debug/classes" />
+            <pathelement path="bin/eclipse" />
+            <pathelement path="../host-testrunner-lib/bin/eclipse" />
         </classpath>
     </rbm-define-tasks>
 	<rbm-setup sdkdir="${sdk.dir}" lazy="false" force="false" />
 	
 	<target name="default" >
-		<rbm-setup sdkdir="${sdk.dir}" />
+		<rbm-setup sdkdir="${sdk.dir}" force="true" lazy="false" verbose="true" />
 		<rbm-lock-device device="true" />
 		<rbm-get-device-property local="local.prop" remote="ro.runtime.firstboot" />
 		<rbm-adb-shell log="false" outputproperty="local.prop2" 
@@ -57,24 +57,27 @@
 			<include name="*.apk"/>
 		</fileset>
 		
-    <rbm-run-tests package="${tester.package}" uninstall="false">
-        <junit dir="bin" multiple="true" />
-        <apks>
-            <tester file="${tester.apk}" />
-            <apk file="${tested.apk}" />
-            <apk file="${tested.apk}" />
-            <apk file="${tested.apk}" />
-            <fileset refid="apks" />
-        </apks>
-        <args>
-          <coverage enable="false" />
-          <logonly enable="true" />
-          <debug enable="false" />
-          <class name="com.robomorphine.tester.ExampleTestA">
-            <name name="com.robomorphine.tester.MainActivityTest" />
-          </class>
-        </args>
-    </rbm-run-tests>
+        <rbm-run-tests package="${tester.package}" 
+                       uninstall="false" 
+                       successOnOlderSdk="true" >
+      
+            <junit dir="bin" multiple="true" />
+            <apks>
+                <tester file="${tester.apk}" />
+                <apk file="${tested.apk}" />
+                <apk file="${tested.apk}" />
+                <apk file="${tested.apk}" />
+                <fileset refid="apks" />
+            </apks>
+            <args>
+              <coverage enable="false" />
+              <logonly enable="true" />
+              <debug enable="false" />
+              <class name="com.robomorphine.tester.ExampleTestA">
+                <name name="com.robomorphine.tester.MainActivityTest" />
+              </class>
+            </args>
+        </rbm-run-tests>
         
         <!--rbm-uninstall-apk package="${tested.package}" />
         <rbm-uninstall-apk file="${tester.apk}" /-->
@@ -120,13 +123,13 @@
         <rbm-delete-avd name="test-avd15" />
     </target>
     
-    <target name="test-inheritance"  >
+    <target name="test-inheritance" >
         <rbm-lock-device force="false"/>
         <rbm-lock-device force="false"/>
         <ant antfile="ant/test.xml" target="print" inheritrefs="true" />
     </target>
     
-    <target name="logcat"  >
+    <target name="logcat" >
         <rbm-setup sdkdir="${sdk.dir}" />
         <rbm-lock-device />
         <rbm-start-logcat file="bin/logcat.txt" dump="false" format="long" reference="logcat" >
@@ -137,7 +140,7 @@
         <rbm-stop-logcat logcatref="logcat" />
     </target>
     
-    <target name="restart-adb" >
+    <target name="restart-adb">
         <rbm-restart-adb />
     </target>
     
@@ -150,11 +153,5 @@
     <target name="print"  >
         <rbm-lock-device force="false" />
     </target>
-	
-	<target name="lock-device"  >
-		<rbm-lock-device emulator="false" device="true" />
-		<rbm-get-locked-device property="serial" />
-		<echo>${serial}</echo>
-	</target>
        
 </project>
