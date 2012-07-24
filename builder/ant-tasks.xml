@@ -8,8 +8,8 @@
         <pathelement location="${prebuilt.libs.dir}/ant-contrib.jar"/>
       </classpath>
     </typedef>
-
-	<!-- jarjar -->
+    
+    <!-- jarjar -->
     <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask" classpath="${root.dir}/libs/jarjar.jar"/>
 	
 	<!-- robomorphine-testrunner -->
