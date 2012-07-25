@@ -64,9 +64,6 @@
     -->
             
     <target name="run" >
-        
-        
-        
     	<!-- do not re-lock device, if it was already locked -->
     	<rbm-lock-device force="false" />
     	<!-- run tests -->

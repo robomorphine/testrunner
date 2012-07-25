@@ -85,6 +85,12 @@
         <property name="build.mode" value="${build.mode}" />
     </subant>
   </target>
+  
+  <target name="lint" depends="buildlist, debug">    
+    <subant target="lint" buildpathref="all-projects" >
+        <property name="build.mode" value="${build.mode}" />
+    </subant>
+  </target>
 	
   <!-- package & deploy -->
   
