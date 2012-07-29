@@ -138,7 +138,6 @@
    <rule ref="rulesets/sunsecure.xml/MethodReturnsInternalArray"/>
    <rule ref="rulesets/sunsecure.xml/ArrayIsStoredDirectly"/>
    <rule ref="rulesets/coupling.xml/CouplingBetweenObjects"/>
-   <rule ref="rulesets/coupling.xml/ExcessiveImports"/>
    <rule ref="rulesets/coupling.xml/LooseCoupling"/>
    <rule ref="rulesets/imports.xml/DuplicateImports"/>
    <rule ref="rulesets/imports.xml/DontImportJavaLang"/>
@@ -146,7 +145,6 @@
    <rule ref="rulesets/imports.xml/ImportFromSamePackage"/>
    <rule ref="rulesets/junit.xml/JUnitStaticSuite"/>
    <rule ref="rulesets/junit.xml/JUnitSpelling"/>
-   <rule ref="rulesets/junit.xml/JUnitTestsShouldIncludeAssert"/>
    <rule ref="rulesets/junit.xml/TestClassWithoutTestCases"/>
    <rule ref="rulesets/junit.xml/UnnecessaryBooleanAssertion"/>
    <rule ref="rulesets/junit.xml/UseAssertEqualsInsteadOfAssertTrue"/>
@@ -154,11 +152,9 @@
    <rule ref="rulesets/junit.xml/UseAssertNullInsteadOfAssertTrue"/>
    <rule ref="rulesets/junit.xml/SimplifyBooleanAssertion"/>
    <rule ref="rulesets/controversial.xml/UnnecessaryConstructor"/>
-   <rule ref="rulesets/controversial.xml/NullAssignment"/>
    <rule ref="rulesets/controversial.xml/UnusedModifier"/>
    <rule ref="rulesets/controversial.xml/DontImportSun"/>
-   <rule ref="rulesets/controversial.xml/SuspiciousOctalEscape"/>
-   <rule ref="rulesets/controversial.xml/CallSuperInConstructor"/>
+   <rule ref="rulesets/controversial.xml/SuspiciousOctalEscape"/>   
    <rule ref="rulesets/controversial.xml/UnnecessaryParentheses"/>
    <rule ref="rulesets/controversial.xml/DefaultPackage"/>
    <rule ref="rulesets/controversial.xml/DataflowAnomalyAnalysis"/>
@@ -169,7 +165,6 @@
    <rule ref="rulesets/controversial.xml/AvoidAccessibilityAlteration"/>
    <rule ref="rulesets/controversial.xml/DoNotCallGarbageCollectionExplicitly"/>
    <rule ref="rulesets/naming.xml/ClassNamingConventions"/>
-   <rule ref="rulesets/naming.xml/AbstractNaming"/>
    <rule ref="rulesets/naming.xml/AvoidDollarSigns"/>
    <rule ref="rulesets/naming.xml/MethodWithSameNameAsEnclosingClass"/>
    <rule ref="rulesets/naming.xml/SuspiciousHashcodeMethodName"/>
