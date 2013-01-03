@@ -2,7 +2,7 @@ package com.robomorphine.test.emulator;
 
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.log.StdSdkLogger;
 
 import java.io.File;
 
@@ -13,7 +13,7 @@ public class RemoteLogcatTest extends TestCase {
     public void testLogcat() throws Exception {
         
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();  
+        ILog logger = new StdSdkLogger();  
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
         

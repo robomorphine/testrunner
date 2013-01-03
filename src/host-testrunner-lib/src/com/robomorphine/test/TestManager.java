@@ -1,18 +1,18 @@
 package com.robomorphine.test;
 
+import java.io.File;
+
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
-import com.android.sdklib.ISdkLog;
 import com.android.sdklib.SdkManager;
 import com.android.sdklib.internal.avd.AvdManager;
+import com.android.utils.ILogger;
 import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.ISdkLog2ILog;
+import com.robomorphine.test.log.ILogger2ILog;
 import com.robomorphine.test.log.PrefixedLog;
 import com.robomorphine.test.sdktool.AdbTool;
 import com.robomorphine.test.sdktool.ToolsManager;
-
-import java.io.File;
 
 public class TestManager {
     
@@ -21,7 +21,7 @@ public class TestManager {
     private final File mSdkPath;
     private final ILog mOriginalLog;
     private final ILog mLog;
-    private final ISdkLog mSdkLog;
+    private final ILogger mSdkLog;
     
     private final SdkManager mSdkManager;
     private AndroidDebugBridge mAdb;
@@ -34,12 +34,12 @@ public class TestManager {
         mSdkPath = sdkPath;
         mOriginalLog = log;
         mLog = new PrefixedLog(TestManager.class.getSimpleName(), log);
-        mSdkLog = new ISdkLog2ILog(new PrefixedLog("SDK", mOriginalLog));
+        mSdkLog = new ILogger2ILog(new PrefixedLog("SDK", mOriginalLog));
         
         mSdkManager = SdkManager.createManager(sdkPath.getAbsolutePath(), mSdkLog);
         
         mToolsManager = new ToolsManager(sdkPath, mOriginalLog);
-        mAvdManager = new AvdManager(mSdkManager, mSdkLog);
+        mAvdManager = AvdManager.getInstance(mSdkManager, mSdkLog);
         mApkManager = new ApkManager(this);
     }
     
@@ -51,7 +51,7 @@ public class TestManager {
         return new PrefixedLog(clazz.getSimpleName(), getLogger()); 
     }
     
-    public ISdkLog getSdkLogger() {
+    public ILogger getSdkLogger() {
         return mSdkLog;
     }    
     

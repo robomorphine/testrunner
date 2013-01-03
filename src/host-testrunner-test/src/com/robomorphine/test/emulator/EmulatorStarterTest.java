@@ -5,7 +5,7 @@ import com.android.sdklib.internal.avd.AvdInfo;
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.log.StdSdkLogger;
 import com.robomorphine.test.util.AvdHelper;
 
 import java.io.File;
@@ -21,7 +21,7 @@ public class EmulatorStarterTest extends TestCase {
             EmulatorStarterException, AdbConnectionException {
         
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();        
+        ILog logger = new StdSdkLogger();        
         
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
@@ -43,7 +43,7 @@ public class EmulatorStarterTest extends TestCase {
     
     public void testWaitForLowCput() throws Exception {
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();        
+        ILog logger = new StdSdkLogger();        
         
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
@@ -56,7 +56,7 @@ public class EmulatorStarterTest extends TestCase {
             EmulatorStarterException, AdbConnectionException {
         
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();        
+        ILog logger = new StdSdkLogger();        
         
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();

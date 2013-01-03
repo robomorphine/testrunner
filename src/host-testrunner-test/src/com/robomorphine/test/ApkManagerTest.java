@@ -4,7 +4,7 @@ import com.android.ddmlib.InstallException;
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.log.StdSdkLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ public class ApkManagerTest extends TestCase {
     
     public void testDecodeAndroidManifest() throws AndroidLocationException, AdbConnectionException, IOException, InstallException {
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();        
+        ILog logger = new StdSdkLogger();        
         
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();

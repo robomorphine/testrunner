@@ -1,28 +1,28 @@
 package com.robomorphine.test.util;
 
+import java.io.File;
+import java.util.HashMap;
+
 import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.android.sdklib.IAndroidTarget;
-import com.android.sdklib.ISdkLog;
 import com.android.sdklib.ISystemImage;
 import com.android.sdklib.SdkManager;
 import com.android.sdklib.internal.avd.AvdInfo;
 import com.android.sdklib.internal.avd.AvdManager;
+import com.android.utils.ILogger;
 import com.robomorphine.test.TestManager;
-
-import java.io.File;
-import java.util.HashMap;
 
 public class AvdHelper {
     
     private final SdkManager mSdkManager;
-    private final ISdkLog mSdkLog;
+    private final ILogger mSdkLog;
     private final com.android.sdklib.internal.avd.AvdManager mSdkAvdManager;
         
     public AvdHelper(TestManager testManager) throws AndroidLocationException {
         this(testManager.getSdkManager(), testManager.getAvdManager(), testManager.getSdkLogger());
     }
     
-    AvdHelper(SdkManager sdkManager, AvdManager avdManager, ISdkLog sdkLogger)
+    AvdHelper(SdkManager sdkManager, AvdManager avdManager, ILogger sdkLogger)
             throws AndroidLocationException {
         mSdkManager = sdkManager;
         mSdkLog = sdkLogger;

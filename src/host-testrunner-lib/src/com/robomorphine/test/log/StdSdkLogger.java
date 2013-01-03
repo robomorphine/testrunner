@@ -1,10 +1,10 @@
 package com.robomorphine.test.log;
 
-import com.android.sdklib.StdSdkLog;
+import com.android.utils.StdLogger;
 
-public class StdLog implements ILog  {
+public class StdSdkLogger implements ILog  {
     
-    private final StdSdkLog mStdLog = new StdSdkLog();
+    private final StdLogger mStdLogger = new StdLogger(com.android.utils.StdLogger.Level.VERBOSE);
     private LogLevel mLogLevel = LogLevel.Verbose;
     
     public void setLevel(LogLevel level) {
@@ -22,21 +22,21 @@ public class StdLog implements ILog  {
     @Override
     public void v(String format, Object... args) {
         if(shouldPrint(LogLevel.Verbose)) {
-            mStdLog.printf(format, args);
+        	mStdLogger.verbose(format, args);
         }
     }
     
     @Override
     public void i(String format, Object... args) {
         if(shouldPrint(LogLevel.Info)) {
-            mStdLog.printf(format, args);
+        	mStdLogger.info(format, args);
         }
     }
     
     @Override
     public void w(String format, Object... args) {
         if(shouldPrint(LogLevel.Warning)) {
-            mStdLog.warning(format, args);
+        	mStdLogger.warning(format, args);
         }
     }
     
@@ -44,9 +44,9 @@ public class StdLog implements ILog  {
     public void e(Throwable ex, String format, Object... args) {
         if(shouldPrint(LogLevel.Error)) {
             if(ex != null) {
-                mStdLog.error(null, ex.getMessage(), args);
+            	mStdLogger.error(null, ex.getMessage(), args);
             }
-            mStdLog.error(null, format, args);
+            mStdLogger.error(null, format, args);
         }
     };
 }

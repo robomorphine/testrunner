@@ -4,7 +4,7 @@ import com.android.prefs.AndroidLocation.AndroidLocationException;
 import com.robomorphine.test.TestManager;
 import com.robomorphine.test.exception.AdbConnectionException;
 import com.robomorphine.test.log.ILog;
-import com.robomorphine.test.log.StdLog;
+import com.robomorphine.test.log.StdSdkLogger;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class EmulatorStopperTest extends TestCase {
     
     public void testStopEmulator() throws AndroidLocationException, AdbConnectionException {
         File path = new File("r:\\repository\\dev\\bin\\android-sdk");
-        ILog logger = new StdLog();        
+        ILog logger = new StdSdkLogger();        
         
         TestManager testManager = new TestManager(path, logger);
         testManager.connectAdb();
